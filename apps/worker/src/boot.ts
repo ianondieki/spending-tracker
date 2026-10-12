@@ -1,6 +1,6 @@
 /** Wires real adapters (or fakes when a secret is missing), pg-boss queues and the scheduler. */
 import { readAiConfig } from '@hesabu/agents';
-import { Db, getDatabaseUrl, REPORT_DELIVER_JOB, REPORT_GENERATE_JOB, SCHEDULER_TICK_JOB, deliveryJobKey, reportJobKey, type ReportDeliverJob, type ReportGenerateJob } from '@hesabu/db';
+import { Db, EMAIL_LINK_JOB, getDatabaseUrl, REPORT_DELIVER_JOB, REPORT_GENERATE_JOB, SCHEDULER_TICK_JOB, deliveryJobKey, reportJobKey, type EmailLinkJob, type ReportDeliverJob, type ReportGenerateJob } from '@hesabu/db';
 import { PgBoss } from 'pg-boss';
 
 import { FakeEmailSender, ResendEmailSender, type EmailSender } from './adapters/email.js';
@@ -9,6 +9,7 @@ import { FsStorage, S3Storage, type Storage } from './adapters/storage.js';
 import { CloudApiWhatsAppSender, FakeWhatsAppSender, type WhatsAppSender } from './adapters/whatsapp.js';
 import { readWorkerConfig, type Env } from './config.js';
 import { runDeliveryJob, type DeliveryDeps } from './deliver.js';
+import { sendEmailLink } from './email-link.js';
 import { schedulerTick } from './scheduler.js';
 import { runReportJob, type WorkflowDeps } from './workflow.js';
 
@@ -27,7 +28,7 @@ export async function buildWorker(env: Env = process.env, log: (line: string) =>
   const boss = new PgBoss({ connectionString: getDatabaseUrl(env), schema: 'pgboss' });
   boss.on('error', (err: Error) => console.error('pg-boss', err.message));
 
-  const storage: Storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir, config.appBaseUrl);
+  const storage: Storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir);
   const email: EmailSender | null = config.resend ? new ResendEmailSender(config.resend.apiKey, config.resend.from) : config.isProduction ? null : new FakeEmailSender();
   const whatsapp: WhatsAppSender | null = config.whatsapp
     ? new CloudApiWhatsAppSender(config.whatsapp.token, config.whatsapp.phoneNumberId, config.whatsapp.apiVersion)
@@ -58,6 +59,10 @@ export async function buildWorker(env: Env = process.env, log: (line: string) =>
       await boss.createQueue(REPORT_GENERATE_JOB);
       await boss.createQueue(REPORT_DELIVER_JOB);
       await boss.createQueue(SCHEDULER_TICK_JOB);
+      await boss.createQueue(EMAIL_LINK_JOB);
+      await boss.work<EmailLinkJob>(EMAIL_LINK_JOB, async ([job]) => {
+        if (job) await sendEmailLink({ email, log }, job.data);
+      });
       await boss.work<ReportGenerateJob>(REPORT_GENERATE_JOB, async ([job]) => {
         if (job) await runReportJob(workflow, job.data);
       });

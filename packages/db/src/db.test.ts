@@ -60,11 +60,20 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     await db?.close();
   });
 
-  it('registers a device once and re-finds its user', async () => {
+  it('registers a device once and re-finds its user; stores only the id hash; revocation sticks', async () => {
     const again = await db.system.registerDevice({ device_id: 'dev-alice', platform: 'android', app_version: '1.1' });
     expect(again.user_id).toBe(alice);
     expect(again.created_user).toBe(false);
     expect(alice).not.toBe(bob);
+    const stored = await db.rawSql<{ device_id: string }[]>`SELECT device_id FROM devices WHERE user_id = ${alice}`;
+    expect(stored[0]?.device_id).toMatch(/^[a-f0-9]{64}$/);
+    expect(stored[0]?.device_id).not.toContain('dev-alice');
+    expect(await db.system.deviceIsActive(again.device_row_id, alice)).toBe(true);
+    expect(await db.system.deviceIsActive(again.device_row_id, bob)).toBe(false);
+    const extra = await db.system.registerDevice({ device_id: 'dev-alice-tablet', platform: 'android', app_version: '1.1' });
+    expect(await db.system.revokeDevice(extra.device_row_id)).toBe(true);
+    expect(await db.system.deviceIsActive(extra.device_row_id, extra.user_id)).toBe(false);
+    await expect(db.system.registerDevice({ device_id: 'dev-alice-tablet', platform: 'android', app_version: '1.1' })).rejects.toThrow(/revoked/);
   });
 
   it('stores and reads preferences per user', async () => {
@@ -177,6 +186,19 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     expect(await a.hasConsent('ai_fallback')).toBe(true);
     await a.revokeConsent('ai_fallback');
     expect(await a.hasConsent('ai_fallback')).toBe(false);
+    // Delivery consents carry the proven address and die when the address changes.
+    await expect(a.grantConsent('whatsapp_delivery')).rejects.toThrow(/proven address/);
+    await a.updatePreferences({ whatsapp_e164: '+254700000001' });
+    await a.grantConsent('whatsapp_delivery', '1', '+254700000001');
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000001')).toBe(true);
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000002')).toBe(false);
+    await a.updatePreferences({ locale: 'en' }); // unrelated change keeps it
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000001')).toBe(true);
+    await a.updatePreferences({ whatsapp_e164: '+254700000002' });
+    expect(await a.hasConsent('whatsapp_delivery')).toBe(false);
+    await expect(db.forUser(bob).updatePreferences({ whatsapp_e164: '+254700000002' })).rejects.toThrow(/another account/);
+    expect((await a.getUser())?.join_code).toMatch(/^[A-F0-9]{8}$/);
+    expect(await db.system.findUserByJoinCode((await a.getUser())!.join_code.toLowerCase())).toBe(alice);
     await a.upsertBudget({ category_id: 'groceries', period: 'weekly', limit_cents: 500_000 });
     await a.upsertBudget({ category_id: 'groceries', period: 'weekly', limit_cents: 600_000 });
     expect(await a.listBudgets()).toMatchObject([{ category_id: 'groceries', limit_cents: 600_000 }]);
@@ -185,6 +207,6 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     await a.audit('worker', 'report.generated', { kind: 'weekly' });
     await a.recordAiUsage({ step: 'write', model: 'claude-opus-5-5', input_tokens: 1000, output_tokens: 200, cost_usd: 0.008 });
     expect(await db.system.aiSpendUsdSince(new Date(Date.now() - 60_000))).toBeCloseTo(0.008, 6);
-    expect((await db.system.listUsersForScheduling()).map((u) => u.user_id).sort()).toEqual([alice, bob].sort());
+    expect((await db.system.listUsersForScheduling()).map((u) => u.user_id)).toEqual(expect.arrayContaining([alice, bob]));
   });
 });

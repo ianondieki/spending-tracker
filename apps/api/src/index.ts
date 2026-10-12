@@ -1,5 +1,5 @@
 import { serve } from '@hono/node-server';
-import { Db, getDatabaseUrl } from '@hesabu/db';
+import { createStorage, Db, getDatabaseUrl } from '@hesabu/db';
 
 import { createApp } from './app.js';
 import { createExtractor } from './extractor.js';
@@ -11,7 +11,7 @@ export type { AppDeps } from './app.js';
 const port = Number(process.env['PORT'] ?? 8787);
 const db = await Db.open(process.env);
 const queue = await PgBossQueue.start(getDatabaseUrl(process.env));
-const app = createApp({ db, queue, env: process.env, extractor: createExtractor(process.env, db) });
+const app = createApp({ db, queue, env: process.env, extractor: createExtractor(process.env, db), storage: createStorage(process.env) });
 
 serve({ fetch: app.fetch, port }, (info) => {
   console.log(`hesabu api listening on http://localhost:${info.port}`);

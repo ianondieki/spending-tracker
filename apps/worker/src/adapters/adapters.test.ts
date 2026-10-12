@@ -27,9 +27,10 @@ describe('worker config', () => {
 describe('storage', () => {
   it('round-trips through the filesystem fake and refuses path escapes', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'hesabu-storage-'));
-    const s = new FsStorage(dir, 'https://app.test');
-    const { url } = await s.put('reports/u/r/hero.png', ONE_PIXEL_PNG, 'image/png');
-    expect(url).toBe('https://app.test/artefacts/reports/u/r/hero.png');
+    const s = new FsStorage(dir);
+    const { key } = await s.put('reports/u/r/hero.png', ONE_PIXEL_PNG, 'image/png');
+    expect(key).toBe('reports/u/r/hero.png');
+    expect(await s.signedGetUrl('reports/u/r/hero.png', 60)).toBeNull(); // the API serves these through its signed route
     expect(Buffer.from(await s.get('reports/u/r/hero.png')).equals(ONE_PIXEL_PNG)).toBe(true);
     await s.put('../../escape.txt', 'x', 'text/plain');
     await expect(s.get('escape.txt')).resolves.toBeDefined();

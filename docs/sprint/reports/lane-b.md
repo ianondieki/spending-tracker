@@ -101,6 +101,31 @@ skipped locally and fail in CI.
   tunnel) and C (committed samples, web fixtures, screenshots), one line to say and a fallback per step, the exact
   commands and the pre-flight checklist.
 
+## Security fixes (docs/sprint/reports/security-review.md)
+
+| Finding | Fix | Commit | Test that shows it closed |
+|---|---|---|---|
+| **B1** consent not bound to the address | `consents.address`; `hasConsentFor(purpose, address)` at send time; changing the number or email revokes the consent; delivery skips with `unverified address`; `email_delivery` only via the magic link (`POST /v1/me/email/send-link` → worker sends → `GET /v1/public/email/confirm/:token`, single use, 1 h); seed grants for the demo user only | `11dbf61` | api "B1/M2: JOIN needs the user's code…" and "B1: email consent comes only from the magic link…"; worker "delivers once per channel…" (number swap → skipped); db consent tests |
+| **M2** JOIN code ignored, number not unique | `users.join_code` (random, shown in preferences with `whatsapp_verified` / `email_verified`); `JOIN <code>` resolves the user by code and binds the sender's number; unique partial index on `whatsapp_e164`; `PUT /v1/me/preferences` answers 409 `address_taken` | `11dbf61` | api "B1/M2…" (bare JOIN and wrong code do nothing; second account cannot type a verified number; a JOIN from it moves the number) |
+| **M1** webhooks fail open | `NODE_ENV=production` without `WHATSAPP_APP_SECRET` / `RESEND_WEBHOOK_SECRET` → 503; verification always runs when configured; `timingSafeEqual` on the verify token; Meta events older than 5 min (or without a timestamp) ignored; only enum-like error codes stored (m6) | `b1db6b1` | api "M1: webhooks fail closed in production…" |
+| **M3** tokens never expire or revoke | `exp` = 30 days; middleware checks the device row exists and is not revoked on every request (401; the app re-registers); `revokeDevice`; a revoked device cannot re-register (403) | `20e5553` | api "M3/M4: tokens expire…"; db registration test |
+| **M4** `device_id` stored in clear | `devices.device_id` = SHA-256 (migration hashes existing rows); tokens carry the device row id; audit actors are row ids; the seed never prints a token | `20e5553` | same |
+| **M5** no limits | `bodyLimit` 1 MB on `/v1/*` and `/webhooks/*`; `.max()` on every string in the Zod mirrors (ajv parity test still green); in-memory fixed-window limiter: register 20/h per IP, public resolver and `/r` 60/min per IP, generate 30/h, send-link 5/h, extract 30/h per token; generate only for periods that ended within 13 months and have started | `dbe5d6c` | api "M5: bounds body size…" |
+| **M6** permanent artefact URLs | Storage adapters moved to `@hesabu/db`; the bucket is private; the database holds keys only; the API mints per request: S3 presigned GET (15 min) or its own signed route `/v1/public/artefacts/<token>` for local storage; the public resolver does the same | `9e21dcc` | api "M6: artefact URLs are minted per request…"; db presign and token tests; worker asserts no URL is stored |
+| m1 live-delivery cross-tenant | `USER_ID` required; reads through that tenant only | `e018072` | script (not executed) |
+| m2 per-user AI cap | `AI_USER_DAILY_BUDGET_USD` (default 0.25) checked per user before extraction | `e018072` | — (global cap tests exist in agents; per-user path is a guard before the call) |
+| m6 verify token, replay, free text | see M1 | `b1db6b1` | api M1 test |
+| m11 undocumented variables, `stubbed` dropped | `.env.example` documents `HESABU_RENDERER_ALLOW_STUB`, `API_BASE_URL`, `HESABU_DEV_ROUTES`, `AI_USER_DAILY_BUDGET_USD`; `artefacts.stubbed` stored; delivery refuses stubbed artefacts | `9e21dcc`, `e018072` | worker "m11: placeholder artefacts… are never delivered" |
+
+Not in Lane B's paths and left to their owners: m3 (salted hashes, pack engine + Android), m4, m5, m12 (Android), m8
+(CI workflow), m9 (`USER` in `Dockerfile.backend`: one line, owner's call), m10 (audit triage), m13 (agents eval set),
+m14 (`docs/THREAT_MODEL.md`), m7 (link revocation on `force`: not done; `resetReport` keeps old links valid, they still
+expire in 30 days).
+
+Contract impact (additive, recorded in `docs/sprint/CONTRACT-REQUESTS.md`): Preferences gains `join_code`,
+`whatsapp_verified`, `email_verified`; two new routes for the magic link; artefact URLs in `ReportSummary` are now
+short-lived (15 min) and must be re-fetched, never cached by the app.
+
 ## Design decisions worth knowing
 
 - **Tenancy.** The only way to touch user data is `db.forUser(id)`; no method takes a user id. RLS policies are a

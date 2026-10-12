@@ -141,8 +141,8 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     const theme = user.theme === 'dark' ? 'dark' : 'light';
     const rendered = await deps.renderer.render(document, facts, { theme, locale: user.locale, baseUrl: deps.appBaseUrl, reportUrl: link.url });
     const prefix = `reports/${job.user_id}/${report.id}`;
-    const hero = await deps.storage.put(`${prefix}/hero.png`, rendered.heroPng, 'image/png');
-    const pdf = await deps.storage.put(`${prefix}/report.pdf`, rendered.pdf, 'application/pdf');
+    await deps.storage.put(`${prefix}/hero.png`, rendered.heroPng, 'image/png');
+    await deps.storage.put(`${prefix}/report.pdf`, rendered.pdf, 'application/pdf');
     await deps.storage.put(`${prefix}/web.html`, rendered.webHtml, 'text/html; charset=utf-8');
     await deps.storage.put(`${prefix}/email.html`, rendered.emailHtml, 'text/html; charset=utf-8');
     await deps.storage.put(`${prefix}/email.txt`, rendered.emailText, 'text/plain; charset=utf-8');
@@ -160,9 +160,9 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
         pdf_key: `${prefix}/report.pdf`,
         html_key: `${prefix}/web.html`,
         chart_keys: chartKeys,
-        hero_png_url: hero.url,
-        pdf_url: pdf.url,
+        // No permanent artefact URLs (M6): the API mints short-lived ones per request from the keys.
         web_url: link.url,
+        stubbed: rendered.stubbed ?? false,
       },
     });
     await tenant.audit('worker', 'report.generated', { kind: report.kind, period_start: report.period_start, writer: produced.writer, fallback_reason: produced.fallback_reason, renderer: deps.renderer.name });

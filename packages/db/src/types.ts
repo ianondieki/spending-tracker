@@ -20,8 +20,18 @@ export interface Preferences {
   theme: 'light' | 'dark' | 'system';
 }
 
+export interface ConsentRow {
+  purpose: ConsentPurpose;
+  version: string;
+  /** The address this consent was proven for (E.164 number or lower-cased email); null for non-delivery purposes. */
+  address: string | null;
+  granted_at: string;
+}
+
 export interface UserRow extends Preferences {
   id: string;
+  /** Shown in the app; the user sends "JOIN <join_code>" from WhatsApp to prove their number. */
+  join_code: string;
   phone_e164: string | null;
   display_name: string | null;
   created_at: string;
@@ -63,9 +73,10 @@ export interface ReportArtefacts {
   pdf_key?: string | null;
   html_key?: string | null;
   chart_keys?: Record<string, string>;
-  hero_png_url?: string | null;
-  pdf_url?: string | null;
+  /** The signed /r/<token> web link (expires with the report link). */
   web_url?: string | null;
+  /** Placeholder binaries from a browser-less renderer; never delivered. */
+  stubbed?: boolean;
 }
 
 export interface ReportRow {

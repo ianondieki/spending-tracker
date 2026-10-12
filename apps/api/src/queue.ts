@@ -1,6 +1,6 @@
 import {
-  deliveryJobKey, REPORT_DELIVER_JOB, REPORT_GENERATE_JOB, reportJobKey,
-  type ReportDeliverJob, type ReportGenerateJob,
+  deliveryJobKey, EMAIL_LINK_JOB, REPORT_DELIVER_JOB, REPORT_GENERATE_JOB, reportJobKey,
+  type EmailLinkJob, type ReportDeliverJob, type ReportGenerateJob,
 } from '@hesabu/db';
 import { PgBoss } from 'pg-boss';
 
@@ -8,17 +8,22 @@ import { PgBoss } from 'pg-boss';
 export interface JobQueue {
   enqueueGenerate(job: ReportGenerateJob): Promise<void>;
   enqueueDeliver(job: ReportDeliverJob): Promise<void>;
+  enqueueEmailLink(job: EmailLinkJob): Promise<void>;
 }
 
 /** Records jobs for tests and for in-process runs. */
 export class InMemoryQueue implements JobQueue {
   readonly generated: ReportGenerateJob[] = [];
   readonly deliveries: ReportDeliverJob[] = [];
+  readonly emailLinks: EmailLinkJob[] = [];
   async enqueueGenerate(job: ReportGenerateJob): Promise<void> {
     this.generated.push(job);
   }
   async enqueueDeliver(job: ReportDeliverJob): Promise<void> {
     this.deliveries.push(job);
+  }
+  async enqueueEmailLink(job: EmailLinkJob): Promise<void> {
+    this.emailLinks.push(job);
   }
 }
 
@@ -31,6 +36,7 @@ export class PgBossQueue implements JobQueue {
     await boss.start();
     await boss.createQueue(REPORT_GENERATE_JOB);
     await boss.createQueue(REPORT_DELIVER_JOB);
+    await boss.createQueue(EMAIL_LINK_JOB);
     return new PgBossQueue(boss);
   }
 
@@ -47,6 +53,10 @@ export class PgBossQueue implements JobQueue {
         retryBackoff: true,
       });
     }
+  }
+
+  async enqueueEmailLink(job: EmailLinkJob): Promise<void> {
+    await this.boss.send(EMAIL_LINK_JOB, job, { retryLimit: 2, retryDelay: 30 });
   }
 
   async stop(): Promise<void> {

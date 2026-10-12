@@ -49,8 +49,8 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     const tenant = db.forUser(userId);
     await tenant.upsertCategories(inbox.categories);
     await tenant.updatePreferences({ email: 'demo@example.test', whatsapp_e164: '+254700000321', channels: ['email', 'whatsapp'], locale: 'en' });
-    await tenant.grantConsent('email_delivery');
-    await tenant.grantConsent('whatsapp_delivery');
+    await tenant.grantConsent('email_delivery', '1', 'demo@example.test');
+    await tenant.grantConsent('whatsapp_delivery', '1', '+254700000321');
     await tenant.upsertBudget({ category_id: 'food_groceries', period: 'weekly', limit_cents: 600_000 });
     const sync = await post('/v1/sync', { device_id: 'demo', app_version: '1.0.0', parser_version: '1.0.0', accounts: inbox.accounts, transactions: inbox.transactions, unknown_message_count: 3, sent_at: NOW.toISOString() });
     expect(sync.status).toBe(200);
@@ -58,7 +58,7 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(synced.rejected).toEqual([]);
     expect(synced.accepted).toBe(inbox.transactions.length);
     deps = {
-      db, renderer: new StubRenderer(), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
+      db, renderer: new StubRenderer({ markStubbed: false }), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
       appBaseUrl: 'https://hesabu.test', reportLinkSecret: env.REPORT_LINK_SECRET, reportLinkTtlDays: 30,
       enqueueDeliver: async (job) => { deliverJobs.push(job); }, now: () => NOW,
     };
@@ -92,8 +92,10 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(result!.facts.totals.out.cents).toBeGreaterThan(0);
     expect(result!.facts.candidate_insights.length).toBeGreaterThan(3);
     expect(result!.deliveriesQueued).toEqual(['email', 'whatsapp']);
-    expect(result!.report.artefacts.hero_png_url).toMatch(/hero\.png$/);
-    expect(result!.report.artefacts.pdf_url).toMatch(/report\.pdf$/);
+    expect(result!.report.artefacts.hero_png_key).toMatch(/hero\.png$/);
+    expect(result!.report.artefacts.pdf_key).toMatch(/report\.pdf$/);
+    expect(JSON.stringify(result!.report.artefacts)).not.toMatch(/_url":"http[^"]*(png|pdf)"/); // M6: no permanent artefact URLs
+    expect(result!.report.artefacts.stubbed).toBe(false); // the test double stands in for a real render
     expect(result!.report.artefacts.web_url).toMatch(/^https:\/\/hesabu\.test\/r\//);
     expect(result!.report.cost_usd).toBe(0);
 
@@ -136,12 +138,35 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(deliveries.map((d) => [d.channel, d.status, d.attempts])).toEqual([['email', 'sent', 1], ['whatsapp', 'sent', 1]]);
     expect(deliveries.every((d) => d.provider_message_id)).toBe(true);
 
-    await db.forUser(userId).revokeConsent('whatsapp_delivery');
+    // B1: the consent was proven for +254700000321; pointing the number elsewhere must not deliver there.
+    await db.forUser(userId).updatePreferences({ whatsapp_e164: '+254799999999' });
     const second = deliverJobs[1]!;
     const skipped = await runDeliveryJob({ db, storage, email, whatsapp }, second);
-    expect(skipped.find((o) => o.channel === 'whatsapp')?.status).toBe('skipped');
+    expect(skipped.find((o) => o.channel === 'whatsapp')).toMatchObject({ status: 'skipped', reason: expect.stringContaining('unverified address') });
+    expect(whatsapp.calls.filter((c) => c.to === '+254799999999')).toHaveLength(0);
+    // Even a stale consent row pointing at the old number never sends to the new one.
+    await db.forUser(userId).grantConsent('whatsapp_delivery', '1', '+254700000321');
+    const stale = await runDeliveryJob({ db, storage, email, whatsapp }, { ...second, channels: ['whatsapp'] });
+    expect(stale[0]?.status).toBe('skipped');
+    await db.forUser(userId).updatePreferences({ whatsapp_e164: '+254700000321' });
     const noProvider = await runDeliveryJob({ db, storage, email: null, whatsapp: null }, { ...second, channels: ['email'] });
     expect(noProvider[0]).toMatchObject({ channel: 'email', status: 'already' }); // email for report 2 was sent just above
+  });
+
+  it('m11: placeholder artefacts from a browser-less renderer are never delivered', async () => {
+    const job = deliverJobs[0]!;
+    const tenant = db.forUser(userId);
+    const report = (await tenant.getReport(job.report_id))!;
+    // A real StubRenderer (no browser) flags its output; the workflow stores the flag.
+    const flagged = await runReportJob({ ...deps, renderer: new StubRenderer() }, { user_id: userId, report_id: (await tenant.ensureReport('weekly', '2026-09-28T00:00:00+03:00', '2026-10-05T00:00:00+03:00')).id, deliver: false });
+    expect(flagged?.report.artefacts.stubbed).toBe(true);
+    const d = await tenant.ensureDelivery(flagged!.report.id, 'email');
+    const before = email.sent.length;
+    const out = await runDeliveryJob({ db, storage, email, whatsapp }, { user_id: userId, report_id: flagged!.report.id, channels: ['email'] });
+    expect(out[0]).toMatchObject({ status: 'skipped', reason: expect.stringContaining('placeholders') });
+    expect(email.sent).toHaveLength(before);
+    expect((await tenant.listDeliveries(flagged!.report.id)).find((x) => x.id === d.id)?.status).toBe('skipped');
+    void report;
   });
 
   it('regenerates on force and marks failures', async () => {
@@ -177,6 +202,7 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
         expect(Object.keys(result!.report.artefacts.chart_keys ?? {}).length).toBeGreaterThan(3);
         const html = new TextDecoder().decode(await storage.get(result!.report.artefacts.html_key!));
         expect(html).toContain(result!.document.title);
+        expect(result!.report.artefacts.stubbed).toBe(false);
       }
     } finally {
       await renderer.close();
