@@ -2,7 +2,9 @@
 import type { AccountFact, CategoryFact, MerchantFact, Period, PersonFact } from '../contracts/facts-sheet.js';
 import type { Account } from '../contracts/transaction.js';
 import { count, delta, money, pct, ratioPct, sumMinor } from '../money.js';
-import { isCashLike, MERCHANT_KINDS } from './classify.js';
+import { isMerchantCounterparty } from '@hesabu/taxonomy';
+
+import { isCashLike } from './classify.js';
 import { UNCATEGORISED, type Tx } from './prepare.js';
 import type { CategoryInfo } from './types.js';
 import { drill, groupBy } from './util.js';
@@ -21,7 +23,8 @@ export function categoryNamer(categories: readonly CategoryInfo[]): CategoryName
 }
 
 /** A payment to a place: merchant kinds only, never an agent withdrawal, a person or a transfer. */
-export const isMerchantTx = (t: Tx): boolean => MERCHANT_KINDS.has(t.cpKind) && t.key !== null && !isCashLike(t);
+export const isMerchantTx = (t: Tx): boolean =>
+  isMerchantCounterparty({ counterparty_kind: t.cpKind, type: t.src.type }) && t.key !== null && !isCashLike(t);
 export const isPersonTx = (t: Tx): boolean => t.cpKind === 'person' && (t.key !== null || t.refMasked !== null);
 export const personKey = (t: Tx): string | null => t.key ?? (t.refMasked === null ? null : `ref:${t.refMasked}`);
 

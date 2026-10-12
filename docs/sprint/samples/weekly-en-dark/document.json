@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "report_id": "01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+  "report_id": "73cbf7e4-9a97-4d0e-99f7-a50eafb5cd96",
   "kind": "weekly",
   "locale": "en",
   "period_label": "5 to 11 October 2026",
@@ -110,10 +110,10 @@
       "type": "chart",
       "chart_id": "top_bars_merchants",
       "chart_type": "top_bars",
-      "title": "You paid Naivas the most: KSh 4,100",
+      "title": "You paid Naivas Kilimani the most: KSh 4,100",
       "takeaway": null,
       "data_ref": "/merchants",
-      "alt_text": "Bar chart of the places you paid most: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200."
+      "alt_text": "Bar chart of the places you paid most: Naivas Kilimani KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom KSh 200."
     },
     {
       "type": "chart",
@@ -294,7 +294,7 @@
       "title": "To watch next week",
       "items": [
         "Uber: about KSh 773 every week",
-        "Naivas: about KSh 1,460 every week",
+        "Naivas Kilimani: about KSh 1,460 every week",
         "Quickmart: about KSh 2,610 every week"
       ]
     },
@@ -309,7 +309,7 @@
     }
   ],
   "whatsapp": {
-    "caption": "*Your week in money*\n5 to 11 October 2026\n\nSpent: *KSh 9,515*\nYou spent less than last week (KSh -23,375, -71%).\n\n• Spending fell to KSh 9,515, from KSh 32,890\n• Supermarket was your biggest spend at KSh 6,920\n• Your largest payment was KSh 2,820 to Quickmart\n\nFull report: https://hesabu.example/r/01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+    "caption": "*Your week in money*\n5 to 11 October 2026\n\nSpent: *KSh 9,515*\nYou spent less than last week (KSh -23,375, -71%).\n\n• Spending fell to KSh 9,515, from KSh 32,890\n• Supermarket was your biggest spend at KSh 6,920\n• Your largest payment was KSh 2,820 to Quickmart\n\nFull report: https://hesabu.example/r/73cbf7e4-9a97-4d0e-99f7-a50eafb5cd96",
     "hero_chart_ids": [
       "donut"
     ]

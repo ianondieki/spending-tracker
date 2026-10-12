@@ -22,6 +22,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@hesabu/taxonomy": "workspace:*",
     "zod": "^4.6.6"
   },
   "devDependencies": {

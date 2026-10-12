@@ -4,9 +4,22 @@
  */
 import type { Counterparty, CounterpartyKind, Transaction } from '../contracts/transaction.js';
 import { isoDate, localHour, toLocalDate, type LocalDate } from '../period.js';
-import { classify, cleanName, displayName, isIgnored, nameKey, type TxClass } from './classify.js';
+import { normaliseMerchantName, titleCase } from '@hesabu/taxonomy';
+
+import { classify, cleanName, isIgnored, nameKey, type TxClass } from './classify.js';
 
 export type NameOf = (counterparty: Counterparty) => string | null;
+
+/**
+ * The name a report shows for a counterparty: merchants through the taxonomy (seed match by pay bill, till or alias,
+ * else title case with legal suffixes dropped); people title-cased ("JANE WANJIKU" → "Jane Wanjiku"); null when empty.
+ */
+export function defaultDisplayName(cp: Counterparty): string | null {
+  const raw = cleanName(cp.name);
+  if (raw === null) return null;
+  if (cp.kind === 'person' || cp.kind === 'self') return /[a-z]/.test(raw) ? raw : titleCase(raw);
+  return cleanName(normaliseMerchantName(raw, { paybill: cp.paybill ?? null, till: cp.till ?? null }));
+}
 
 export const UNCATEGORISED = 'uncategorised';
 
@@ -61,7 +74,7 @@ export function prepare(transactions: readonly Transaction[], endMs: number, nam
     const local = toLocalDate(ms);
     const feeTotal = fee + (t.type === 'FEE' ? amount : 0);
     if (!Number.isSafeInteger(feeTotal)) throw new TypeError(`computeFacts: transaction ${t.id} fee overflows`);
-    const name = cleanName(nameOf?.(t.counterparty)) ?? displayName(t.counterparty.name);
+    const name = cleanName(nameOf?.(t.counterparty)) ?? defaultDisplayName(t.counterparty);
     out.push({
       src: t,
       id: t.id,

@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "report_id": "5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+  "report_id": "5aecdb5b-8e00-4345-b2a7-7d4eaf6cd2ed",
   "kind": "monthly",
   "locale": "en",
   "period_label": "September 2026",
@@ -113,7 +113,7 @@
       "title": "You paid Makao Properties the most: KSh 18,000",
       "takeaway": null,
       "data_ref": "/merchants",
-      "alt_text": "Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900."
+      "alt_text": "Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas Kilimani KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; KPLC Prepaid KSh 3,000; Netflix KSh 1,100; Safaricom KSh 900; Monthly Ledger Fee KSh 120."
     },
     {
       "type": "chart",
@@ -324,7 +324,7 @@
         {
           "insight_id": "income_received",
           "headline": "KSh 86,500 came in",
-          "body": "Payments received: 2. The largest source was Acme Logistics Salary.",
+          "body": "Payments received: 2. The largest source was Acme Logistics Ltd Salary.",
           "drilldown": {
             "kind": "transactions",
             "filter": {
@@ -434,7 +434,7 @@
       "type": "watch",
       "title": "To watch next month",
       "items": [
-        "Naivas: about KSh 2,015 every week",
+        "Naivas Kilimani: about KSh 2,015 every week",
         "Uber: about KSh 738 every week",
         "Quickmart: about KSh 2,550 every week"
       ]
@@ -450,7 +450,7 @@
     }
   ],
   "whatsapp": {
-    "caption": "*Your month in money*\nSeptember 2026\n\nSpent: *KSh 62,890*\nYou spent 161% more than last month (KSh +38,755).\n\n• Spending rose to KSh 62,890, from KSh 24,135\n• You used KSh 1,599 of Fuliza\n• Supermarket went up to KSh 25,180\n\nFull report: https://hesabu.example/r/5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+    "caption": "*Your month in money*\nSeptember 2026\n\nSpent: *KSh 62,890*\nYou spent 161% more than last month (KSh +38,755).\n\n• Spending rose to KSh 62,890, from KSh 24,135\n• You used KSh 1,599 of Fuliza\n• Supermarket went up to KSh 25,180\n\nFull report: https://hesabu.example/r/5aecdb5b-8e00-4345-b2a7-7d4eaf6cd2ed",
     "hero_chart_ids": [
       "donut"
     ]

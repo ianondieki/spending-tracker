@@ -67,17 +67,19 @@ skipped locally and fail in CI.
 ## Package 3 (orchestrator review of the samples)
 
 - **Names.** Every name a report shows (merchants, people, largest, recurring, anomalies, insight params, and so
-  `display_strings`) now comes from one place: `FactsInput.merchantName` when the caller supplies it, else the
-  engine's `displayName` normaliser (title case, LTD/LIMITED/PLC dropped, acronyms such as KPLC and DSTV kept,
-  "M-PESA" → "M-Pesa"). The worker supplies `merchantDisplayName`: the taxonomy's canonical merchant name when a seed
-  matches by pay bill, till or alias (Naivas, Quickmart, Kenya Power (prepaid tokens), Netflix), then
-  `normaliseMerchantName` from `@hesabu/taxonomy` when that export exists (Lane D is adding it; picked up at runtime
-  with no code change), else the engine's own. Drill-down filters by merchant carry the display name, so the app
-  must apply the same canonicalisation when it filters (noted for Lane A).
-- **Cash is not a merchant.** Agent withdrawals (type WITHDRAW/ATM or counterparty kind agent) never appear in
-  `merchants`, `largest`, `recurring`, `top_merchant` or the `biggest_transaction` insight; they stay in
-  `totals.cash_withdrawn` and the `cash_withdrawn` insight ("You withdrew KSh 8,500 in cash"). Transfers were already
-  excluded from spending; people (kind person) go to `people`, never `merchants`.
+  `display_strings`) comes from one place in `packages/analytics/src/facts/prepare.ts`: `FactsInput.merchantName`
+  when the caller supplies an override, else `@hesabu/taxonomy`'s `normaliseMerchantName(raw, { paybill, till })`
+  for merchants (seed match by pay bill, till or alias first: Naivas, Quickmart, KPLC Prepaid, Netflix, Safaricom
+  Home Fibre; else title case with legal and branch suffixes dropped and acronyms kept) and the taxonomy's
+  `titleCase` for people ("JANE WANJIKU" → "Jane Wanjiku"). Analytics now depends on `@hesabu/taxonomy` (pure data
+  and functions; no cycle). Drill-down filters by merchant carry the display name, so the app must apply the same
+  canonicalisation when it filters (noted for Lane A).
+- **Cash is not a merchant.** The taxonomy's `isMerchantCounterparty` decides what belongs in a merchant list
+  (merchant, pay bill, till and unknown kinds; never agent, person, bank or self; never WITHDRAW/DEPOSIT/ATM).
+  Cash-like rows (those types or an agent counterparty) also never appear in `largest`, `recurring`,
+  `top_merchant` or the `biggest_transaction` insight; they stay in `totals.cash_withdrawn` and the
+  `cash_withdrawn` insight ("You withdrew KSh 8,500 in cash"). Transfers were already excluded from spending; people
+  (kind person) go to `people`, never `merchants`.
 - **Totals semantics, confirmed.** `totals.out` excludes transfers (`is_transfer` or transfer types), savings
   (M-Shwari deposits), loan repayments and fee-only rows. `totals.fees` is separate: fee_cents on every row plus
   FEE-type rows; it is **not** inside `totals.out`. The hero "Total spent" is `totals.out`; fees appear in the KPI

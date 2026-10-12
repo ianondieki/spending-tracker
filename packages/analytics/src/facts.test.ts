@@ -161,7 +161,7 @@ describe('computeFacts on the weekly sample', () => {
 
   it('finds recurring payments and subscriptions across the window', () => {
     expect(sheet.recurring.map((r) => [r.merchant, r.cadence, cents(r.typical_amount) / 100, r.next_expected, r.confidence, r.is_subscription])).toEqual([
-      ['Safaricom Home', 'monthly', 2_999, '2026-10-01T09:10:00+03:00', 1, true],
+      ['Safaricom Home Fibre', 'monthly', 2_999, '2026-10-01T09:10:00+03:00', 1, true],
       ['Netflix', 'monthly', 1_100, '2026-10-05T20:00:00+03:00', 1, true],
       // 450, 500, 480 are within 20% of the median 490 (the 2,100 is not); gaps 8 and 1 days: irregular.
       ['Java House', 'irregular', 480, null, 0, false],
@@ -188,7 +188,7 @@ describe('computeFacts on the weekly sample', () => {
 
   it('groups income by source and kind', () => {
     expect(sheet.income.map((i) => [i.source, i.kind, cents(i.in) / 100, i.count.value])).toEqual([
-      ['Acme Salary', 'salary', 85_000, 1],
+      ['Acme Ltd Salary', 'salary', 85_000, 1],
       ['Jane Wanjiku', 'person', 700, 1],
     ]);
   });
@@ -233,7 +233,7 @@ describe('computeFacts on the weekly sample', () => {
       'info spendiest_day:2026-09-23',
       'info weekend_share',
       'info late_night_spend',
-      'info subscription_due:Safaricom Home', // due 1 October, inside 28 September to 4 October; Netflix (5 October) is not
+      'info subscription_due:Safaricom Home Fibre', // due 1 October, inside 28 September to 4 October; Netflix (5 October) is not
       'info category_falling:transport',
       'info category_falling:food_groceries',
       'info late_arrivals',
@@ -258,7 +258,7 @@ describe('computeFacts on the weekly sample', () => {
     expect(insight(sheet, 'fuliza_usage').params).toEqual({ drawdown: 'KSh 500', repaid: 'KSh 505', cost: 'KSh 5', days: '2' });
     expect(insight(sheet, 'cash_withdrawn').params).toEqual({ amount: 'KSh 3,000', count: '1' });
     expect(insight(sheet, 'savings_rate').params).toEqual({ rate: '2%', savings: 'KSh 2,000', income: 'KSh 85,700' });
-    expect(insight(sheet, 'income_received').params).toEqual({ income: 'KSh 85,700', count: '2', top_source: 'Acme Salary' });
+    expect(insight(sheet, 'income_received').params).toEqual({ income: 'KSh 85,700', count: '2', top_source: 'Acme Ltd Salary' });
     expect(insight(sheet, 'sent_to_people').params).toEqual({ total: 'KSh 2,800', count: '2', top_person: 'Jane Wanjiku', top_amount: 'KSh 2,000' });
     expect(insight(sheet, 'spendiest_day:2026-09-23').params).toEqual({ weekday_en: 'Wednesday', weekday_sw: 'Jumatano', date: '2026-09-23', out: 'KSh 4,300' });
     expect(insight(sheet, 'weekend_share').params).toEqual({ share: '23%', weekend_out: 'KSh 3,800', weekday_out: 'KSh 13,000' });
@@ -271,7 +271,7 @@ describe('computeFacts on the weekly sample', () => {
       category_id: 'eating_out', category_en: 'Eating out & drinks', category_sw: 'Kula nje na vinywaji',
       spent: 'KSh 2,750', limit: 'KSh 2,500', used: '110%',
     });
-    expect(insight(sheet, 'subscription_due:Safaricom Home').params).toEqual({ merchant: 'Safaricom Home', amount: 'KSh 2,999', next_expected: '2026-10-01' });
+    expect(insight(sheet, 'subscription_due:Safaricom Home Fibre').params).toEqual({ merchant: 'Safaricom Home Fibre', amount: 'KSh 2,999', next_expected: '2026-10-01' });
     expect(insight(sheet, 'category_rising:eating_out').params).toMatchObject({ out: 'KSh 2,750', delta: 'KSh +1,770', delta_pct: '181%' });
     expect(insight(sheet, 'category_falling:transport').params).toMatchObject({ out: 'KSh 0', delta: 'KSh -1,200', delta_pct: '-100%' });
     expect(insight(sheet, 'personal_record:out').params).toEqual({ metric: 'out', value: 'KSh 16,800', previous_record: 'KSh 15,000' });

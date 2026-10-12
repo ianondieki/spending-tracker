@@ -30,7 +30,7 @@ More came in than went out: net KSh 23,191
 Bars comparing money in and out. This period: in KSh 86,500, out KSh 62,890. Period before: in KSh 85,000, out KSh 24,135.
 
 You paid Makao Properties the most: KSh 18,000
-Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900.
+Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas Kilimani KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; KPLC Prepaid KSh 3,000; Netflix KSh 1,100; Safaricom KSh 900; Monthly Ledger Fee KSh 120.
 
 Spending this month: KSh 62,890, against recent months
 Line chart of money in, money out and net by month, from Apr 2026 to Sep 2026. This month: in KSh 86,500, out KSh 62,890, net KSh 23,191.
@@ -70,7 +70,7 @@ What stood out
 - You set aside 6% of your income
   KSh 5,000 went to savings out of KSh 86,500 that came in.
 - KSh 86,500 came in
-  Payments received: 2. The largest source was Acme Logistics Salary.
+  Payments received: 2. The largest source was Acme Logistics Ltd Salary.
 - You sent KSh 3,000 to people
   Transfers to people: 1. The most went to Jane Wanjiru: KSh 3,000.
 
@@ -90,7 +90,7 @@ Total  |  KSh 62,890  |    |  KSh +38,755
 
 To watch next month
 -------------------
-1. Naivas: about KSh 2,015 every week
+1. Naivas Kilimani: about KSh 2,015 every week
 2. Uber: about KSh 738 every week
 3. Quickmart: about KSh 2,550 every week
 
@@ -98,4 +98,4 @@ Every number here is computed from your transaction messages on your phone. Noth
 Accounts covered: Demo Bank, M-Pesa
 Messages Hesabu could not read: Messages not yet understood: 0
 
-Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWQ3MTVhZS01MGRjLTRmY2MtYmRjNi05NzdjYmM5MGFjMDAiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiMTR1NFhMVWEifQ.A9-O8eriduszuW1x7WDSLw-HjwDdZbRzU6AeAa7hzQs
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiaG5UeTV0YUgifQ.j12TmWUNt8RyrFrj-gGGc8uFFTO23S-ZKVwJPqiGtm0

@@ -29,8 +29,8 @@ Chati ya nguzo ya matumizi kwa siku. Siku ya juu zaidi: Jumamosi 2026-10-10, KSh
 Pesa iliyotoka ilizidi iliyoingia: tofauti ni KSh -9,544
 Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 0, matumizi KSh 9,515. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 32,890.
 
-Ulilipa Naivas zaidi: KSh 4,100
-Chati ya nguzo ya maeneo uliyolipa zaidi: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200.
+Ulilipa Naivas Kilimani zaidi: KSh 4,100
+Chati ya nguzo ya maeneo uliyolipa zaidi: Naivas Kilimani KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom KSh 200.
 
 food groceries imetumia 0% ya bajeti yake
 Nguzo za bajeti: food groceries KSh 0 kati ya KSh 6,000, inaelekea KSh 0.
@@ -68,11 +68,11 @@ Jumla  |  KSh 9,515  |    |  KSh -23,375
 Ya kuangalia wiki ijayo
 -----------------------
 1. Uber: takriban KSh 773 kila wiki
-2. Naivas: takriban KSh 1,460 kila wiki
+2. Naivas Kilimani: takriban KSh 1,460 kila wiki
 3. Quickmart: takriban KSh 2,610 kila wiki
 
 Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna kilichokisiwa.
 Akaunti zilizojumuishwa: Demo Bank, M-Pesa
 Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
 
-Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiIwMWRkMGZjOC0yY2ExLTRhNjQtYmIyMy0yYTc5MGRmZjY0ZGIiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoibjlzYzYtdmYifQ.HHhV-ZQCZDd31eAFegPPISzw-yphvYPCDynoykdZcsA
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoicVhPaUp3NVMifQ.5cOwqWZ_7nKASVri-9jRwbCAA3yP2gCUKC6GBxx_YdM

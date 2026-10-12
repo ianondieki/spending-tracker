@@ -182,7 +182,7 @@
         "value": 3,
         "display": "3"
       },
-      "top_merchant": "Naivas",
+      "top_merchant": "Naivas Kilimani",
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -290,7 +290,7 @@
         "value": 2,
         "display": "2"
       },
-      "top_merchant": "Safaricom airtime & bundles",
+      "top_merchant": "Safaricom",
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -304,7 +304,7 @@
   ],
   "merchants": [
     {
-      "name": "Naivas",
+      "name": "Naivas Kilimani",
       "category_id": "food_groceries.supermarket",
       "out": {
         "cents": 410000,
@@ -320,7 +320,7 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "Naivas"
+          "merchant": "Naivas Kilimani"
         }
       }
     },
@@ -367,7 +367,7 @@
       }
     },
     {
-      "name": "Safaricom airtime & bundles",
+      "name": "Safaricom",
       "category_id": "airtime_bundles",
       "out": {
         "cents": 20000,
@@ -383,7 +383,7 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "Safaricom airtime & bundles"
+          "merchant": "Safaricom"
         }
       }
     }
@@ -689,7 +689,7 @@
         "display": "KSh 2,620"
       },
       "direction": "out",
-      "counterparty": "Naivas",
+      "counterparty": "Naivas Kilimani",
       "category_id": "food_groceries.supermarket",
       "type": "BUY_GOODS"
     },
@@ -701,7 +701,7 @@
         "display": "KSh 1,480"
       },
       "direction": "out",
-      "counterparty": "Naivas",
+      "counterparty": "Naivas Kilimani",
       "category_id": "food_groceries.supermarket",
       "type": "BUY_GOODS"
     },
@@ -725,7 +725,7 @@
         "display": "KSh 100"
       },
       "direction": "out",
-      "counterparty": "Safaricom airtime & bundles",
+      "counterparty": "Safaricom",
       "category_id": "airtime_bundles",
       "type": "AIRTIME"
     }
@@ -762,7 +762,7 @@
       }
     },
     {
-      "merchant": "Naivas",
+      "merchant": "Naivas Kilimani",
       "category_id": "food_groceries.supermarket",
       "cadence": "weekly",
       "typical_amount": {
@@ -776,7 +776,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "Naivas",
+          "merchant": "Naivas Kilimani",
           "transaction_ids": [
             "bee14aa8-35f6-44c9-9785-79d9f309590b",
             "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
@@ -818,7 +818,7 @@
       }
     },
     {
-      "merchant": "Safaricom airtime & bundles",
+      "merchant": "Safaricom",
       "category_id": "airtime_bundles",
       "cadence": "irregular",
       "typical_amount": {
@@ -832,7 +832,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "Safaricom airtime & bundles",
+          "merchant": "Safaricom",
           "transaction_ids": [
             "d2e8b9af-b637-4310-9017-caa62a24424e",
             "a130022f-8f0c-4b2d-920f-eaf059593016",
@@ -855,7 +855,7 @@
       }
     },
     {
-      "merchant": "Kenya Power (prepaid tokens)",
+      "merchant": "KPLC Prepaid",
       "category_id": "utilities.electricity",
       "cadence": "irregular",
       "typical_amount": {
@@ -869,7 +869,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "Kenya Power (prepaid tokens)",
+          "merchant": "KPLC Prepaid",
           "transaction_ids": [
             "ebcc1603-c03f-48fc-9e17-758ce72c1b6d",
             "3d0aa74b-b680-4e50-8ce1-79b5dbacde0c",
@@ -1116,18 +1116,18 @@
       }
     },
     {
-      "id": "recurring_found:Naivas",
+      "id": "recurring_found:Naivas Kilimani",
       "kind": "recurring_found",
       "severity": "info",
       "params": {
-        "merchant": "Naivas",
+        "merchant": "Naivas Kilimani",
         "amount": "KSh 1,460",
         "cadence": "weekly"
       },
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "Naivas",
+          "merchant": "Naivas Kilimani",
           "transaction_ids": [
             "bee14aa8-35f6-44c9-9785-79d9f309590b",
             "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
@@ -1297,7 +1297,7 @@
     "2026-10-10",
     "Uber",
     "weekly",
-    "Naivas",
+    "Naivas Kilimani",
     "housing_rent.rent",
     "Rent",
     "Kodi ya nyumba",
