@@ -29,7 +29,6 @@ import androidx.core.content.ContextCompat
 import ke.hesabu.app.R
 import ke.hesabu.app.ui.components.DoubleRule
 import ke.hesabu.app.ui.components.HesabuScreen
-import ke.hesabu.app.ui.components.KeyValue
 import ke.hesabu.app.ui.components.LedgerRow
 import ke.hesabu.app.ui.components.PrimaryButton
 import ke.hesabu.app.ui.components.QuietButton
@@ -71,7 +70,7 @@ fun DisclosureScreen(senders: List<String>, onAllow: () -> Unit, onNotNow: () ->
             if (senders.isNotEmpty()) {
                 Text(
                     senders.joinToString(", "),
-                    style = MaterialTheme.typography.bodyMedium.tabular(),
+                    style = MaterialTheme.typography.bodyMedium,
                     color = HesabuTheme.colors.inkSoft,
                     modifier = Modifier.padding(top = 8.dp),
                 )
@@ -184,8 +183,8 @@ fun OemGuidanceScreen(oem: OemGuidance.Oem, onOpenSettings: () -> Unit, onDone: 
                 if (i < steps.size - 1) Rule()
             }
         }
-        Sheet {
-            KeyValue(stringResource(R.string.oem_why_label), stringResource(R.string.oem_why_value))
+        Sheet(title = stringResource(R.string.oem_why_label)) {
+            Text(stringResource(R.string.oem_why_value), style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.ink)
         }
         PrimaryButton(stringResource(R.string.oem_open_settings), onOpenSettings, Modifier.fillMaxWidth())
         SecondaryButton(stringResource(R.string.action_done), onDone, Modifier.fillMaxWidth())
