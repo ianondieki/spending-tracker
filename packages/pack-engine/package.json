@@ -19,6 +19,14 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "cli": "node dist/cli.js",
+    "corpus": "node dist/cli.js run --corpus ../../corpus/mpesa/unverified-public-samples.jsonl"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0"
+  },
+  "bin": {
+    "pack-engine": "./dist/cli.js"
   }
 }
