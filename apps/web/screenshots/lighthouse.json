@@ -1,20 +1,46 @@
 [
   {
     "fixture": "weekly-en",
-    "performance": 98,
+    "performance": 91,
     "accessibility": 100,
     "bestPractices": 96,
-    "lcpMs": 2236,
-    "tbtMs": 115,
-    "cls": 0
+    "lcpMs": 2525,
+    "tbtMs": 290,
+    "cls": 0,
+    "jsTransferKb": 103,
+    "totalKb": 216
+  },
+  {
+    "fixture": "weekly-sw",
+    "performance": 96,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "lcpMs": 2330,
+    "tbtMs": 151,
+    "cls": 0,
+    "jsTransferKb": 103,
+    "totalKb": 215
   },
   {
     "fixture": "monthly-en",
     "performance": 98,
     "accessibility": 100,
-    "bestPractices": 100,
-    "lcpMs": 2228,
-    "tbtMs": 87,
-    "cls": 0
+    "bestPractices": 96,
+    "lcpMs": 2192,
+    "tbtMs": 75,
+    "cls": 0,
+    "jsTransferKb": 103,
+    "totalKb": 264
+  },
+  {
+    "fixture": "monthly-sw",
+    "performance": 97,
+    "accessibility": 100,
+    "bestPractices": 96,
+    "lcpMs": 2467,
+    "tbtMs": 89,
+    "cls": 0,
+    "jsTransferKb": 103,
+    "totalKb": 266
   }
 ]

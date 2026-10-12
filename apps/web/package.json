@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "clean": "rm -rf .next",
     "screenshots": "HESABU_DEV_ROUTES=1 node scripts/screenshots.mjs",
-    "lighthouse": "HESABU_DEV_ROUTES=1 node scripts/lighthouse.mjs"
+    "lighthouse": "HESABU_DEV_ROUTES=1 node scripts/lighthouse.mjs",
+    "showcase": "HESABU_DEV_ROUTES=1 node scripts/showcase.mjs"
   },
   "dependencies": {
     "@hesabu/charts": "workspace:*",
