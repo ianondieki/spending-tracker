@@ -48,25 +48,51 @@ ANDROID_HOME=/opt/android-sdk && ./gradlew assembleDebug testDebugUnitTest lint 
    note, parser provenance), Teach Hesabu (unknown bodies decrypted on device, one-tap money out/in/transfer/fee with
    suggested amount, or "Not money"), Accounts (balance as of, month in/out/fees, last message), Settings (server,
    email, WhatsApp, weekly/monthly times, language en/sw applied live, theme, SMS consent review, AI consent off by
-   default, demo mode, paste import, re-scan inbox, OEM help, pack versions), Reports: see below.
+   default, demo mode, paste import, re-scan inbox, OEM help, pack versions, your M-PESA number stored masked).
+   Reports (built by a sub-agent in its own worktree, reviewed and merged): list from `GET /v1/reports` grouped
+   weekly/monthly with status and delivery state, a "Generate this week's report" action, and a native
+   `ReportDocument` renderer for every section type (hero as the Tally, KPI grid, charts, insights, tables with
+   right-aligned figures and a double-ruled total row, lists, callouts, watch list, footer). Compose charts under
+   `ui/charts/`: donut, daily bars with average line, top bars, fee meter, balance sparkline, each with a "Show as
+   table" view and a TalkBack description carrying the key numbers; the other chart types fall back to their alt
+   text. Share image / share PDF download the artefact URLs into the app cache (15 MB cap, token sent only to the
+   configured host) and open the Android share sheet through a FileProvider. Offline or in demo mode the bundled
+   sample report (`assets/demo-builtin/sample-report.json`, validated against both schemas, every figure computed)
+   is shown.
 7. **Demo mode.** Settings toggle; `assets/demo/demo-inbox.jsonl` (from `corpus/demo` when merged) or the built-in
    29-message sample through the real pipeline, rows tagged `demo` and removed exactly when toggled off.
 8. **Screenshots.** `ScreenshotTest` (Roborazzi) records every screen at 360×800 and 412×915, light and dark, into
-   `android/screenshots/` on every unit-test run (48 PNGs committed).
+   `android/screenshots/` on every unit-test run (56 PNGs committed, reports included). Reviewing them caught and
+   fixed: tabular figures widening the thousands comma, a tally row never reaching full opacity, KPI truncation at
+   360 dp, a clipped 56 sp hero amount, a squeezed label on the OEM screen.
 9. **Import paths.** `ShareReceiverActivity` (ACTION_SEND text/plain) and the paste screen run `TextImport`: each block
    is tried against every pack to find its sender; what no pack claims goes to Teach Hesabu under the sender `shared`.
 
 ## Tests
 
-`./gradlew testDebugUnitTest`: see the count in the final log line of `docs/sprint/LOG.md`. Suites: Money format and
+`./gradlew assembleDebug testDebugUnitTest lint`: 276 unit tests green, lint with no errors, debug APK built. Suites: Money format and
 parsing, design-token parity, ledger components (Compose/Robolectric), portable regex, normalisers, pack engine,
 post-processing, pack examples (parameterised), corpus coverage, categoriser and taxonomy reader, body cipher,
 ingest pipeline (in-memory Room), text import, demo inbox, periods, screen smoke tests, screenshots, sync protocol
-(Ktor mock engine). Lint: no errors. CI never reaches a network: the sync tests use `MockEngine`.
+(Ktor mock engine), report charts and sections, sample report validation, JSON pointer and chart mappers,
+cross-engine parity. CI never reaches a network: the sync tests use `MockEngine`, reports use the bundled sample.
+
+## Cross-engine parity
+
+`ParityTest` runs `corpus/mpesa`, `corpus/airtel-money` and `corpus/demo/demo-inbox.jsonl` through the Kotlin engine
+with the variables from `corpus/expected/README.md` and asserts the canonical JSONL equals the TypeScript engine's
+committed dumps byte for byte. All three match. When Lane D regenerates `corpus/expected/`, this test is the first
+thing to run.
 
 ## Known gaps and where to resume
 
 - Kiswahili copy is machine-drafted and tagged `[[COPY-REVIEW]]`; category names in Kiswahili likewise.
+- Share image / PDF is unit-tested for URL handling only; the sample report has no artefact URLs, so the download
+  path needs a server to exercise end to end.
+- The six-step categorical chart ramp from the design tokens fails the dataviz palette validator (grey steps too
+  close); the charts compensate with direct labels, slice gaps and the table view. A design decision for the
+  orchestrator.
+- The Welcome and Disclosure screens do not yet ask for the M-PESA number; it lives in Settings.
 - The built-in pack is English-only; Airtel Money, T-Kash and bank packs come from Lane D (`contracts/provider-packs/`).
   `CorpusCoverageTest` will show exactly what the merged packs miss.
 - The M-PESA number is a Settings field stored masked; messages read before it is set stay filed under
