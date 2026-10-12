@@ -48,6 +48,14 @@ Recorded in `docs/sprint/CONTRACT-REQUESTS.md` as clarifications, not changes:
 9. **Datetime formats** support single-quoted literals (`'at'`, `'saa'`); a space matches any whitespace run;
    matching is case-insensitive. Seconds are not a token: capture the group without them.
 
+Each clarification has a test in `src/engine.test.ts`, `src/normalise.test.ts` or `src/postprocess.test.ts`.
+
+## Cross-engine parity dumps
+
+`pnpm --filter @hesabu/pack-engine dump` runs every pack over every corpus file and the demo inbox and writes canonical
+JSONL to `corpus/expected/` (format and inputs: `corpus/expected/README.md`). `src/dump.test.ts` fails when the
+committed dumps drift; the Kotlin engine asserts it produces identical files.
+
 ## CLI
 
 ```sh
@@ -55,6 +63,8 @@ pnpm --filter @hesabu/pack-engine build
 node packages/pack-engine/dist/cli.js validate                       # every pack in contracts/provider-packs
 node packages/pack-engine/dist/cli.js examples [--pack file]          # examples are the tests
 node packages/pack-engine/dist/cli.js run --corpus corpus/mpesa/unverified-public-samples.jsonl [--pack file] [--json]
+pnpm --filter @hesabu/pack-engine dump                                # rewrite corpus/expected/
+pnpm --filter @hesabu/pack-engine demo:write                          # rewrite corpus/demo/
 ```
 
 `run` prints per-family counts, duplicates, transfer pairs, balance-chain breaks and every unknown body; exit code 1

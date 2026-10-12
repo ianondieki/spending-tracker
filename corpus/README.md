@@ -68,6 +68,8 @@ corpus/
     unverified-public-samples.jsonl    ← bodies copied from public web pages (see §5)
     MISSING-FAMILIES.md                ← families with no real sample yet
   airtel-money/   tkash/   banks/<bank>/   wallets/<name>/   other/<sender>/
+  demo/                              ← synthetic demo inbox (not real messages), see demo/README.md
+  expected/                          ← engine parity dumps, generated, see expected/README.md
 ```
 
 `<provider>` comes from the senders file (`mpesa`, `airtel-money`, `tkash`, `banks/equity`,

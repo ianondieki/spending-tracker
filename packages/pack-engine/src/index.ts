@@ -68,3 +68,13 @@ export {
   type UnknownMessage,
 } from './corpus.js';
 export { runExamples, type ExampleFailure, flattenForExpect } from './examples.js';
+export {
+  dumpAll,
+  dumpFile,
+  dumpTargets,
+  writeDumps,
+  canonicalJson,
+  EXPECTED_DIR,
+  DUMP_VARIABLES,
+  type DumpTarget,
+} from './dump.js';

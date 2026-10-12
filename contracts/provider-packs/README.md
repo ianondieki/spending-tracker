@@ -6,7 +6,7 @@ executed by `packages/pack-engine` (TypeScript, tests and CLI) and the Kotlin en
 
 | Pack | Sender IDs | Families | Status |
 |---|---|---|---|
-| `mpesa.json` | `MPESA` (seen in public fixtures), `M-PESA` (unverified alias) | 26: send (en, sw), receive (person, no number, Ziidi), pay bill, buy goods, withdraw, deposit, airtime (own, other), Fuliza drawdown and repayment, M-Shwari in and out, KCB M-PESA to M-PESA, bank to M-PESA, M-PESA to bank, GlobalPay card, Pochi (inferred), reversal credit and debit; ignore: Jumbe split notification, balance query, failed (2) | every example `verified: false`: bodies come from `corpus/mpesa/unverified-public-samples.jsonl` (public parser repos), none from a real export yet |
+| `mpesa.json` | `MPESA` (seen in public fixtures), `M-PESA` (unverified alias) | 28: send (en, sw), receive (person, no number, Ziidi), pay bill, buy goods, withdraw, deposit, airtime (own, other, sw), Fuliza drawdown and repayment, M-Shwari in and out, KCB M-PESA to M-PESA, bank to M-PESA, M-PESA to bank, GlobalPay card, Pochi (inferred), reversal credit and debit; ignore: Jumbe split notification, balance query (en, sw), failed (2) | every example `verified: false`: bodies come from `corpus/mpesa/unverified-public-samples.jsonl` (public parser repos), none from a real export yet |
 | `airtel_money.json` | `AirtelMoney` (one public demo fixture) | 1: bundle purchase (confidence 0.6) | the only plausible capture found; every other Airtel Money family is missing (`corpus/airtel-money/MISSING-FAMILIES.md`) |
 | `demo_bank.json` | `HESABUDEMO` | 3: credit, debit to M-PESA, other debit | **synthetic, demo only**: a fictional bank for `corpus/demo/`, because no real bank alert exists in the corpus. Load only in demo mode. See `docs/DECISIONS-NEEDED.md`. |
 
@@ -22,5 +22,7 @@ the user's redacted export (`source: sms-backup-xml`) may flip to `verified: tru
   "the first Ksh".
 - Only the portable regex subset (named groups, `(?:…)`, classes, `\d \s \w`, `? * + {m,n}`, `^ $`, the dot, escaped
   punctuation). The engine rejects anything else at load time, so does CI.
+- Group names are camelCase `[a-z][a-zA-Z0-9]*` (Java rejects underscores). `pnpm --filter @hesabu/pack-engine dump`
+  regenerates `corpus/expected/` after any change; the Kotlin engine asserts against those files.
 - Bump `version` (semver) on every change; the app records it on each transaction so a fixed pack can re-run.
 - Never edit `corpus/` fixtures to make a pattern pass.
