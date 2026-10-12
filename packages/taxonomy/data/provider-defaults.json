@@ -1,0 +1,265 @@
+{
+  "$comment": "Provider-type defaults (master prompt §7, step 3 of the resolution order: user rule → merchant table → provider default → model → Uncategorised). Rules are evaluated in order; the first rule whose conditions all match wins. A condition that is omitted matches anything. type is a TxType from contracts/transaction.schema.json; direction is in|out|none; counterparty_kind and provider are lists. category_id null means 'no default: the transaction needs the merchant table or the model' (PAYBILL, BUY_GOODS, DEBIT, CARD_PURCHASE…) or 'nothing to categorise' (BALANCE_QUERY, FAILED). Every TxType in the contract must appear at least once; the test enforces it.",
+  "version": 1,
+  "rules": [
+    {
+      "id": "send_money.self",
+      "type": "SEND_MONEY",
+      "counterparty_kind": ["self"],
+      "category_id": "transfers.own_accounts",
+      "confidence": 0.9,
+      "note": "Send Money to one of the user's own numbers is a transfer."
+    },
+    {
+      "id": "send_money.person",
+      "type": "SEND_MONEY",
+      "counterparty_kind": ["person"],
+      "category_id": "family_friends.sent_to_people",
+      "confidence": 0.75,
+      "note": "Sent to a person; per-person totals come from enrichment."
+    },
+    {
+      "id": "send_money.default",
+      "type": "SEND_MONEY",
+      "category_id": "family_friends.sent_to_people",
+      "confidence": 0.55,
+      "note": "Send Money without a known counterparty kind is most often to a person."
+    },
+
+    {
+      "id": "receive_money.self",
+      "type": "RECEIVE_MONEY",
+      "counterparty_kind": ["self"],
+      "category_id": "transfers.own_accounts",
+      "confidence": 0.9
+    },
+    {
+      "id": "receive_money.person",
+      "type": "RECEIVE_MONEY",
+      "counterparty_kind": ["person"],
+      "category_id": "income.from_people",
+      "confidence": 0.8
+    },
+    {
+      "id": "receive_money.default",
+      "type": "RECEIVE_MONEY",
+      "category_id": "income.from_people",
+      "confidence": 0.6
+    },
+
+    {
+      "id": "paybill.none",
+      "type": "PAYBILL",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Needs the merchant table (paybill number) or the model."
+    },
+    {
+      "id": "buy_goods.none",
+      "type": "BUY_GOODS",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Needs the merchant table (till number) or the model."
+    },
+    {
+      "id": "pochi.none",
+      "type": "POCHI",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Pochi la Biashara payments go to small traders; needs the merchant table or the model."
+    },
+
+    {
+      "id": "withdraw.agent",
+      "type": "WITHDRAW",
+      "category_id": "cash_withdrawals.agent",
+      "confidence": 0.95,
+      "note": "Cash is untracked; not spending."
+    },
+    { "id": "atm", "type": "ATM", "category_id": "cash_withdrawals.atm", "confidence": 0.95 },
+    {
+      "id": "deposit.cash",
+      "type": "DEPOSIT",
+      "category_id": "transfers.cash_deposit",
+      "confidence": 0.9,
+      "note": "Cash deposited at an agent is the user's own money, not income."
+    },
+
+    {
+      "id": "airtime",
+      "type": "AIRTIME",
+      "category_id": "airtime_bundles.airtime",
+      "confidence": 0.95
+    },
+
+    {
+      "id": "fuliza.drawdown",
+      "type": "FULIZA_DRAWDOWN",
+      "category_id": "loans_credit.fuliza",
+      "confidence": 0.95,
+      "note": "The drawdown itself; the fee is a FEE row."
+    },
+    {
+      "id": "fuliza.repay",
+      "type": "FULIZA_REPAY",
+      "category_id": "loans_credit.fuliza",
+      "confidence": 0.95
+    },
+    {
+      "id": "mshwari.deposit",
+      "type": "MSHWARI_DEPOSIT",
+      "category_id": "chama_savings.mshwari",
+      "confidence": 0.95,
+      "note": "Savings transfer, not spending."
+    },
+    {
+      "id": "mshwari.withdraw",
+      "type": "MSHWARI_WITHDRAW",
+      "category_id": "chama_savings.mshwari",
+      "confidence": 0.95
+    },
+    {
+      "id": "mshwari.loan",
+      "type": "MSHWARI_LOAN",
+      "category_id": "loans_credit.mshwari_loan",
+      "confidence": 0.95
+    },
+    {
+      "id": "mshwari.loan_repay",
+      "type": "MSHWARI_LOAN_REPAY",
+      "category_id": "loans_credit.mshwari_loan",
+      "confidence": 0.95
+    },
+    {
+      "id": "kcb_mpesa",
+      "type": "KCB_MPESA",
+      "category_id": "loans_credit.kcb_mpesa",
+      "confidence": 0.6,
+      "note": "KCB M-Pesa is both a savings target and a loan product; the type alone cannot tell them apart, so confidence is low and the model or a user rule may override."
+    },
+
+    {
+      "id": "bank_to_mpesa",
+      "type": "BANK_TO_MPESA",
+      "category_id": "transfers.bank_mpesa",
+      "confidence": 0.9
+    },
+    {
+      "id": "mpesa_to_bank",
+      "type": "MPESA_TO_BANK",
+      "category_id": "transfers.bank_mpesa",
+      "confidence": 0.9
+    },
+    {
+      "id": "internal_transfer",
+      "type": "INTERNAL_TRANSFER",
+      "category_id": "transfers.own_accounts",
+      "confidence": 0.9
+    },
+
+    {
+      "id": "global_send",
+      "type": "GLOBAL_SEND",
+      "category_id": "family_friends.sent_to_people",
+      "confidence": 0.5,
+      "note": "International send; usually to a person, sometimes a business."
+    },
+
+    {
+      "id": "reversal.in",
+      "type": "REVERSAL",
+      "direction": "in",
+      "category_id": "income.refunds_reversals",
+      "confidence": 0.9
+    },
+    {
+      "id": "reversal.out",
+      "type": "REVERSAL",
+      "direction": "out",
+      "category_id": null,
+      "confidence": 0,
+      "note": "A reversal that takes money back out inherits nothing; the paired transaction is what matters."
+    },
+    {
+      "id": "reversal.none",
+      "type": "REVERSAL",
+      "category_id": "income.refunds_reversals",
+      "confidence": 0.6,
+      "note": "Direction unknown; most reversals return money."
+    },
+
+    {
+      "id": "credit.person",
+      "type": "CREDIT",
+      "counterparty_kind": ["person"],
+      "category_id": "income.from_people",
+      "confidence": 0.7
+    },
+    {
+      "id": "credit.self",
+      "type": "CREDIT",
+      "counterparty_kind": ["self"],
+      "category_id": "transfers.own_accounts",
+      "confidence": 0.85
+    },
+    {
+      "id": "credit.default",
+      "type": "CREDIT",
+      "category_id": "income",
+      "confidence": 0.5,
+      "note": "Bank credit of unknown origin: income until the model or the user says otherwise."
+    },
+    {
+      "id": "debit.none",
+      "type": "DEBIT",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Bank debit; needs the merchant table or the model."
+    },
+    {
+      "id": "card_purchase.none",
+      "type": "CARD_PURCHASE",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Card purchase; needs the merchant table or the model."
+    },
+
+    {
+      "id": "fee",
+      "type": "FEE",
+      "category_id": "fees_charges.transaction",
+      "confidence": 0.95,
+      "note": "Fees are first-class."
+    },
+    {
+      "id": "loan_repay",
+      "type": "LOAN_REPAY",
+      "category_id": "loans_credit",
+      "confidence": 0.75,
+      "note": "Generic loan repayment; the merchant table refines to the lender."
+    },
+    {
+      "id": "standing_order.none",
+      "type": "STANDING_ORDER",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Could be rent, savings or a loan; needs the merchant table, the model or a user rule."
+    },
+
+    {
+      "id": "balance_query.none",
+      "type": "BALANCE_QUERY",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Not a money movement; nothing to categorise."
+    },
+    {
+      "id": "failed.none",
+      "type": "FAILED",
+      "category_id": null,
+      "confidence": 0,
+      "note": "Failed transaction; nothing to categorise."
+    },
+    { "id": "other.none", "type": "OTHER", "category_id": null, "confidence": 0 }
+  ]
+}

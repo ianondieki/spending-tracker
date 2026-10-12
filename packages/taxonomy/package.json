@@ -2,7 +2,7 @@
   "name": "@hesabu/taxonomy",
   "version": "0.0.0",
   "private": true,
-  "description": "Category taxonomy, merchant seeds and rules.",
+  "description": "Category taxonomy, merchant seeds and provider-type categorisation defaults (data in data/*.json).",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -12,7 +12,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "data"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
