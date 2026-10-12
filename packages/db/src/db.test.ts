@@ -60,11 +60,20 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     await db?.close();
   });
 
-  it('registers a device once and re-finds its user', async () => {
+  it('registers a device once and re-finds its user; stores only the id hash; revocation sticks', async () => {
     const again = await db.system.registerDevice({ device_id: 'dev-alice', platform: 'android', app_version: '1.1' });
     expect(again.user_id).toBe(alice);
     expect(again.created_user).toBe(false);
     expect(alice).not.toBe(bob);
+    const stored = await db.rawSql<{ device_id: string }[]>`SELECT device_id FROM devices WHERE user_id = ${alice}`;
+    expect(stored[0]?.device_id).toMatch(/^[a-f0-9]{64}$/);
+    expect(stored[0]?.device_id).not.toContain('dev-alice');
+    expect(await db.system.deviceIsActive(again.device_row_id, alice)).toBe(true);
+    expect(await db.system.deviceIsActive(again.device_row_id, bob)).toBe(false);
+    const extra = await db.system.registerDevice({ device_id: 'dev-alice-tablet', platform: 'android', app_version: '1.1' });
+    expect(await db.system.revokeDevice(extra.device_row_id)).toBe(true);
+    expect(await db.system.deviceIsActive(extra.device_row_id, extra.user_id)).toBe(false);
+    await expect(db.system.registerDevice({ device_id: 'dev-alice-tablet', platform: 'android', app_version: '1.1' })).rejects.toThrow(/revoked/);
   });
 
   it('stores and reads preferences per user', async () => {
@@ -198,6 +207,6 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     await a.audit('worker', 'report.generated', { kind: 'weekly' });
     await a.recordAiUsage({ step: 'write', model: 'claude-opus-5-5', input_tokens: 1000, output_tokens: 200, cost_usd: 0.008 });
     expect(await db.system.aiSpendUsdSince(new Date(Date.now() - 60_000))).toBeCloseTo(0.008, 6);
-    expect((await db.system.listUsersForScheduling()).map((u) => u.user_id).sort()).toEqual([alice, bob].sort());
+    expect((await db.system.listUsersForScheduling()).map((u) => u.user_id)).toEqual(expect.arrayContaining([alice, bob]));
   });
 });

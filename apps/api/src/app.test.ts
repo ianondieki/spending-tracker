@@ -114,6 +114,25 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(((await res.json()) as { user_id: string }).user_id).toBe(userId);
   });
 
+  it('M3/M4: tokens expire, a revoked device is refused, and the token carries no device secret', async () => {
+    const reg = (await (await json('/v1/devices/register', { device_id: 'dev-expiring', platform: 'android', app_version: '1.0.0' }, '')).json()) as { device_token: string; user_id: string };
+    const payload = JSON.parse(Buffer.from(reg.device_token.split('.')[0]!, 'base64url').toString('utf8')) as Record<string, unknown>;
+    expect(payload['device_id']).toBeUndefined();
+    expect(String(payload['device'])).not.toContain('dev-expiring');
+    expect(typeof payload['exp']).toBe('number');
+    expect((await get('/v1/me/preferences', reg.device_token)).status).toBe(200);
+    const later = createApp({ db, env, now: () => new Date(FIXED_NOW.getTime() + 31 * 86_400_000) });
+    expect((await later.request('/v1/me/preferences', { headers: { authorization: `Bearer ${reg.device_token}` } })).status).toBe(401);
+    const row = await db.rawSql<{ id: string }[]>`SELECT id FROM devices WHERE user_id = ${reg.user_id}`;
+    await db.system.revokeDevice(row[0]!.id);
+    expect((await get('/v1/me/preferences', reg.device_token)).status).toBe(401);
+    expect((await json('/v1/devices/register', { device_id: 'dev-expiring', platform: 'android', app_version: '1.0.0' }, '')).status).toBe(403);
+    // Audit rows name the device row, never the device's own id.
+    const audit = await db.rawSql<{ actor: string }[]>`SELECT actor FROM audit_log WHERE user_id = ${userId} AND actor LIKE 'device:%'`;
+    expect(audit.length).toBeGreaterThan(0);
+    expect(audit.every((a) => !a.actor.includes('dev-1'))).toBe(true);
+  });
+
   it('validates the sync body against the contract and upserts idempotently', async () => {
     const bad = await json('/v1/sync', { device_id: 'dev-1' });
     expect(bad.status).toBe(400);

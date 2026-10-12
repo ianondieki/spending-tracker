@@ -1,7 +1,7 @@
 import { nextReportAt, resolvePeriod, SyncRequestSchema } from '@hesabu/analytics';
 import { randomBytes } from 'node:crypto';
 
-import { AddressTakenError, hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
+import { AddressTakenError, DeviceRevokedError, hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
 import { Hono, type Context } from 'hono';
 import type { ZodType } from 'zod';
 
@@ -79,11 +79,15 @@ export function createApp(deps: AppDeps): ApiApp {
     if (!config.deviceTokenSecret) return c.json(errorBody('not_configured', 'DEVICE_TOKEN_SECRET is not set'), 503);
     const body = await parseBody(c, RegisterBodySchema);
     if (!body.ok) return body.res;
-    const reg = await db.system.registerDevice(body.value);
-    const device_token = signDeviceToken(
-      { user_id: reg.user_id, device_id: body.value.device_id, iat: Math.floor(now().getTime() / 1000) },
-      config.deviceTokenSecret,
-    );
+    let reg;
+    try {
+      reg = await db.system.registerDevice(body.value);
+    } catch (err) {
+      if (err instanceof DeviceRevokedError) return c.json(errorBody('device_revoked', 'this device was revoked'), 403);
+      throw err;
+    }
+    // The token names the device row, never the device's secret id; it expires after 30 days (M3, M4).
+    const device_token = signDeviceToken({ user_id: reg.user_id, device: reg.device_row_id, iat: Math.floor(now().getTime() / 1000) }, config.deviceTokenSecret);
     return c.json({ device_token, user_id: reg.user_id });
   });
 
@@ -93,10 +97,11 @@ export function createApp(deps: AppDeps): ApiApp {
     if (!config.deviceTokenSecret) return c.json(errorBody('not_configured', 'DEVICE_TOKEN_SECRET is not set'), 503);
     const header = c.req.header('authorization') ?? '';
     const token = header.startsWith('Bearer ') ? header.slice(7).trim() : '';
-    const claims = token ? verifyDeviceToken(token, config.deviceTokenSecret) : null;
-    if (!claims) return c.json(errorBody('unauthorized', 'missing or invalid device token'), 401);
+    const claims = token ? verifyDeviceToken(token, config.deviceTokenSecret, now()) : null;
+    if (!claims) return c.json(errorBody('unauthorized', 'missing, invalid or expired device token'), 401);
+    if (!(await db.system.deviceIsActive(claims.device, claims.user_id))) return c.json(errorBody('unauthorized', 'device unknown or revoked'), 401);
     c.set('tenant', db.forUser(claims.user_id));
-    c.set('deviceId', claims.device_id);
+    c.set('deviceId', claims.device);
     return next();
   });
 

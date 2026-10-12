@@ -35,15 +35,14 @@ await tenant.audit('system', 'seed.demo', { accepted: outcome.accepted, rejected
 console.log(`demo user ${reg.user_id}${reg.created_user ? ' (new)' : ''}: ${outcome.accepted} transactions, ${outcome.rejected.length} rejected`);
 await db.close();
 
-const token = signDeviceToken({ user_id: reg.user_id, device_id: 'demo-device', iat: Math.floor(now.getTime() / 1000) }, secret);
+// The token is used by this process only and is never printed (M3): the app registers itself with its own device id.
+const token = signDeviceToken({ user_id: reg.user_id, device: reg.device_row_id, iat: Math.floor(now.getTime() / 1000) }, secret);
 const headers = { 'content-type': 'application/json', authorization: `Bearer ${token}` };
 
 const apiUp = await fetch(`${apiUrl}/health`).then((r) => r.ok).catch(() => false);
 if (!apiUp) {
-  console.log(`API not reachable at ${apiUrl}. Start it (pnpm dev:api) and the worker (pnpm dev:worker), then:`);
-  for (const [kind, period] of inbox ? [['weekly', '2026-10-07'], ['monthly', '2026-09-15']] : [['weekly', 'last_week'], ['monthly', 'last_month']]) {
-    console.log(`curl -s -X POST ${apiUrl}/v1/reports/generate -H 'authorization: Bearer ${token}' -H 'content-type: application/json' -d '{"kind":"${kind}","period":"${period}","deliver":true}'`);
-  }
+  console.log(`API not reachable at ${apiUrl}. Start it (pnpm dev:api) and the worker (pnpm dev:worker), then re-run this script;`);
+  console.log(`or register your own device (POST /v1/devices/register) and call POST /v1/reports/generate as in apps/api/README.md.`);
   process.exit(0);
 }
 

@@ -25,26 +25,38 @@ function verifySignature(payload: string, signature: string, secret: string): bo
   return expected.length === given.length && timingSafeEqual(expected, given);
 }
 
+export const DEVICE_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
+
 export interface DeviceTokenClaims {
   readonly user_id: string;
-  readonly device_id: string;
+  /** The device row id (uuid), never the device's secret id. */
+  readonly device: string;
   readonly iat: number; // epoch seconds
+  readonly exp: number; // epoch seconds; the app re-registers on 401
 }
 
-export function signDeviceToken(claims: DeviceTokenClaims, secret: string | undefined): string {
+/** SHA-256 of the device's secret id: what the database stores and compares (M4). */
+export function hashDeviceId(deviceId: string): string {
+  return createHash('sha256').update(deviceId, 'utf8').digest('hex');
+}
+
+export function signDeviceToken(claims: Omit<DeviceTokenClaims, 'exp'> & { exp?: number }, secret: string | undefined): string {
   const s = requireSecret(secret, 'DEVICE_TOKEN_SECRET');
-  const payload = b64u(JSON.stringify(claims));
+  const full: DeviceTokenClaims = { ...claims, exp: claims.exp ?? claims.iat + DEVICE_TOKEN_TTL_SECONDS };
+  const payload = b64u(JSON.stringify(full));
   return `${payload}.${sign(payload, s)}`;
 }
 
-export function verifyDeviceToken(token: string, secret: string | undefined): DeviceTokenClaims | null {
+/** Signature, shape and expiry; the caller still checks the device row exists and is not revoked (M3). */
+export function verifyDeviceToken(token: string, secret: string | undefined, now: Date = new Date()): DeviceTokenClaims | null {
   const s = requireSecret(secret, 'DEVICE_TOKEN_SECRET');
   const [payload, signature] = token.split('.');
   if (!payload || !signature || !verifySignature(payload, signature, s)) return null;
   try {
     const claims = JSON.parse(fromB64u(payload).toString('utf8')) as Partial<DeviceTokenClaims>;
-    if (typeof claims.user_id !== 'string' || typeof claims.device_id !== 'string' || typeof claims.iat !== 'number') return null;
-    return { user_id: claims.user_id, device_id: claims.device_id, iat: claims.iat };
+    if (typeof claims.user_id !== 'string' || typeof claims.device !== 'string' || typeof claims.iat !== 'number' || typeof claims.exp !== 'number') return null;
+    if (claims.exp * 1000 <= now.getTime()) return null;
+    return { user_id: claims.user_id, device: claims.device, iat: claims.iat, exp: claims.exp };
   } catch {
     return null;
   }
