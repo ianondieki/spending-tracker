@@ -27,6 +27,8 @@ export interface DonutData {
 
 export interface DonutProps extends BaseChartProps {
   readonly data: DonutData;
+  /** Ring only (no legend, no frame): used inside the hero image. */
+  readonly bare?: boolean;
 }
 
 /** Folds anything past the six largest slices into Other. */
@@ -64,8 +66,9 @@ function arcPath(cx: number, cy: number, rOuter: number, rInner: number, a0: num
   return `M${p(rOuter, a0)} A${rOuter} ${rOuter} 0 ${large} 1 ${p(rOuter, a1)} L${p(rInner, a1)} A${rInner} ${rInner} 0 ${large} 0 ${p(rInner, a0)} Z`;
 }
 
-export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDTH, showTable, altText, data }: DonutProps): ReactElement {
+export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDTH, showTable, altText, data, bare = false }: DonutProps): ReactElement {
   const l = chartLabels(locale);
+  if (bare) return <DonutRing data={data} size={width} label={l.out} altText={altText ?? donutAltText(data, locale)} />;
   const stacked = width < 480;
   const r = stacked ? Math.min(Math.round(width * 0.3), 112) : 112;
   const ring = Math.round(r * 0.34);
@@ -139,5 +142,37 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
         </g>
       </Svg>
     </Figure>
+  );
+}
+
+/** The ring with the total in its centre and nothing else; sized to `size` px square. */
+export function DonutRing({ data, size, label, altText }: { readonly data: DonutData; readonly size: number; readonly label: string; readonly altText: string }): ReactElement {
+  const r = size / 2;
+  const ring = Math.round(r * 0.34);
+  const cx = r;
+  const cy = r;
+  const total = Math.max(1, data.total.cents);
+  const firstSpan = data.slices[0] ? (data.slices[0].cents / total) * Math.PI * 2 : 0;
+  let angle = -firstSpan / 2;
+  const arcs = data.slices.map((s, i) => {
+    const a0 = angle;
+    const a1 = angle + (s.cents / total) * Math.PI * 2;
+    angle = a1;
+    return { s, i, a0, a1 };
+  });
+  const hole = 2 * (r - ring);
+  const totalSize = Math.min(Math.round(size * 0.13), Math.floor((hole - 16) / Math.max(1, textWidth(data.total.display, 1))));
+  return (
+    <Svg width={size} height={size} altText={altText} chartType="donut">
+      {arcs.map(({ s, i, a0, a1 }) => (
+        <path key={i} d={arcPath(cx, cy, r - 1, r - ring, a0, Math.max(a1, a0 + 0.001))} fill={s.isOther ? v(VAR.other) : v(catVar(i))} stroke={v(VAR.sheet)} strokeWidth={GAP} strokeLinejoin="round" />
+      ))}
+      <Label x={cx} y={cy + totalSize * 0.1} size={totalSize} weight={700} anchor="middle" numeric>
+        {data.total.display}
+      </Label>
+      <Label x={cx} y={cy + totalSize * 0.1 + Math.round(totalSize * 0.75)} size={Math.round(totalSize * 0.55)} anchor="middle" soft>
+        {label}
+      </Label>
+    </Svg>
   );
 }

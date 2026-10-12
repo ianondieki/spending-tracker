@@ -90,7 +90,7 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
             );
           })}
         </g>
-        {current >= 0 ? <rect x={px(x(current) - band / 2)} y={px(top)} width={px(band)} height={px(plotH)} fill={v(VAR.ink)} opacity={0.06} /> : null}
+        {current >= 0 ? <rect x={px(Math.max(plotX, x(current) - band / 2))} y={px(top)} width={px(Math.min(x(current) + band / 2, plotX + plotW) - Math.max(plotX, x(current) - band / 2))} height={px(plotH)} fill={v(VAR.ink)} opacity={0.06} /> : null}
         {yTicks.map((t) => (
           <g key={t}>
             <HRule x1={plotX} x2={plotX + plotW} y={y(t)} strong={t === 0} />
