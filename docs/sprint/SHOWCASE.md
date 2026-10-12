@@ -19,7 +19,9 @@ Layers, best first. Decide the layer in the pre-flight hour and keep the next on
 - [ ] Phone: APK installed, battery > 50 %, notifications on, Settings → server URL saved, SMS consent granted
       (layer A) or demo mode on (layer B); airplane mode off; auto-brightness off.
 - [ ] Seed once so the Reports screen is not empty: `make seed-demo` (prints the two web links; open both once).
-- [ ] Layer A only: `DRY_RUN=1 pnpm --filter @hesabu/worker live-delivery` prints the report that will go out.
+- [ ] Layer A only: `USER_ID=<owner uuid> DRY_RUN=1 pnpm --filter @hesabu/worker live-delivery` prints the report that will go out.
+- [ ] Layer A only: the owner has sent `JOIN <code>` (code in the app's Settings) from their WhatsApp and confirmed the
+      email magic link; Settings shows both addresses as verified. Without that, deliveries are skipped by design.
 - [ ] Layer C open in browser tabs: `docs/sprint/samples/weekly-en-light/hero.png`, `.../report.pdf`,
       `http://localhost:3000/dev/report?fixture=monthly-en&theme=dark`, `android/screenshots/`.
 - [ ] Mailpit (`http://localhost:8025`) open for layer B so a fake-free local email is visible if Resend is off.
@@ -62,7 +64,7 @@ Each step: **show** · *say (one line)* · **if it fails**.
 
 7. **Real delivery (7:30–8:45, layer A only).**
    ```sh
-   pnpm --filter @hesabu/worker live-delivery          # sends the latest weekly report to REPORT_TO_EMAIL and REPORT_TO_WHATSAPP
+   USER_ID=<owner uuid> pnpm --filter @hesabu/worker live-delivery   # the owner's latest weekly report to REPORT_TO_EMAIL and REPORT_TO_WHATSAPP
    ```
    Show the WhatsApp image with caption and the PDF arriving on the owner's phone, then the email. *"Delivered where
    people already look; the webhooks update the status to delivered and read."* Fails: layer B fake deliveries show
