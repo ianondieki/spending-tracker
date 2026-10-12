@@ -57,7 +57,6 @@ android {
         }
     }
 
-    sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/hesabuAssets"))
 
     packaging {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/INDEX.LIST", "META-INF/io.netty.versions.properties")
@@ -149,8 +148,11 @@ val copyContractAssets = tasks.register<Sync>("copyContractAssets") {
 tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
 tasks.matching { it.name.startsWith("generate") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
 tasks.matching { it.name.startsWith("package") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
-tasks.matching { it.name.startsWith("lintVital") || it.name.startsWith("lintAnalyze") || it.name == "lint" }.configureEach { dependsOn(copyContractAssets) }
+// Every lint task, including the model writers (generate<Variant>LintReportModel), reads the merged assets.
+tasks.matching { it.name.contains("Lint") || it.name.startsWith("lint") }.configureEach { dependsOn(copyContractAssets) }
 tasks.withType<Test>().configureEach { dependsOn(copyContractAssets) }
+// Wiring the task itself as the source directory lets Gradle infer the dependency for every consumer (lint included).
+android.sourceSets["main"].assets.srcDir(copyContractAssets)
 
 roborazzi {
     // Screenshots are committed under android/screenshots/ so the orchestrator can review the design.

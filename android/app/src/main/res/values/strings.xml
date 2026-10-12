@@ -279,4 +279,23 @@
     <string name="home_delta_more">%1$s more than last week</string>
     <string name="home_delta_less">%1$s less than last week</string>
     <string name="home_delta_same">The same as last week</string>
+
+    <!-- Import confirmation and local http [[COPY-REVIEW]] -->
+    <string name="import_preview_title">What Hesabu read</string>
+    <plurals name="import_preview_ignored">
+        <item quantity="one">1 notice with no money moved will be skipped.</item>
+        <item quantity="other">%d notices with no money moved will be skipped.</item>
+    </plurals>
+    <plurals name="import_preview_unknown">
+        <item quantity="one">1 block was not understood and will wait in Teach Hesabu.</item>
+        <item quantity="other">%d blocks were not understood and will wait in Teach Hesabu.</item>
+    </plurals>
+    <string name="import_preview_note">Nothing is saved until you confirm. Shared text can come from any app, so check the counts.</string>
+    <plurals name="import_confirm">
+        <item quantity="one">Add 1 message</item>
+        <item quantity="other">Add %d messages</item>
+    </plurals>
+    <string name="settings_allow_http">Allow http for local testing</string>
+    <string name="settings_allow_http_body">Off, Hesabu only talks to https servers. Turn on only for a server on your own laptop or tunnel.</string>
+    <string name="settings_sync_cleartext_blocked">That server address uses http. Turn on \"Allow http for local testing\" to use it.</string>
 </resources>

@@ -70,7 +70,7 @@ ANDROID_HOME=/opt/android-sdk && ./gradlew assembleDebug testDebugUnitTest lint 
 
 ## Tests
 
-`./gradlew assembleDebug testDebugUnitTest lint`: 276 unit tests green, lint with no errors, debug APK built. Suites: Money format and
+`./gradlew assembleDebug testDebugUnitTest lint`: 293 unit tests green, lint with no errors, debug APK built. Suites: Money format and
 parsing, design-token parity, ledger components (Compose/Robolectric), portable regex, normalisers, pack engine,
 post-processing, pack examples (parameterised), corpus coverage, categoriser and taxonomy reader, body cipher,
 ingest pipeline (in-memory Room), text import, demo inbox, periods, screen smoke tests, screenshots, sync protocol
@@ -83,6 +83,23 @@ cross-engine parity. CI never reaches a network: the sync tests use `MockEngine`
 with the variables from `corpus/expected/README.md` and asserts the canonical JSONL equals the TypeScript engine's
 committed dumps byte for byte. All three match. When Lane D regenerates `corpus/expected/`, this test is the first
 thing to run.
+
+## Security package (orchestrator check-in 3)
+
+- `POST /v1/reports/generate` sends `deliver` and `force` as JSON booleans (`GenerateRequest`, `encodeDefaults`);
+  `SyncClientBodyTest` checks the generate body and the sync body against `openapi.yaml` and
+  `transaction.schema.json` (required keys present, no extra keys).
+- Cleartext is off: `res/xml/network_security_config.xml` permits http only to `10.0.2.2`, `localhost`, `127.0.0.1`;
+  the debug build overlays a permissive config for a laptop tunnel, but `SyncClient` refuses any non-loopback
+  `http://` address until "Allow http for local testing" is on in Settings (`CleartextBlocked`, surfaced in the sync
+  status). Redirects are never followed by the API client or the artefact downloader.
+- Share-to-app and paste import parse first and show counts per message type, ignored notices and unrecognised
+  blocks; nothing is written or queued until the confirm tap (`TextImport.preview`, `ImportPreviewSheet`). Shared text
+  over 20,000 characters is dropped.
+- On a 401 the stored token is cleared, the device registers once and the batch is retried once; a second 401 in
+  the same run fails the run (`SyncerTest` covers both). 
+- `ReconcileWorker` purges unknown-message rows older than 30 days on every run (`purgeOlderThan`), whether or not
+  SMS access is granted.
 
 ## Known gaps and where to resume
 

@@ -275,4 +275,22 @@
     <string name="home_delta_more">%1$s zaidi ya wiki iliyopita</string>
     <string name="home_delta_less">%1$s chini ya wiki iliyopita</string>
     <string name="home_delta_same">Sawa na wiki iliyopita</string>
+
+    <string name="import_preview_title">Hesabu ilisoma nini</string>
+    <plurals name="import_preview_ignored">
+        <item quantity="one">Taarifa 1 bila pesa kuhamishwa itarukwa.</item>
+        <item quantity="other">Taarifa %d bila pesa kuhamishwa zitarukwa.</item>
+    </plurals>
+    <plurals name="import_preview_unknown">
+        <item quantity="one">Kipande 1 hakikueleweka na kitasubiri katika Fundisha Hesabu.</item>
+        <item quantity="other">Vipande %d havikueleweka na vitasubiri katika Fundisha Hesabu.</item>
+    </plurals>
+    <string name="import_preview_note">Hakuna kinachohifadhiwa hadi uthibitishe. Maandishi yaliyoshirikiwa yanaweza kutoka programu yoyote, kwa hivyo kagua hesabu.</string>
+    <plurals name="import_confirm">
+        <item quantity="one">Ongeza ujumbe 1</item>
+        <item quantity="other">Ongeza jumbe %d</item>
+    </plurals>
+    <string name="settings_allow_http">Ruhusu http kwa majaribio ya ndani</string>
+    <string name="settings_allow_http_body">Ikizimwa, Hesabu huzungumza na seva za https pekee. Washa tu kwa seva iliyo kwenye kompyuta yako au tunnel yako.</string>
+    <string name="settings_sync_cleartext_blocked">Anwani hiyo ya seva inatumia http. Washa \"Ruhusu http kwa majaribio ya ndani\" ili kuitumia.</string>
 </resources>
