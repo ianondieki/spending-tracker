@@ -100,7 +100,6 @@
     <string name="home_week_nothing_yet">Nothing spent yet this week.</string>
     <string name="home_kpi_in">Received</string>
     <string name="home_kpi_fees">Fees</string>
-    <string name="home_kpi_vs_last_week">Than last week</string>
     <string name="home_see_transactions">See all transactions</string>
     <string name="home_teach_title">Teach Hesabu</string>
     <string name="home_teach_action">Teach Hesabu</string>
@@ -276,4 +275,8 @@
     <string name="settings_number_title">Your M-PESA number</string>
     <string name="settings_number_body">Used only to label your own account. Hesabu keeps the first two and last three digits.</string>
     <string name="settings_number_label">Phone number</string>
+
+    <string name="home_delta_more">%1$s more than last week</string>
+    <string name="home_delta_less">%1$s less than last week</string>
+    <string name="home_delta_same">The same as last week</string>
 </resources>

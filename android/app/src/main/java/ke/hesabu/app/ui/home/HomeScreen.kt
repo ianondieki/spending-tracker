@@ -84,7 +84,18 @@ fun HomeContent(
                 Kpi(stringResource(R.string.home_kpi_in), state.weekInCents, MoneyTone.In)
                 Kpi(stringResource(R.string.home_kpi_fees), state.weekFeeCents, MoneyTone.Fee)
                 val delta = state.lastWeekOutCents?.let { state.weekOutCents - it }
-                if (delta != null) Kpi(stringResource(R.string.home_kpi_vs_last_week), delta, MoneyTone.Neutral, signed = true)
+                if (delta != null) {
+                    Text(
+                        when {
+                            delta > 0 -> stringResource(R.string.home_delta_more, Money.formatKsh(delta))
+                            delta < 0 -> stringResource(R.string.home_delta_less, Money.formatKsh(-delta))
+                            else -> stringResource(R.string.home_delta_same)
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = HesabuTheme.colors.inkSoft,
+                        modifier = Modifier.padding(top = 8.dp),
+                    )
+                }
                 QuietButton(stringResource(R.string.home_see_transactions), onOpenTransactions, Modifier.padding(top = 8.dp))
             }
         }
@@ -109,7 +120,7 @@ fun HomeContent(
                         onClick = onOpenAccounts,
                         showRule = i < state.accounts.size - 1,
                     ) {
-                        if (a.lastBalanceCents != null) MoneyText(a.lastBalanceCents, tone = MoneyTone.Neutral, decimals = 2)
+                        if (a.lastBalanceCents != null) MoneyText(a.lastBalanceCents, tone = MoneyTone.Neutral)
                         else Text(stringResource(R.string.home_balance_unknown), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft)
                     }
                 }
@@ -139,14 +150,11 @@ fun HomeContent(
     }
 }
 
-/** A quiet ledger line under the tally: label left, amount right, no rule. A signed delta reads "+KSh 1,200". */
+/** A quiet ledger line under the tally: label left, amount right, no rule. */
 @Composable
-private fun Kpi(label: String, cents: Long, tone: MoneyTone, signed: Boolean = false) {
+private fun Kpi(label: String, cents: Long, tone: MoneyTone) {
     Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(label, style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft, modifier = Modifier.weight(1f))
-        if (signed && cents > 0) {
-            Text("+", style = HesabuTheme.money.row, color = HesabuTheme.colors.ink)
-        }
         MoneyText(cents, tone = tone)
     }
 }

@@ -78,7 +78,7 @@ fun AccountsContent(state: AccountsViewModel.State, onBack: (() -> Unit)? = null
                 Sheet(title = r.account.label) {
                     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
                         Text(stringResource(R.string.accounts_balance), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft, modifier = Modifier.weight(1f))
-                        if (r.account.lastBalanceCents != null) MoneyText(r.account.lastBalanceCents, tone = MoneyTone.Neutral, style = HesabuTheme.money.large, decimals = 2)
+                        if (r.account.lastBalanceCents != null) MoneyText(r.account.lastBalanceCents, tone = MoneyTone.Neutral, style = HesabuTheme.money.large)
                         else Text(stringResource(R.string.home_balance_unknown), style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft, textAlign = TextAlign.End)
                     }
                     if (r.account.lastBalanceAtMillis != null) KeyValue(stringResource(R.string.accounts_balance_at), periods.dateTimeOf(r.account.lastBalanceAtMillis))
