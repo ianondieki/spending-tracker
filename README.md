@@ -10,6 +10,7 @@ This repository currently holds the **build prompt pack**. The application is bu
 |---|---|
 | `prompts/MASTER-BUILD-PROMPT.md` | The full specification and operating instructions. Paste it once, in Phase 0. |
 | `prompts/PHASE-KICKOFFS.md` | One short prompt per phase (0–8) to start each later session. |
+| `prompts/24H-SPRINT.md` | The one-day alternative: four parallel lanes that get the product working for one user in 24 hours. |
 | `CLAUDE.md` | Always-loaded rules: session rhythm, principles, spec index, commands, commits, agents. |
 
 How to start: open Claude Code in this repo on branch `claude/beautiful-pascal-w5oxu3`, paste
