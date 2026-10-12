@@ -43,8 +43,10 @@ export type Direction = 'in' | 'out' | 'none';
 
 export interface MerchantSeed {
   id: string;
-  /** Canonical display name, e.g. "Naivas". */
+  /** Canonical name, e.g. "Naivas" or "Kenya Power (prepaid tokens)". */
   name: string;
+  /** Short name for reports when `name` is descriptive, e.g. "KPLC Prepaid"; see normaliseMerchantName. */
+  display_name?: string;
   /** Upper-case strings as they appear in money SMS. */
   aliases: string[];
   paybills: string[];
@@ -300,9 +302,16 @@ function parseMerchants(
       const note = entry['note'];
       if (note !== null && typeof note !== 'string')
         fail(file, `${id}: note must be a string or null`);
+      const display_name = entry['display_name'];
+      if (
+        display_name !== undefined &&
+        (typeof display_name !== 'string' || display_name.trim() === '')
+      )
+        fail(file, `${id}: display_name must be a non-empty string when present`);
       return {
         id,
         name: entry['name'] as string,
+        ...(typeof display_name === 'string' ? { display_name } : {}),
         aliases,
         paybills: entry['paybills'] as string[],
         tills: entry['tills'] as string[],
@@ -665,3 +674,12 @@ export function resolveCategory(input: ResolveCategoryInput): ResolvedCategory {
   }
   return { category_id: null, source: 'none', confidence: 0 };
 }
+
+export {
+  normaliseMerchantName,
+  titleCase,
+  isMerchantCounterparty,
+  AGENT_TRANSACTION_TYPES,
+  MERCHANT_COUNTERPARTY_KINDS,
+  type MerchantNameOptions,
+} from './display.js';

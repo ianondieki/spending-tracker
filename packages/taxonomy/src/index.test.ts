@@ -115,7 +115,15 @@ describe('data files', () => {
       'source_url',
       'note',
     ].sort();
-    for (const m of raw.merchants) expect(Object.keys(m).sort(), String(m['id'])).toEqual(expected);
+    for (const m of raw.merchants) {
+      expect(
+        Object.keys(m)
+          .filter((k) => k !== 'display_name')
+          .sort(),
+        String(m['id']),
+      ).toEqual(expected);
+      if ('display_name' in m) expect(typeof m['display_name'], String(m['id'])).toBe('string');
+    }
   });
 
   it('every provider rule uses only documented fields', () => {
