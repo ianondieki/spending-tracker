@@ -80,25 +80,27 @@ WHATSAPP_TOKEN=EAAG...
 WHATSAPP_PHONE_NUMBER_ID=1234567890
 REPORT_TO_EMAIL=owner@example.com
 REPORT_TO_WHATSAPP=+2547XXXXXXXX
+USER_ID=<the owner's account uuid, printed by make seed-demo>
 ```
 
 Then, with at least one finished weekly report in the database:
 
 ```sh
 set -a; . ./.env; set +a
-DRY_RUN=1 pnpm --filter @hesabu/worker live-delivery     # prints what would go where, sends nothing
+DRY_RUN=1 pnpm --filter @hesabu/worker live-delivery     # prints what would go where, sends nothing (needs USER_ID too)
 pnpm --filter @hesabu/worker live-delivery               # sends the latest weekly report to the owner only
 CHANNELS=email pnpm --filter @hesabu/worker live-delivery
 ```
 
-The script refuses to run unless all six variables are present and only ever addresses `REPORT_TO_EMAIL` and
-`REPORT_TO_WHATSAPP`. It records an audit row per send. Delivery status webhooks (`/webhooks/email`,
+The script refuses to run unless all seven variables are present, reads only the `USER_ID` account's reports and only
+ever addresses `REPORT_TO_EMAIL` and `REPORT_TO_WHATSAPP`. It records an audit row per send. Delivery status webhooks (`/webhooks/email`,
 `/webhooks/whatsapp`) need a public URL (a tunnel to the API) configured at Resend and Meta; `WHATSAPP_VERIFY_TOKEN`
 answers Meta's verification handshake.
 
 For the normal path (the worker delivering to the user's own preferences), set the same provider secrets, make sure
 the user's preferences carry an email and a number, the `email_delivery` and `whatsapp_delivery` consents are granted
-(the seed grants them; in the product the WhatsApp one comes from the `JOIN` message), and call
+(the seed grants them for the demo user; in the product the WhatsApp one comes from the `JOIN <code>` message and the
+email one from the magic link sent by `POST /v1/me/email/send-link`), and call
 `POST /v1/reports/<id>/deliver` or generate with `"deliver": true`.
 
 ## 5. Write with the live model

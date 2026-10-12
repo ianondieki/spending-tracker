@@ -18,7 +18,11 @@ export interface ReportSummary {
   generated_at: string | null;
 }
 
-export function toSummary(report: ReportRow, deliveries: readonly DeliveryRow[]): ReportSummary {
+/** Mints a short-lived URL for an artefact key (presigned S3 GET or the API's signed artefact route), or null. */
+export type ArtefactUrlMinter = (key: string | null | undefined) => Promise<string | null>;
+
+export async function toSummary(report: ReportRow, deliveries: readonly DeliveryRow[], mint: ArtefactUrlMinter): Promise<ReportSummary> {
+  const [hero_png_url, pdf_url] = await Promise.all([mint(report.artefacts.hero_png_key), mint(report.artefacts.pdf_key)]);
   return {
     report_id: report.id,
     kind: report.kind,
@@ -26,11 +30,7 @@ export function toSummary(report: ReportRow, deliveries: readonly DeliveryRow[])
     period_end: report.period_end,
     status: report.status,
     writer: report.writer,
-    artefacts: {
-      hero_png_url: report.artefacts.hero_png_url ?? null,
-      pdf_url: report.artefacts.pdf_url ?? null,
-      web_url: report.artefacts.web_url ?? null,
-    },
+    artefacts: { hero_png_url, pdf_url, web_url: report.artefacts.web_url ?? null },
     deliveries: deliveries.map((d) => ({
       channel: d.channel,
       status: d.status,

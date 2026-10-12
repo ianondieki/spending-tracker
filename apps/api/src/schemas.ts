@@ -44,3 +44,7 @@ export const ExtractBodySchema = z.object({
 });
 
 export const ReportKindQuerySchema = z.enum(['weekly', 'monthly']).optional();
+
+export const SendEmailLinkBodySchema = z.object({
+  email: z.email().max(254).optional(),
+});

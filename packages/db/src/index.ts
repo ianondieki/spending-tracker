@@ -4,9 +4,9 @@ import { TenantDb } from './tenant.js';
 
 export { connect, dropAll, getDatabaseUrl, migrate } from './client.js';
 export type { ConnectOptions, Env, MigrationResult, Sql } from './client.js';
-export { TenantDb } from './tenant.js';
+export { AddressTakenError, normaliseEmail, TenantDb } from './tenant.js';
 export type { DeliveryPatch, ReportPatch, TransactionWindow } from './tenant.js';
-export { SystemDb } from './system.js';
+export { DeviceRevokedError, SystemDb } from './system.js';
 export type { RegisterDeviceInput, RegisteredDevice, ScheduleUser } from './system.js';
 export * from './types.js';
 
@@ -55,3 +55,5 @@ export * from './jobs.js';
 export { demoAccounts, demoTransactions, DEMO_CATEGORIES } from './demo-data.js';
 export { DbCostLedger, startOfNairobiDay, type LedgerEntry } from './cost-ledger.js';
 export { categorise, DEMO_INBOX_PATH, DEMO_VARIABLES, demoInboxAvailable, parseDemoInbox, taxonomyCategoryRows, type DemoInbox } from './demo-inbox.js';
+export * from './storage.js';
+export { createStorage, readStorageConfig, type StorageConfig } from './storage-config.js';

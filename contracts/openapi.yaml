@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Hesabu API (sprint v1)
-  version: 1.0.0
+  version: 1.1.0
   description: >
     Minimal API for the 24-hour sprint. Single-user device-token auth (phone OTP comes later).
     Schemas referenced from contracts/*.schema.json are authoritative.
@@ -25,6 +25,9 @@ components:
         monthly_at: { type: string, description: "e.g. 1 07:30" }
         channels: { type: array, items: { type: string, enum: [email, whatsapp, share] } }
         theme: { type: string, enum: [light, dark, system] }
+        join_code: { type: string, readOnly: true, description: "Per-user code; the user sends 'JOIN <join_code>' from their phone to the business number to verify it" }
+        whatsapp_verified: { type: boolean, readOnly: true, description: "true once a JOIN with the user's code arrived from whatsapp_e164; changing the number resets it" }
+        email_verified: { type: boolean, readOnly: true, description: "true once the magic link for the current email was confirmed; changing the email resets it" }
     ReportSummary:
       type: object
       properties:
@@ -36,6 +39,7 @@ components:
         writer: { type: string, enum: [model, fallback, pending] }
         artefacts:
           type: object
+          description: "hero_png_url and pdf_url are signed URLs valid for 15 minutes, minted per request; clients re-fetch the summary instead of caching them"
           properties:
             hero_png_url: { type: [string, "null"] }
             pdf_url: { type: [string, "null"] }
@@ -151,6 +155,22 @@ paths:
                   facts: { $ref: "facts-sheet.schema.json" }
                   artefacts: { type: object, properties: { hero_png_url: { type: [string, "null"] }, pdf_url: { type: [string, "null"] } } }
         "404": { description: expired or unknown }
+  /v1/me/email/send-link:
+    post:
+      summary: Send a magic link to the email in preferences; confirming it grants email delivery consent for exactly that address
+      responses: { "202": { description: queued }, "429": { description: rate limited } }
+  /v1/public/email/confirm/{token}:
+    get:
+      security: []
+      summary: Confirm a magic link (single use, valid 1 hour) and grant email delivery consent for the address it was sent to
+      parameters: [ { name: token, in: path, required: true, schema: { type: string } } ]
+      responses: { "200": { description: confirmed }, "404": { description: expired or unknown } }
+  /v1/public/artefacts/{token}:
+    get:
+      security: []
+      summary: Serve one rendered artefact behind a signed, 15-minute token (used when storage has no presigned URLs)
+      parameters: [ { name: token, in: path, required: true, schema: { type: string } } ]
+      responses: { "200": { description: the file }, "404": { description: expired or unknown } }
   /r/{token}:
     get:
       security: []

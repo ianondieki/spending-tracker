@@ -36,15 +36,18 @@ export function verifySvixSignature(
   });
 }
 
-export function emailWebhook(db: Db, config: ApiConfig): Hono {
+export function emailWebhook(db: Db, config: ApiConfig, now: () => Date = () => new Date()): Hono {
   const r = new Hono();
   r.post('/webhooks/email', async (c) => {
+    // Fail closed: in production an unsigned webhook is a disabled webhook (M1).
+    if (!config.resendWebhookSecret && config.isProduction) return c.text('RESEND_WEBHOOK_SECRET is not set; webhook disabled', 503);
     const raw = await c.req.text();
     if (config.resendWebhookSecret) {
       const ok = verifySvixSignature(
         raw,
         { id: c.req.header('svix-id'), timestamp: c.req.header('svix-timestamp'), signature: c.req.header('svix-signature') },
         config.resendWebhookSecret,
+        now(),
       );
       if (!ok) return c.text('bad signature', 401);
     }
@@ -57,7 +60,8 @@ export function emailWebhook(db: Db, config: ApiConfig): Hono {
     const mapped = event.type ? EVENT_MAP[event.type] : undefined;
     const id = event.data?.email_id;
     if (!mapped || !id) return c.json({ ok: true, handled: false });
-    const detail = event.type === 'email.bounced' ? (event.data?.bounce?.message ?? 'bounced') : event.type === 'email.complained' ? 'complaint' : null;
+    // Enum-like reasons only; provider free text never reaches the app.
+    const detail = event.type === 'email.bounced' ? 'bounced' : event.type === 'email.complained' ? 'complaint' : null;
     const hit = await db.system.updateDeliveryByProviderMessageId(id, mapped, mapped === 'failed' ? detail : null);
     if (hit) {
       const tenant = db.forUser(hit.user_id);

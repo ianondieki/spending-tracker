@@ -56,12 +56,13 @@ async function deliverOne(deps: DeliveryDeps, tenant: TenantDb, report: ReportRo
     await tenant.audit('worker', 'delivery.skipped', { channel, reason });
     return { channel, status: 'skipped', reason };
   };
+  if (report.artefacts.stubbed) return skip('artefacts are renderer placeholders (no browser); not delivering');
   const prefs = await tenant.getPreferences();
   const document = ReportDocumentSchema.parse(report.document_json);
   try {
     if (channel === 'email') {
       if (!prefs.email) return skip('no email address');
-      if (!(await tenant.hasConsent('email_delivery'))) return skip('email_delivery consent not granted');
+      if (!(await tenant.hasConsentFor('email_delivery', prefs.email))) return skip('unverified address: email_delivery consent is not for this email');
       if (!deps.email) return skip('email provider not configured');
       const html = new TextDecoder().decode(await deps.storage.get(requireKey(report, report.artefacts.html_key?.replace(/web\.html$/, 'email.html'), 'email html')));
       const text = new TextDecoder().decode(await deps.storage.get(requireKey(report, report.artefacts.html_key?.replace(/web\.html$/, 'email.txt'), 'email text')));
@@ -82,7 +83,7 @@ async function deliverOne(deps: DeliveryDeps, tenant: TenantDb, report: ReportRo
       return { channel, status: 'sent', providerMessageId: sent.providerMessageId };
     }
     if (!prefs.whatsapp_e164) return skip('no WhatsApp number');
-    if (!(await tenant.hasConsent('whatsapp_delivery'))) return skip('whatsapp_delivery consent not granted (JOIN not received)');
+    if (!(await tenant.hasConsentFor('whatsapp_delivery', prefs.whatsapp_e164))) return skip('unverified address: whatsapp_delivery consent is not for this number (send JOIN <code>)');
     if (!deps.whatsapp) return skip('WhatsApp provider not configured');
     const hero = await deps.storage.get(requireKey(report, report.artefacts.hero_png_key, 'hero'));
     const pdf = await deps.storage.get(requireKey(report, report.artefacts.pdf_key, 'pdf'));

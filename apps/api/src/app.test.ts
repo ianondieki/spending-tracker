@@ -4,6 +4,8 @@ import { signReportLinkToken, hashToken, type Db } from '@hesabu/db';
 import { canReachDatabase, openTestDb } from '@hesabu/db/test-db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { MemoryStorage } from '@hesabu/db';
+
 import { createApp, type ApiApp } from './app.js';
 import { InMemoryQueue } from './queue.js';
 
@@ -18,6 +20,7 @@ const env = {
 };
 
 const FIXED_NOW = new Date('2026-10-12T09:00:00+03:00'); // Monday
+const TS = String(Math.floor(FIXED_NOW.getTime() / 1000) - 30); // a Meta event stamped 30 s before "now"
 
 function sampleTransaction(id: string, extra: Record<string, unknown> = {}) {
   return {
@@ -66,6 +69,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
   let db: Db;
   let app: ApiApp;
   let queue: InMemoryQueue;
+  const storage = new MemoryStorage();
   let token: string;
   let userId: string;
 
@@ -76,7 +80,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
   beforeAll(async () => {
     db = await openTestDb();
     queue = new InMemoryQueue();
-    app = createApp({ db, queue, env, now: () => FIXED_NOW, extractor: { enabled: true, extract: async (items) => ({ proposals: items.map((_, index) => ({ index, type: 'OTHER' })) }) } });
+    app = createApp({ db, queue, env, now: () => FIXED_NOW, storage, extractor: { enabled: true, extract: async (items) => ({ proposals: items.map((_, index) => ({ index, type: 'OTHER' })) }) } });
     const res = await json('/v1/devices/register', { device_id: 'dev-1', platform: 'android', app_version: '1.0.0' }, '');
     expect(res.status).toBe(200);
     const body = (await res.json()) as { device_token: string; user_id: string };
@@ -111,6 +115,25 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
   it('re-registering the same device returns the same user', async () => {
     const res = await json('/v1/devices/register', { device_id: 'dev-1', platform: 'android', app_version: '1.0.1' }, '');
     expect(((await res.json()) as { user_id: string }).user_id).toBe(userId);
+  });
+
+  it('M3/M4: tokens expire, a revoked device is refused, and the token carries no device secret', async () => {
+    const reg = (await (await json('/v1/devices/register', { device_id: 'dev-expiring', platform: 'android', app_version: '1.0.0' }, '')).json()) as { device_token: string; user_id: string };
+    const payload = JSON.parse(Buffer.from(reg.device_token.split('.')[0]!, 'base64url').toString('utf8')) as Record<string, unknown>;
+    expect(payload['device_id']).toBeUndefined();
+    expect(String(payload['device'])).not.toContain('dev-expiring');
+    expect(typeof payload['exp']).toBe('number');
+    expect((await get('/v1/me/preferences', reg.device_token)).status).toBe(200);
+    const later = createApp({ db, env, now: () => new Date(FIXED_NOW.getTime() + 31 * 86_400_000) });
+    expect((await later.request('/v1/me/preferences', { headers: { authorization: `Bearer ${reg.device_token}` } })).status).toBe(401);
+    const row = await db.rawSql<{ id: string }[]>`SELECT id FROM devices WHERE user_id = ${reg.user_id}`;
+    await db.system.revokeDevice(row[0]!.id);
+    expect((await get('/v1/me/preferences', reg.device_token)).status).toBe(401);
+    expect((await json('/v1/devices/register', { device_id: 'dev-expiring', platform: 'android', app_version: '1.0.0' }, '')).status).toBe(403);
+    // Audit rows name the device row, never the device's own id.
+    const audit = await db.rawSql<{ actor: string }[]>`SELECT actor FROM audit_log WHERE user_id = ${userId} AND actor LIKE 'device:%'`;
+    expect(audit.length).toBeGreaterThan(0);
+    expect(audit.every((a) => !a.actor.includes('dev-1'))).toBe(true);
   });
 
   it('validates the sync body against the contract and upserts idempotently', async () => {
@@ -247,8 +270,8 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
 
     const payload = JSON.stringify({
       entry: [{ changes: [{ value: {
-        statuses: [{ id: 'wamid.ABC', status: 'delivered' }, { id: 'wamid.unknown', status: 'read' }],
-        messages: [{ from: '254700000123', type: 'text', text: { body: 'STOP' } }],
+        statuses: [{ id: 'wamid.ABC', status: 'delivered', timestamp: TS }, { id: 'wamid.unknown', status: 'read', timestamp: TS }],
+        messages: [{ from: '254700000123', type: 'text', timestamp: TS, text: { body: 'STOP' } }],
       } }] }],
     });
     const unsigned = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload });
@@ -256,9 +279,93 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
     const signed = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload });
     expect(signed.status).toBe(200);
-    expect(await signed.json()).toEqual({ ok: true, statuses: 1, commands: 1 });
+    expect(await signed.json()).toEqual({ ok: true, statuses: 1, commands: 1, stale: 0 });
     expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')?.status).toBe('delivered');
     expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+  });
+
+  it('M1: webhooks fail closed in production without their secrets, and old Meta events are ignored', async () => {
+    const prod = createApp({ db, env: { ...env, WHATSAPP_APP_SECRET: '', RESEND_WEBHOOK_SECRET: '', NODE_ENV: 'production' }, now: () => FIXED_NOW });
+    expect((await prod.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(503);
+    expect((await prod.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(503);
+    const dev = createApp({ db, env: { ...env, WHATSAPP_APP_SECRET: '', RESEND_WEBHOOK_SECRET: '' }, now: () => FIXED_NOW });
+    expect((await dev.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(200);
+    // Replay: a status event stamped ten minutes ago changes nothing.
+    const tenant = db.forUser(userId);
+    const report = (await tenant.listReports('weekly'))[0]!;
+    const delivery = await tenant.ensureDelivery(report.id, 'whatsapp');
+    await tenant.updateDelivery(delivery.id, { status: 'sent', provider_message_id: 'wamid.OLD' });
+    const old = String(Math.floor(FIXED_NOW.getTime() / 1000) - 600);
+    const payload = JSON.stringify({ entry: [{ changes: [{ value: { statuses: [{ id: 'wamid.OLD', status: 'failed', timestamp: old, errors: [{ code: 131026, title: 'free text <script>' }] }] } }] }] });
+    const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
+    const res = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload });
+    expect(await res.json()).toEqual({ ok: true, statuses: 0, commands: 0, stale: 1 });
+    expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')?.status).toBe('sent');
+    // A fresh failure stores only an error code, never the provider's text.
+    const fresh = payload.replace(old, TS);
+    const sig2 = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(fresh).digest('hex');
+    await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig2 }, body: fresh });
+    expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')).toMatchObject({ status: 'failed', last_error: 'whatsapp_error_131026' });
+  });
+
+  it('B1/M2: JOIN needs the user’s code, proves the sender’s number, and a changed number loses the consent', async () => {
+    const tenant = db.forUser(userId);
+    const prefs = (await (await get('/v1/me/preferences')).json()) as { join_code: string; whatsapp_verified: boolean };
+    expect(prefs.join_code).toMatch(/^[A-F0-9]{8}$/);
+    expect(prefs.whatsapp_verified).toBe(false);
+    const send = async (from: string, body: string) => {
+      const payload = JSON.stringify({ entry: [{ changes: [{ value: { messages: [{ from, type: 'text', timestamp: TS, text: { body } }] } }] }] });
+      const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
+      return (await (await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload })).json()) as { commands: number };
+    };
+    // A bare JOIN, or a JOIN with someone else's code, proves nothing.
+    expect((await send('254711111111', 'JOIN')).commands).toBe(0);
+    expect((await send('254711111111', 'JOIN NOTACODE1')).commands).toBe(0);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(false);
+    // The real code from the real phone binds that number and grants consent for exactly it.
+    expect((await send('254711111111', `join ${prefs.join_code.toLowerCase()}`)).commands).toBe(1);
+    const after = (await (await get('/v1/me/preferences')).json()) as { whatsapp_e164: string; whatsapp_verified: boolean };
+    expect(after).toMatchObject({ whatsapp_e164: '+254711111111', whatsapp_verified: true });
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(true);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254799999999')).toBe(false);
+    // The exploit: pointing the number at a victim after consent. The consent dies with the change.
+    const moved = await json('/v1/me/preferences', { whatsapp_e164: '+254799999999' }, token, 'PUT');
+    expect(((await moved.json()) as { whatsapp_verified: boolean }).whatsapp_verified).toBe(false);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254799999999')).toBe(false);
+    expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+    // A second account cannot type a number that is verified elsewhere; a JOIN from it moves the number instead.
+    const other = (await (await json('/v1/devices/register', { device_id: 'dev-other', platform: 'android', app_version: '1.0.0' }, '')).json()) as { device_token: string; user_id: string };
+    expect((await send('254711111111', `JOIN ${prefs.join_code}`)).commands).toBe(1); // back on the first account
+    const taken = await json('/v1/me/preferences', { whatsapp_e164: '+254711111111' }, other.device_token, 'PUT');
+    expect(taken.status).toBe(409);
+    const otherPrefs = (await (await get('/v1/me/preferences', other.device_token)).json()) as { join_code: string };
+    expect((await send('254711111111', `JOIN ${otherPrefs.join_code}`)).commands).toBe(1);
+    expect(await db.forUser(other.user_id).hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(true);
+    expect((await tenant.getPreferences()).whatsapp_e164).toBeNull();
+    expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+  });
+
+  it('B1: email consent comes only from the magic link and is bound to that address', async () => {
+    const tenant = db.forUser(userId);
+    await json('/v1/me/preferences', { email: 'owner@example.test' }, token, 'PUT');
+    expect(await tenant.hasConsentFor('email_delivery', 'owner@example.test')).toBe(false);
+    const sent = await json('/v1/me/email/send-link', {});
+    expect(sent.status).toBe(202);
+    const job = queue.emailLinks.at(-1)!;
+    expect(job).toMatchObject({ user_id: userId, email: 'owner@example.test' });
+    const linkToken = job.link.split('/confirm-email/')[1]!;
+    expect((await get('/v1/public/email/confirm/not-a-real-token-at-all-0000000000', '')).status).toBe(404);
+    const confirm = await get(`/v1/public/email/confirm/${linkToken}`, '');
+    expect(confirm.status).toBe(200);
+    expect(await confirm.json()).toEqual({ confirmed: true, email: 'owner@example.test' });
+    expect((await get(`/v1/public/email/confirm/${linkToken}`, '')).status).toBe(404); // single use
+    expect(await tenant.hasConsentFor('email_delivery', 'Owner@Example.test')).toBe(true);
+    expect(((await (await get('/v1/me/preferences')).json()) as { email_verified: boolean }).email_verified).toBe(true);
+    await json('/v1/me/preferences', { email: 'victim@example.test' }, token, 'PUT');
+    expect(await tenant.hasConsentFor('email_delivery', 'victim@example.test')).toBe(false);
+    expect(await tenant.hasConsent('email_delivery')).toBe(false);
+    // Granting a delivery consent without an address is refused outright.
+    await expect(tenant.grantConsent('email_delivery')).rejects.toThrow(/proven address/);
   });
 
   it('maps email provider events onto deliveries', async () => {
@@ -266,16 +373,70 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     const report = (await tenant.listReports('weekly'))[0]!;
     const delivery = await tenant.ensureDelivery(report.id, 'email');
     await tenant.updateDelivery(delivery.id, { status: 'sent', provider_message_id: 'email-1' });
-    await tenant.grantConsent('email_delivery');
+    await tenant.grantConsent('email_delivery', '1', 'me@example.test');
     const res = await app.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'email.bounced', data: { email_id: 'email-1', bounce: { message: 'mailbox full' } } }) });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true, handled: true });
     const d = (await tenant.listDeliveries(report.id)).find((x) => x.channel === 'email');
     expect(d?.status).toBe('failed');
-    expect(d?.last_error).toBe('mailbox full');
+    expect(d?.last_error).toBe('bounced');
     expect(await tenant.hasConsent('email_delivery')).toBe(false);
     const miss = await app.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'email.delivered', data: { email_id: 'nope' } }) });
     expect(await miss.json()).toEqual({ ok: true, handled: false });
+  });
+
+  it('M6: artefact URLs are minted per request, expire in 15 minutes and never leak a permanent location', async () => {
+    const tenant = db.forUser(userId);
+    const report = (await tenant.listReports('weekly'))[0]!;
+    const heroKey = `reports/${userId}/${report.id}/hero.png`;
+    const pdfKey = `reports/${userId}/${report.id}/report.pdf`;
+    await storage.put(heroKey, new Uint8Array([137, 80, 78, 71]), 'image/png');
+    await storage.put(pdfKey, new TextEncoder().encode('%PDF-1.4 demo'), 'application/pdf');
+    await tenant.updateReport(report.id, { artefacts: { ...report.artefacts, hero_png_key: heroKey, pdf_key: pdfKey } });
+    const summary = (await (await get(`/v1/reports/${report.id}`)).json()) as { summary: { artefacts: { hero_png_url: string; pdf_url: string } } };
+    const heroUrl = summary.summary.artefacts.hero_png_url;
+    expect(heroUrl).toMatch(/^http:\/\/localhost:8787\/v1\/public\/artefacts\//);
+    expect(heroUrl).not.toContain(heroKey);
+    const path = heroUrl.replace('http://localhost:8787', '');
+    const served = await app.request(path);
+    expect(served.status).toBe(200);
+    expect(served.headers.get('content-type')).toBe('image/png');
+    expect(new Uint8Array(await served.arrayBuffer())).toEqual(new Uint8Array([137, 80, 78, 71]));
+    expect((await app.request(path.slice(0, -2) + 'xx')).status).toBe(404);
+    const later = createApp({ db, env, storage, now: () => new Date(FIXED_NOW.getTime() + 16 * 60 * 1000) });
+    expect((await later.request(path)).status).toBe(404);
+    // The public resolver mints the same way, and the stored row holds keys only.
+    const stored = await tenant.getReport(report.id);
+    expect(JSON.stringify(stored?.artefacts)).not.toContain('http');
+    const noStorage = createApp({ db, env, now: () => FIXED_NOW });
+    const bare = (await (await noStorage.request(`/v1/reports/${report.id}`, { headers: { authorization: `Bearer ${token}` } })).json()) as { summary: { artefacts: { hero_png_url: string | null } } };
+    expect(bare.summary.artefacts.hero_png_url).toBeNull();
+  });
+
+  it('M5: bounds body size, string lengths, report age and request rates', async () => {
+    const big = JSON.stringify({ ...syncBody([]), parser_version: 'x'.repeat(1_100_000) });
+    expect((await app.request('/v1/sync', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }, body: big })).status).toBe(413);
+    const longString = await json('/v1/sync', syncBody([sampleTransaction('77777777-7777-4777-8777-777777777777', { account_ref: 'a'.repeat(81) })]));
+    expect(longString.status).toBe(400);
+    const ancient = await json('/v1/reports/generate', { kind: 'monthly', period: '2024-01-15' });
+    expect(ancient.status).toBe(400);
+    expect(((await ancient.json()) as { message: string }).message).toContain('13 months');
+    const future = await json('/v1/reports/generate', { kind: 'weekly', period: '2027-06-01' });
+    expect(future.status).toBe(400);
+    // Registration: 20 per IP per hour, then 429 with retry-after.
+    const fresh = createApp({ db, env, now: () => FIXED_NOW });
+    let last = 0;
+    for (let i = 0; i < 21; i += 1) {
+      const r = await fresh.request('/v1/devices/register', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.9' }, body: JSON.stringify({ device_id: `burst-${i}`, platform: 'android', app_version: '1' }) });
+      last = r.status;
+      if (r.status === 429) expect(r.headers.get('retry-after')).toMatch(/^\d+$/);
+    }
+    expect(last).toBe(429);
+    const otherIp = await fresh.request('/v1/devices/register', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.10' }, body: JSON.stringify({ device_id: 'burst-x', platform: 'android', app_version: '1' }) });
+    expect(otherIp.status).toBe(200);
+    // Public resolver: 60 per IP per minute.
+    for (let i = 0; i < 60; i += 1) await fresh.request('/v1/public/reports/nope', { headers: { 'x-forwarded-for': '198.51.100.1' } });
+    expect((await fresh.request('/v1/public/reports/nope', { headers: { 'x-forwarded-for': '198.51.100.1' } })).status).toBe(429);
   });
 
   it('404s unknown routes', async () => {

@@ -19,15 +19,13 @@ const inbox = demoInboxAvailable() ? parseDemoInbox() : null;
 if (inbox) console.log(`demo inbox: ${inbox.stats.messages} messages, ${inbox.stats.parsed} parsed, ${inbox.stats.duplicates} duplicate dropped, ${inbox.stats.transfer_pairs} transfer pairs, ${inbox.stats.balance_breaks} balance breaks`);
 else console.warn('corpus/demo/demo-inbox.jsonl not found; seeding the inline sample ledger instead');
 await tenant.upsertCategories(inbox ? inbox.categories : [...DEMO_CATEGORIES]);
-await tenant.updatePreferences({
-  email: process.env['REPORT_TO_EMAIL'] || 'demo@example.test',
-  whatsapp_e164: process.env['REPORT_TO_WHATSAPP'] || '+254700000321',
-  channels: ['email', 'whatsapp', 'share'],
-  locale: 'en',
-});
+const demoEmail = process.env['REPORT_TO_EMAIL'] || 'demo@example.test';
+const demoWhatsapp = process.env['REPORT_TO_WHATSAPP'] || '+254700000321';
+await tenant.updatePreferences({ email: demoEmail, whatsapp_e164: demoWhatsapp, channels: ['email', 'whatsapp', 'share'], locale: 'en' });
 await tenant.grantConsent('sync');
-await tenant.grantConsent('email_delivery');
-await tenant.grantConsent('whatsapp_delivery');
+// Demo user only: the consents are bound to the addresses set above, as a real JOIN / magic link would do.
+await tenant.grantConsent('email_delivery', '1', demoEmail);
+await tenant.grantConsent('whatsapp_delivery', '1', demoWhatsapp);
 await tenant.upsertBudget({ category_id: inbox ? 'food_groceries' : 'groceries', period: 'weekly', limit_cents: 600_000 });
 await tenant.upsertBudget({ category_id: inbox ? 'transport' : 'eating_out', period: 'monthly', limit_cents: 800_000 });
 await tenant.upsertAccounts(inbox ? inbox.accounts : demoAccounts(now));
@@ -37,15 +35,14 @@ await tenant.audit('system', 'seed.demo', { accepted: outcome.accepted, rejected
 console.log(`demo user ${reg.user_id}${reg.created_user ? ' (new)' : ''}: ${outcome.accepted} transactions, ${outcome.rejected.length} rejected`);
 await db.close();
 
-const token = signDeviceToken({ user_id: reg.user_id, device_id: 'demo-device', iat: Math.floor(now.getTime() / 1000) }, secret);
+// The token is used by this process only and is never printed (M3): the app registers itself with its own device id.
+const token = signDeviceToken({ user_id: reg.user_id, device: reg.device_row_id, iat: Math.floor(now.getTime() / 1000) }, secret);
 const headers = { 'content-type': 'application/json', authorization: `Bearer ${token}` };
 
 const apiUp = await fetch(`${apiUrl}/health`).then((r) => r.ok).catch(() => false);
 if (!apiUp) {
-  console.log(`API not reachable at ${apiUrl}. Start it (pnpm dev:api) and the worker (pnpm dev:worker), then:`);
-  for (const [kind, period] of inbox ? [['weekly', '2026-10-07'], ['monthly', '2026-09-15']] : [['weekly', 'last_week'], ['monthly', 'last_month']]) {
-    console.log(`curl -s -X POST ${apiUrl}/v1/reports/generate -H 'authorization: Bearer ${token}' -H 'content-type: application/json' -d '{"kind":"${kind}","period":"${period}","deliver":true}'`);
-  }
+  console.log(`API not reachable at ${apiUrl}. Start it (pnpm dev:api) and the worker (pnpm dev:worker), then re-run this script;`);
+  console.log(`or register your own device (POST /v1/devices/register) and call POST /v1/reports/generate as in apps/api/README.md.`);
   process.exit(0);
 }
 

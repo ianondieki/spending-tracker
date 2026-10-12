@@ -9,7 +9,7 @@ import type postgres from 'postgres';
 
 import type { Sql, TransactionSql } from './client.js';
 import type {
-  AccountRow, AiUsageEntry, BudgetRow, CategoryRow, Channel, ConsentPurpose, DeliveryRow, DeliveryStatus,
+  AccountRow, AiUsageEntry, BudgetRow, CategoryRow, Channel, ConsentPurpose, ConsentRow, DeliveryRow, DeliveryStatus,
   Preferences, ReportArtefacts, ReportKind, ReportLinkRow, ReportRow, ReportStatus, SyncOutcome, TransactionRow,
   UserRow, Writer,
 } from './types.js';
@@ -33,8 +33,21 @@ function mapUser(r: Row): UserRow {
     monthly_at: r['monthly_at'] as string,
     channels: r['channels'] as Channel[],
     theme: r['theme'] as UserRow['theme'],
+    join_code: r['join_code'] as string,
     created_at: isoReq(r['created_at'] as Date),
   };
+}
+
+/** Thrown when a WhatsApp number is already proven by another account. */
+export class AddressTakenError extends Error {
+  constructor(readonly field: 'whatsapp_e164') {
+    super(`${field} already belongs to another account`);
+  }
+}
+
+export function normaliseEmail(email: string | null | undefined): string | null {
+  const e = email?.trim().toLowerCase() ?? '';
+  return e === '' ? null : e;
 }
 
 function mapAccount(r: Row): AccountRow {
@@ -173,29 +186,82 @@ export class TenantDb {
     return { email, whatsapp_e164, locale, week_start, weekly_at, monthly_at, channels, theme };
   }
 
+  /**
+   * Updates preferences. Changing the email or the WhatsApp number revokes the matching delivery consent, because a
+   * consent is proof for one address only (B1); the new address has to be proven again (JOIN / magic link).
+   * A WhatsApp number proven by another account cannot be taken (AddressTakenError).
+   */
   async updatePreferences(p: Partial<Preferences>): Promise<Preferences> {
-    await this.tx(
-      (tx) => tx`UPDATE users SET
-        email = COALESCE(${p.email === undefined ? null : p.email}, CASE WHEN ${p.email === undefined} THEN email ELSE NULL END),
-        whatsapp_e164 = COALESCE(${p.whatsapp_e164 === undefined ? null : p.whatsapp_e164}, CASE WHEN ${p.whatsapp_e164 === undefined} THEN whatsapp_e164 ELSE NULL END),
-        locale = COALESCE(${p.locale ?? null}, locale),
-        week_start = COALESCE(${p.week_start ?? null}, week_start),
-        weekly_at = COALESCE(${p.weekly_at ?? null}, weekly_at),
-        monthly_at = COALESCE(${p.monthly_at ?? null}, monthly_at),
-        channels = COALESCE(${p.channels ? tx.json(p.channels) : null}, channels),
-        theme = COALESCE(${p.theme ?? null}, theme),
-        updated_at = now()
-      WHERE id = ${this.userId}`,
-    );
+    const email = p.email === undefined ? undefined : normaliseEmail(p.email);
+    try {
+      await this.tx(async (tx) => {
+        const current = (await tx`SELECT email, whatsapp_e164 FROM users WHERE id = ${this.userId}`)[0] as Row | undefined;
+        if (!current) throw new Error('user not found');
+        const emailChanges = email !== undefined && email !== ((current['email'] as string | null) ?? null);
+        const waChanges = p.whatsapp_e164 !== undefined && p.whatsapp_e164 !== ((current['whatsapp_e164'] as string | null) ?? null);
+        await tx`UPDATE users SET
+          email = COALESCE(${email === undefined ? null : email}, CASE WHEN ${email === undefined} THEN email ELSE NULL END),
+          whatsapp_e164 = COALESCE(${p.whatsapp_e164 === undefined ? null : p.whatsapp_e164}, CASE WHEN ${p.whatsapp_e164 === undefined} THEN whatsapp_e164 ELSE NULL END),
+          locale = COALESCE(${p.locale ?? null}, locale),
+          week_start = COALESCE(${p.week_start ?? null}, week_start),
+          weekly_at = COALESCE(${p.weekly_at ?? null}, weekly_at),
+          monthly_at = COALESCE(${p.monthly_at ?? null}, monthly_at),
+          channels = COALESCE(${p.channels ? tx.json(p.channels) : null}, channels),
+          theme = COALESCE(${p.theme ?? null}, theme),
+          updated_at = now()
+        WHERE id = ${this.userId}`;
+        if (emailChanges) await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${this.userId} AND purpose = 'email_delivery' AND revoked_at IS NULL`;
+        if (waChanges) await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${this.userId} AND purpose = 'whatsapp_delivery' AND revoked_at IS NULL`;
+      });
+    } catch (err) {
+      if ((err as postgres.PostgresError).code === '23505') throw new AddressTakenError('whatsapp_e164');
+      throw err;
+    }
     return this.getPreferences();
   }
 
   // ----- consents -----
 
-  async grantConsent(purpose: ConsentPurpose, version = '1'): Promise<void> {
+  /**
+   * Grants a consent. Delivery consents (`whatsapp_delivery`, `email_delivery`) MUST carry the address they were
+   * proven for; granting one without an address is refused (fail closed).
+   */
+  async grantConsent(purpose: ConsentPurpose, version = '1', address: string | null = null): Promise<void> {
+    const isDelivery = purpose === 'whatsapp_delivery' || purpose === 'email_delivery';
+    const addr = purpose === 'email_delivery' ? normaliseEmail(address) : address;
+    if (isDelivery && !addr) throw new Error(`${purpose} consent needs the proven address`);
     await this.tx(async (tx) => {
       await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${this.userId} AND purpose = ${purpose} AND revoked_at IS NULL`;
-      await tx`INSERT INTO consents (user_id, purpose, version) VALUES (${this.userId}, ${purpose}, ${version})`;
+      await tx`INSERT INTO consents (user_id, purpose, version, address) VALUES (${this.userId}, ${purpose}, ${version}, ${addr})`;
+    });
+  }
+
+  /** The active consent for a purpose, with the address it was proven for. */
+  async activeConsent(purpose: ConsentPurpose): Promise<ConsentRow | null> {
+    const rows = await this.tx(
+      (tx) => tx`SELECT purpose, version, address, granted_at FROM consents WHERE user_id = ${this.userId} AND purpose = ${purpose} AND revoked_at IS NULL ORDER BY granted_at DESC LIMIT 1`,
+    );
+    const r = rows[0] as Row | undefined;
+    return r ? { purpose: r['purpose'] as ConsentPurpose, version: r['version'] as string, address: (r['address'] as string | null) ?? null, granted_at: isoReq(r['granted_at'] as Date) } : null;
+  }
+
+  /** True only when an active consent exists AND it was proven for exactly this address (B1). */
+  async hasConsentFor(purpose: 'whatsapp_delivery' | 'email_delivery', address: string | null): Promise<boolean> {
+    if (!address) return false;
+    const want = purpose === 'email_delivery' ? normaliseEmail(address) : address;
+    const c = await this.activeConsent(purpose);
+    return !!c && c.address !== null && c.address === want;
+  }
+
+  // ----- email magic link -----
+
+  /** Records a pending confirmation for `email`; the caller sends the link carrying the token. */
+  async createEmailConfirmation(email: string, tokenHash: string, expiresAt: string): Promise<void> {
+    const addr = normaliseEmail(email);
+    if (!addr) throw new Error('email required');
+    await this.tx(async (tx) => {
+      await tx`UPDATE email_confirmations SET used_at = now() WHERE user_id = ${this.userId} AND used_at IS NULL`;
+      await tx`INSERT INTO email_confirmations (user_id, email, token_hash, expires_at) VALUES (${this.userId}, ${addr}, ${tokenHash}, ${expiresAt})`;
     });
   }
 
@@ -494,6 +560,12 @@ export class TenantDb {
 
   async audit(actor: string, action: string, details: Record<string, unknown> = {}): Promise<void> {
     await this.tx((tx) => tx`INSERT INTO audit_log (user_id, actor, action, details) VALUES (${this.userId}, ${actor}, ${action}, ${tx.json(details as never)})`);
+  }
+
+  /** This user's model spend since `since` (the per-user daily cap). */
+  async aiSpendUsdSince(since: Date): Promise<number> {
+    const rows = await this.tx((tx) => tx<{ total: string | null }[]>`SELECT sum(cost_usd)::text AS total FROM ai_usage WHERE user_id = ${this.userId} AND created_at >= ${since}`);
+    return Number(rows[0]?.total ?? 0);
   }
 
   async recordAiUsage(e: AiUsageEntry): Promise<void> {

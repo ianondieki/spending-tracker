@@ -72,6 +72,9 @@ Root `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` are green for the 
   Kiswahili variants beyond Send Money) are listed in `corpus/mpesa/MISSING-FAMILIES.md`.
 - Kiswahili category names are machine-written copy (`copy_review: true`).
 - 68 of 77 merchant seeds carry numbers or aliases without a fetched source (`verified: false`).
+- Security review m3 (MINOR): `raw_hash` and the transaction id are unsalted SHA-256 of the body. The fix (a per-device
+  HMAC key passed as an engine variable) is a contract change mirrored in both engines; proposed in
+  `docs/sprint/CONTRACT-REQUESTS.md`, not applied during the sprint.
 - Regex timing: Java's `CASE_INSENSITIVE` is ASCII-only and its `\s` excludes NBSP; the engine normalises NBSP only.
   Non-ASCII case folding differences are not expected in money messages.
 
@@ -103,3 +106,4 @@ Not available: no real export in `corpus/` at the time of writing.
 - 15:16 UTC: merged c588cf8; normaliseMerchantName + isMerchantCounterparty in @hesabu/taxonomy for Lane B's analytics. No real export.
 - 16:09 UTC: merged b9d904a; Lane A's ParityTest and Lane B's demo seed consume my files as documented; taxonomy `pnpm build` now copies `data/*.json` into `dist/` for the Android asset sync. No real export.
 - 17:01 UTC: merged 51530df; nothing parity-relevant changed; tests green; no real export. Report finalised; last export check at ~17:55 UTC, then stop.
+- 17:58 UTC: final check-in: merged b06b37e; no real export; tests green; security review m3 recorded as a contract request. Lane D stopped.

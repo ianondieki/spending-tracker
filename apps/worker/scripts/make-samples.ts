@@ -40,7 +40,7 @@ function downscale2x(png: Uint8Array): Buffer {
 
 const db = await Db.open(process.env);
 const storageDir = await mkdtemp(join(tmpdir(), 'hesabu-samples-'));
-const storage = new FsStorage(storageDir, 'https://hesabu.example');
+const storage = new FsStorage(storageDir);
 const renderer = new PackageRenderer();
 try {
   const reg = await db.system.registerDevice({ device_id: 'samples-device', platform: 'android', app_version: '1.0.0', display_name: 'Wanjiru' });
