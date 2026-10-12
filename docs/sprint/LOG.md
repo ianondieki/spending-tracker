@@ -50,3 +50,4 @@ Readable from a phone. One line per event. Newest at the bottom.
 - 18:12 orchestrator: lane B security fixes merged (6f9f559, 693 tests): blocker and all six majors closed; openapi 1.1.0 adds join_code, verified flags, magic-link routes and 15-minute artefact URLs.
 - 18:15 UTC lane A: addendum: fresh signed URLs on share, unverified-address skip surfaced; join code and email verification UI deferred to the lane report's first resume item; stopping.
 - 18:43 orchestrator: check-in 5 done; lane A security package merged (4c772db); all checks green; docs/sprint/STATUS.md written for the owner; last app package (join code and email verification UI) dispatched.
+- 18:49 UTC lane A: final package: WhatsApp JOIN instruction with wa.me link, email confirmation link, address_taken handling, verification screenshots; 303 unit tests, lint, APK green; lane report updated; stopping.
