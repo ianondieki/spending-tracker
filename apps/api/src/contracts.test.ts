@@ -7,7 +7,7 @@ import { readFile } from 'node:fs/promises';
 import {
   COUNTERPARTY_KINDS, FactsSheetSchema, INSIGHT_KINDS, PROVIDERS, SyncRequestSchema, TransactionSchema, TX_TYPES,
 } from '@hesabu/analytics';
-import { CHART_TYPES, ReportDocumentSchema } from '@hesabu/agents';
+import { CHART_TYPES, ReportDocumentSchema } from '../../../packages/agents/src/contracts/report-document.js';
 import { Ajv2020 } from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { describe, expect, it } from 'vitest';
