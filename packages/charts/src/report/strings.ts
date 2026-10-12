@@ -7,6 +7,8 @@ export interface ReportStrings {
   readonly monthly: string;
   readonly totalSpent: string;
   readonly vsLast: (kind: 'weekly' | 'monthly') => string;
+  /** "KSh 1,550 more than last week": amount unsigned, direction in words, never an arrow plus a sign. */
+  readonly deltaSentence: (delta: string, direction: 'up' | 'down' | 'flat' | 'na', kind: 'weekly' | 'monthly') => string;
   readonly accountsCovered: string;
   readonly unknownMessages: string;
   readonly openInApp: string;
@@ -23,6 +25,14 @@ const EN: ReportStrings = {
   monthly: 'Monthly report',
   totalSpent: 'Total spent',
   vsLast: (kind) => (kind === 'weekly' ? 'vs last week' : 'vs last month'),
+  deltaSentence: (delta, direction, kind) => {
+    const period = kind === 'weekly' ? 'last week' : 'last month';
+    const amount = unsigned(delta);
+    if (direction === 'up') return `${amount} more than ${period}`;
+    if (direction === 'down') return `${amount} less than ${period}`;
+    if (direction === 'flat') return `The same as ${period}`;
+    return `No comparison with ${period} yet`;
+  },
   accountsCovered: 'Accounts covered',
   unknownMessages: 'Messages Hesabu could not read',
   openInApp: 'Open in Hesabu',
@@ -39,6 +49,14 @@ const SW: ReportStrings = {
   monthly: 'Ripoti ya mwezi',
   totalSpent: 'Jumla ya matumizi',
   vsLast: (kind) => (kind === 'weekly' ? 'ikilinganishwa na wiki iliyopita' : 'ikilinganishwa na mwezi uliopita'),
+  deltaSentence: (delta, direction, kind) => {
+    const period = kind === 'weekly' ? 'wiki iliyopita' : 'mwezi uliopita';
+    const amount = unsigned(delta);
+    if (direction === 'up') return `${amount} zaidi ya ${period}`;
+    if (direction === 'down') return `${amount} chini ya ${period}`;
+    if (direction === 'flat') return `Sawa na ${period}`;
+    return `Bado hakuna ulinganisho na ${period}`;
+  },
   accountsCovered: 'Akaunti zilizojumuishwa',
   unknownMessages: 'Jumbe ambazo Hesabu haikuweza kusoma',
   openInApp: 'Fungua kwenye Hesabu',
@@ -48,6 +66,11 @@ const SW: ReportStrings = {
   skipToContent: 'Ruka hadi ripoti',
   contents: 'Katika ripoti hii',
 };
+
+/** `KSh +1,550` → `KSh 1,550`; the words carry the direction. */
+export function unsigned(delta: string): string {
+  return delta.replace(/\s*[+\-−]\s*/, ' ').replace(/\s+/g, ' ').trim();
+}
 
 export function reportStrings(locale: Locale): ReportStrings {
   return locale === 'sw' ? SW : EN;

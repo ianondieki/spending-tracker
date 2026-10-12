@@ -8,7 +8,7 @@ import { chartLabels } from '../labels.js';
 import { BAR_MAX, hBarPath, HRule, Label, Tip } from '../primitives.js';
 import { linear, px } from '../scale.js';
 import { v, VAR } from '../theme.js';
-import { fit, textWidth } from '../text.js';
+import { fit, humanName, textWidth } from '../text.js';
 import { FONT } from '../tokens.js';
 
 export interface TopBarItem {
@@ -30,21 +30,24 @@ export interface TopBarsProps extends BaseChartProps {
 
 export function topBarsAltText(data: TopBarsData, locale: Locale): string {
   const l = chartLabels(locale);
-  return data.items.map((m, i) => `${i + 1}. ${m.name} ${m.display}${m.isNew ? ` (${l.new.toLowerCase()})` : ''}`).join('; ') + '.';
+  return data.items.map((m, i) => `${i + 1}. ${humanName(m.name)} ${m.display}${m.isNew ? ` (${l.new.toLowerCase()})` : ''}`).join('; ') + '.';
 }
 
 export function topBarsTable(data: TopBarsData, locale: Locale): DataTableSpec {
   const l = chartLabels(locale);
   return {
     columns: [data.nameLabel ?? l.merchant, l.amount, ''],
-    rows: data.items.map((m) => [m.name, m.display, m.isNew ? l.new : '']),
+    rows: data.items.map((m) => [humanName(m.name), m.display, m.isNew ? l.new : '']),
     numeric: [1],
   };
 }
 
 export function TopBars({ id, title, takeaway, locale, theme, width = DEFAULT_WIDTH, showTable, altText, data }: TopBarsProps): ReactElement {
   const l = chartLabels(locale);
-  const items = [...data.items].sort((a, b) => b.cents - a.cents).slice(0, 8);
+  const items = [...data.items]
+    .sort((a, b) => b.cents - a.cents)
+    .slice(0, 8)
+    .map((m) => ({ ...m, name: humanName(m.name) }));
   const rowH = 34;
   const nameW = Math.round(Math.min(width * 0.38, 200));
   const valueW = Math.max(...items.map((m) => textWidth(m.display, FONT.sm))) + 12;

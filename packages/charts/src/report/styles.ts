@@ -23,9 +23,7 @@ export const reportStyles = `
 .h-tally__label--total { color: var(--h-ink); font-size: 14px; font-weight: 400; text-align: left; }
 .h-tally__value--total { font-size: 40px; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
 .h-tally__rule { height: 0; border-bottom: 3px double var(--h-ink); }
-.h-hero__delta { margin: 12px 0 0; font-size: 16px; }
-.h-hero__delta-value { font-weight: 500; }
-.h-hero__delta-label { color: var(--h-ink-soft); }
+.h-hero__delta { margin: 12px 0 0; font-size: 16px; font-weight: 500; }
 .h-hero__verdict { margin: 12px 0 0; font-size: 20px; line-height: 1.45; max-width: 36em; }
 .h-sections { margin-top: 32px; }
 .h-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }

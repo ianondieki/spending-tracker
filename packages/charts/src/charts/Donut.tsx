@@ -8,7 +8,7 @@ import { chartLabels } from '../labels.js';
 import { GAP, HRule, Label, Tip } from '../primitives.js';
 import { px } from '../scale.js';
 import { catVar, v, VAR } from '../theme.js';
-import { fit, textWidth } from '../text.js';
+import { fit, humanName, textWidth } from '../text.js';
 import { FONT, MAX_DONUT_SLICES } from '../tokens.js';
 
 export interface DonutSlice {
@@ -31,16 +31,25 @@ export interface DonutProps extends BaseChartProps {
   readonly bare?: boolean;
 }
 
-/** Folds anything past the six largest slices into Other. */
+/**
+ * The chart spec caps a donut at six slices plus Other. Enforced here, inside the component, so every caller
+ * gets it: the six largest named slices stay, everything else (including an Other the caller already made) folds
+ * into one Other slice drawn in the other_slice token. Names in capitals are rendered in title case.
+ */
 export function foldSlices(slices: readonly DonutSlice[], otherLabel: string): DonutSlice[] {
-  const sorted = [...slices].sort((a, b) => b.cents - a.cents);
-  if (sorted.length <= MAX_DONUT_SLICES) return sorted;
-  const top = sorted.slice(0, MAX_DONUT_SLICES);
-  const rest = sorted.slice(MAX_DONUT_SLICES);
+  const named = slices.filter((s) => !s.isOther).sort((a, b) => b.cents - a.cents);
+  const existingOther = slices.filter((s) => s.isOther);
+  const total = slices.reduce((a, s) => a + s.cents, 0);
+  const top = named.slice(0, MAX_DONUT_SLICES).map((s) => ({ ...s, name: humanName(s.name) }));
+  const rest = [...named.slice(MAX_DONUT_SLICES), ...existingOther];
+  if (rest.length === 0) return top;
+  if (rest.length === 1 && rest[0]!.isOther) return [...top, rest[0]!];
   const cents = rest.reduce((a, s) => a + s.cents, 0);
-  const total = sorted.reduce((a, s) => a + s.cents, 0);
   const share = total ? Math.round((cents / total) * 100) : 0;
-  return [...top, { name: otherLabel, cents, display: formatKsh(cents), share: `${share}%`, isOther: true }];
+  return [
+    ...top,
+    { name: otherLabel, cents, display: formatKsh(cents), share: `${share}%`, isOther: true },
+  ];
 }
 
 export function donutAltText(data: DonutData, locale: Locale): string {
@@ -55,20 +64,50 @@ export function donutTable(data: DonutData, locale: Locale): DataTableSpec {
   const l = chartLabels(locale);
   return {
     columns: [l.category, l.amount, l.share],
-    rows: [...data.slices.map((s) => [s.name, s.display, s.share]), [l.total, data.total.display, '100%']],
+    rows: [
+      ...data.slices.map((s) => [s.name, s.display, s.share]),
+      [l.total, data.total.display, '100%'],
+    ],
     numeric: [1, 2],
   };
 }
 
-function arcPath(cx: number, cy: number, rOuter: number, rInner: number, a0: number, a1: number): string {
+function arcPath(
+  cx: number,
+  cy: number,
+  rOuter: number,
+  rInner: number,
+  a0: number,
+  a1: number,
+): string {
   const large = a1 - a0 > Math.PI ? 1 : 0;
   const p = (r: number, a: number) => `${px(cx + r * Math.sin(a))} ${px(cy - r * Math.cos(a))}`;
   return `M${p(rOuter, a0)} A${rOuter} ${rOuter} 0 ${large} 1 ${p(rOuter, a1)} L${p(rInner, a1)} A${rInner} ${rInner} 0 ${large} 0 ${p(rInner, a0)} Z`;
 }
 
-export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDTH, showTable, altText, data, bare = false }: DonutProps): ReactElement {
+export function Donut({
+  id,
+  title,
+  takeaway,
+  locale,
+  theme,
+  width = DEFAULT_WIDTH,
+  showTable,
+  altText,
+  data: raw,
+  bare = false,
+}: DonutProps): ReactElement {
   const l = chartLabels(locale);
-  if (bare) return <DonutRing data={data} size={width} label={l.out} altText={altText ?? donutAltText(data, locale)} />;
+  const data: DonutData = { ...raw, slices: foldSlices(raw.slices, l.other) };
+  if (bare)
+    return (
+      <DonutRing
+        data={data}
+        size={width}
+        label={l.out}
+        altText={altText ?? donutAltText(data, locale)}
+      />
+    );
   const stacked = width < 480;
   const r = stacked ? Math.min(Math.round(width * 0.3), 112) : 112;
   const ring = Math.round(r * 0.34);
@@ -78,7 +117,9 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
   const cy = r + 36;
   const legendX = stacked ? 0 : 2 * r + 56;
   const legendY = stacked ? 2 * r + 60 : Math.max(8, cy - (data.slices.length * legendRow) / 2);
-  const height = stacked ? legendY + data.slices.length * legendRow + 8 : Math.max(2 * r + 60, legendY + data.slices.length * legendRow + 8);
+  const height = stacked
+    ? legendY + data.slices.length * legendRow + 8
+    : Math.max(2 * r + 60, legendY + data.slices.length * legendRow + 8);
 
   const total = Math.max(1, data.total.cents);
   // The largest slice straddles 12 o'clock so its outside label sits above the ring, clear of the legend.
@@ -94,14 +135,39 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
   const topLx = cx;
   const topLy = cy - r - 12;
   const hole = 2 * (r - ring);
-  const totalSize = Math.min(FONT.xl, Math.floor((hole - 12) / Math.max(1, textWidth(data.total.display, 1))));
+  const totalSize = Math.min(
+    FONT.xl,
+    Math.floor((hole - 12) / Math.max(1, textWidth(data.total.display, 1))),
+  );
 
   return (
-    <Figure id={id} title={title} takeaway={takeaway} altText={altText ?? donutAltText(data, locale)} locale={locale} theme={theme} table={donutTable(data, locale)} showTable={showTable} width={width}>
-      <Svg width={width} height={height} altText={altText ?? donutAltText(data, locale)} chartType="donut">
+    <Figure
+      id={id}
+      title={title}
+      takeaway={takeaway}
+      altText={altText ?? donutAltText(data, locale)}
+      locale={locale}
+      theme={theme}
+      table={donutTable(data, locale)}
+      showTable={showTable}
+      width={width}
+    >
+      <Svg
+        width={width}
+        height={height}
+        altText={altText ?? donutAltText(data, locale)}
+        chartType="donut"
+      >
         <g>
           {arcs.map(({ s, i, a0, a1 }) => (
-            <path key={i} d={arcPath(cx, cy, r, r - ring, a0, Math.max(a1, a0 + 0.001))} fill={s.isOther ? v(VAR.other) : v(catVar(i))} stroke={v(VAR.sheet)} strokeWidth={GAP} strokeLinejoin="round">
+            <path
+              key={i}
+              d={arcPath(cx, cy, r, r - ring, a0, Math.max(a1, a0 + 0.001))}
+              fill={s.isOther ? v(VAR.other) : v(catVar(i))}
+              stroke={v(VAR.sheet)}
+              strokeWidth={GAP}
+              strokeLinejoin="round"
+            >
               <Tip>{`${s.name}: ${s.display} (${s.share})`}</Tip>
             </path>
           ))}
@@ -114,7 +180,14 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
         </Label>
         {top ? (
           <g>
-            <line x1={px(cx)} y1={px(cy - r)} x2={px(topLx)} y2={px(topLy + 4)} stroke={v(VAR.inkSoft)} strokeWidth={1} />
+            <line
+              x1={px(cx)}
+              y1={px(cy - r)}
+              x2={px(topLx)}
+              y2={px(topLy + 4)}
+              stroke={v(VAR.inkSoft)}
+              strokeWidth={1}
+            />
             <Label x={topLx} y={topLy} size={FONT.sm} weight={500} anchor="middle">
               {`${top.s.name} ${top.s.share}`}
             </Label>
@@ -125,7 +198,14 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
             const y = legendY + i * legendRow;
             return (
               <g key={i}>
-                <rect x={px(legendX)} y={px(y + 9)} width={10} height={10} rx={2} fill={s.isOther ? v(VAR.other) : v(catVar(i))} />
+                <rect
+                  x={px(legendX)}
+                  y={px(y + 9)}
+                  width={10}
+                  height={10}
+                  rx={2}
+                  fill={s.isOther ? v(VAR.other) : v(catVar(i))}
+                />
                 <Label x={legendX + 18} y={y + 19} size={FONT.sm}>
                   {fit(s.name, legendW - 18 - 120, FONT.sm)}
                 </Label>
@@ -145,34 +225,135 @@ export function Donut({ id, title, takeaway, locale, theme, width = DEFAULT_WIDT
   );
 }
 
-/** The ring with the total in its centre and nothing else; sized to `size` px square. */
-export function DonutRing({ data, size, label, altText }: { readonly data: DonutData; readonly size: number; readonly label: string; readonly altText: string }): ReactElement {
+/**
+ * The ring with the total in its centre, the largest slice named above it and, when `rows` is set, the next
+ * slices as swatch rows beneath. Sized to `size` px square plus the label band. Used inside the hero image.
+ */
+export function DonutRing({
+  data,
+  size,
+  label,
+  altText,
+  rows = 0,
+  fontSize = 28,
+  otherLabel = 'Other',
+  width: canvas,
+}: {
+  readonly data: DonutData;
+  readonly size: number;
+  readonly label: string;
+  readonly altText: string;
+  readonly rows?: number;
+  readonly fontSize?: number;
+  readonly otherLabel?: string;
+  /** canvas width; the ring is centred and labels may use the full width */
+  readonly width?: number;
+}): ReactElement {
+  const slices = foldSlices(data.slices, otherLabel);
   const r = size / 2;
   const ring = Math.round(r * 0.34);
-  const cx = r;
-  const cy = r;
+  const labelBand = fontSize + 18;
+  const rowPitch = Math.round(fontSize * 1.3);
+  const width = Math.max(size, canvas ?? size);
+  const height = labelBand + size + (rows > 0 ? 12 + rows * rowPitch : 0);
+  const cx = width / 2;
+  const cy = labelBand + r;
   const total = Math.max(1, data.total.cents);
-  const firstSpan = data.slices[0] ? (data.slices[0].cents / total) * Math.PI * 2 : 0;
+  const firstSpan = slices[0] ? (slices[0].cents / total) * Math.PI * 2 : 0;
   let angle = -firstSpan / 2;
-  const arcs = data.slices.map((s, i) => {
+  const arcs = slices.map((s, i) => {
     const a0 = angle;
     const a1 = angle + (s.cents / total) * Math.PI * 2;
     angle = a1;
     return { s, i, a0, a1 };
   });
   const hole = 2 * (r - ring);
-  const totalSize = Math.min(Math.round(size * 0.13), Math.floor((hole - 16) / Math.max(1, textWidth(data.total.display, 1))));
+  const totalSize = Math.min(
+    Math.round(size * 0.13),
+    Math.floor((hole - 16) / Math.max(1, textWidth(data.total.display, 1))),
+  );
+  const top = slices[0];
+  // The centre label only when it can sit under the total at the minimum size; otherwise the number alone.
+  const innerLabel = Math.round(totalSize * 0.72) >= fontSize;
+  const topText = top ? fit(`${top.name} ${top.share}`, width, fontSize) : '';
+  const rowSlices = slices.slice(1, 1 + rows);
   return (
-    <Svg width={size} height={size} altText={altText} chartType="donut">
+    <Svg width={width} height={height} altText={altText} chartType="donut">
+      {top ? (
+        <g>
+          <Label x={cx} y={fontSize} size={fontSize} weight={500} anchor="middle">
+            {topText}
+          </Label>
+          <line
+            x1={px(cx)}
+            x2={px(cx)}
+            y1={px(fontSize + 6)}
+            y2={px(labelBand)}
+            stroke={v(VAR.inkSoft)}
+            strokeWidth={2}
+          />
+        </g>
+      ) : null}
       {arcs.map(({ s, i, a0, a1 }) => (
-        <path key={i} d={arcPath(cx, cy, r - 1, r - ring, a0, Math.max(a1, a0 + 0.001))} fill={s.isOther ? v(VAR.other) : v(catVar(i))} stroke={v(VAR.sheet)} strokeWidth={GAP} strokeLinejoin="round" />
+        <path
+          key={i}
+          d={arcPath(cx, cy, r - 1, r - ring, a0, Math.max(a1, a0 + 0.001))}
+          fill={s.isOther ? v(VAR.other) : v(catVar(i))}
+          stroke={v(VAR.sheet)}
+          strokeWidth={GAP}
+          strokeLinejoin="round"
+        />
       ))}
-      <Label x={cx} y={cy + totalSize * 0.1} size={totalSize} weight={700} anchor="middle" numeric>
+      <Label
+        x={cx}
+        y={cy + (innerLabel ? totalSize * 0.1 : totalSize * 0.36)}
+        size={totalSize}
+        weight={700}
+        anchor="middle"
+        numeric
+      >
         {data.total.display}
       </Label>
-      <Label x={cx} y={cy + totalSize * 0.1 + Math.round(totalSize * 0.8)} size={Math.round(totalSize * 0.72)} anchor="middle" soft>
-        {label}
-      </Label>
+      {innerLabel ? (
+        <Label
+          x={cx}
+          y={cy + totalSize * 0.1 + Math.round(totalSize * 0.8)}
+          size={Math.round(totalSize * 0.72)}
+          anchor="middle"
+          soft
+        >
+          {label}
+        </Label>
+      ) : null}
+      {rowSlices.map((s, i) => {
+        const y = labelBand + size + 12 + i * rowPitch;
+        const sw = Math.round(fontSize * 0.5);
+        return (
+          <g key={s.name}>
+            <rect
+              x={0}
+              y={px(y + (rowPitch - sw) / 2 - 2)}
+              width={sw}
+              height={sw}
+              rx={3}
+              fill={s.isOther ? v(VAR.other) : v(catVar(i + 1))}
+            />
+            <Label x={sw + 10} y={y + rowPitch / 2 + fontSize * 0.35} size={fontSize}>
+              {fit(s.name, width - sw - 10 - textWidth(` ${s.share}`, fontSize) - 4, fontSize)}
+            </Label>
+            <Label
+              x={width}
+              y={y + rowPitch / 2 + fontSize * 0.35}
+              size={fontSize}
+              anchor="end"
+              soft
+              numeric
+            >
+              {s.share}
+            </Label>
+          </g>
+        );
+      })}
     </Svg>
   );
 }

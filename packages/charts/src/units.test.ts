@@ -85,3 +85,41 @@ describe('data shaping', () => {
     expect(heatBin(50, 100)).toBe(2);
   });
 });
+
+describe('humanName', () => {
+  it('title-cases shouting names and keeps acronyms and suffixes', async () => {
+    const { humanName } = await import('./text.js');
+    expect(humanName('QUICKMART LTD')).toBe('Quickmart Ltd');
+    expect(humanName('MAKAO PROPERTIES')).toBe('Makao Properties');
+    expect(humanName('KPLC PREPAID')).toBe('KPLC Prepaid');
+    expect(humanName('NAIVAS LTD KILIMANI')).toBe('Naivas Ltd Kilimani');
+    expect(humanName('Naivas Westlands')).toBe('Naivas Westlands');
+    expect(humanName('KCB')).toBe('KCB');
+    expect(humanName('M-PESA AGENT')).toBe('M-pesa Agent');
+  });
+});
+
+describe('deltaSentence', () => {
+  it('writes direction in words with an unsigned amount', async () => {
+    const { reportStrings, unsigned } = await import('./report/strings.js');
+    expect(unsigned('KSh +1,550')).toBe('KSh 1,550');
+    expect(unsigned('KSh -23,375')).toBe('KSh 23,375');
+    expect(reportStrings('en').deltaSentence('KSh -23,375', 'down', 'weekly')).toBe('KSh 23,375 less than last week');
+    expect(reportStrings('en').deltaSentence('KSh +6,250', 'up', 'monthly')).toBe('KSh 6,250 more than last month');
+    expect(reportStrings('sw').deltaSentence('KSh +1,550', 'up', 'weekly')).toBe('KSh 1,550 zaidi ya wiki iliyopita');
+    expect(reportStrings('en').deltaSentence('KSh 0', 'flat', 'weekly')).toBe('The same as last week');
+  });
+});
+
+describe('donut cap', () => {
+  it('folds an existing Other and anything past six into one Other slice', () => {
+    const slices = [
+      ...Array.from({ length: 8 }, (_, i) => ({ name: `c${i}`, cents: (9 - i) * 1000, display: '', share: '' })),
+      { name: 'Other', cents: 500, display: 'KSh 5', share: '1%', isOther: true },
+    ];
+    const folded = foldSlices(slices, 'Other');
+    expect(folded).toHaveLength(7);
+    expect(folded.filter((s) => s.isOther)).toHaveLength(1);
+    expect(folded[6]!.cents).toBe(3000 + 2000 + 500);
+  });
+});

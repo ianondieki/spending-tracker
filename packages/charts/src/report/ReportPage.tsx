@@ -23,6 +23,7 @@ import type {
 import { DEFAULT_WIDTH, PHONE_WIDTH } from '../common.js';
 import { resolveChart } from '../resolve.js';
 import type { Theme } from '../tokens.js';
+import { humanName } from '../text.js';
 import { reportStrings } from './strings.js';
 
 export type ReportMode = 'web' | 'print' | 'static';
@@ -86,8 +87,6 @@ function Hero({
   readonly doc: ReportDocument;
 }): ReactElement {
   const s = reportStrings(doc.locale);
-  const arrow =
-    section.delta_direction === 'up' ? '↑' : section.delta_direction === 'down' ? '↓' : '';
   return (
     <section className="h-hero" aria-labelledby="h-hero-total">
       <table className="h-tally" style={{ ['--rows' as string]: section.tally.length }}>
@@ -96,7 +95,7 @@ function Hero({
           {section.tally.map((row, i) => (
             <tr key={i} className="h-tally__row" style={{ ['--i' as string]: i }}>
               <th scope="row" className="h-tally__label">
-                {row.label}
+                {humanName(row.label)}
               </th>
               <td className="h-tally__value h-num">{row.value}</td>
             </tr>
@@ -115,11 +114,7 @@ function Hero({
       </table>
       <div className="h-tally__rule" aria-hidden="true" />
       <p className="h-hero__delta" data-direction={section.delta_direction}>
-        <span className="h-hero__delta-value h-num">
-          {arrow ? <span aria-hidden="true">{arrow} </span> : null}
-          {section.delta}
-        </span>{' '}
-        <span className="h-hero__delta-label">{s.vsLast(doc.kind)}</span>
+        {s.deltaSentence(section.delta, section.delta_direction, doc.kind)}
       </p>
       <p className="h-hero__verdict">{section.verdict}</p>
     </section>

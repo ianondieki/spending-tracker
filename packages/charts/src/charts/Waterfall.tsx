@@ -8,7 +8,7 @@ import { chartLabels } from '../labels.js';
 import { GAP, HRule, Label, Tip } from '../primitives.js';
 import { linear, niceMax, px, ticks } from '../scale.js';
 import { v, VAR } from '../theme.js';
-import { fit, textWidth } from '../text.js';
+import { fit, humanName, textWidth } from '../text.js';
 import { FONT } from '../tokens.js';
 
 export interface WaterfallStep {
@@ -38,7 +38,7 @@ export function waterfallSteps(
   const top = sorted.slice(0, 5);
   const restCents = sorted.slice(5).reduce((a, c) => a + c.cents, 0);
   const steps: WaterfallStep[] = [{ label: labels.income, cents: income.cents, display: income.display, kind: 'income' }];
-  for (const c of top) steps.push({ label: c.name, cents: -c.cents, display: c.display, kind: 'category' });
+  for (const c of top) steps.push({ label: humanName(c.name), cents: -c.cents, display: c.display, kind: 'category' });
   if (restCents > 0) steps.push({ label: labels.other, cents: -restCents, display: formatKsh(restCents), kind: 'other' });
   steps.push({ label: labels.fees, cents: -fees.cents, display: fees.display, kind: 'fees' });
   steps.push({ label: labels.net, cents: net.cents, display: net.display, kind: 'net' });

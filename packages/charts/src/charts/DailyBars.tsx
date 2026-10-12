@@ -43,10 +43,24 @@ export function dailyBarsAltText(data: DailyBarsData, locale: Locale): string {
 
 export function dailyBarsTable(data: DailyBarsData, locale: Locale): DataTableSpec {
   const l = chartLabels(locale);
-  return { columns: [l.day, l.amount], rows: [...data.bars.map((b) => [b.long, b.display]), [l.average, data.average.display]], numeric: [1] };
+  return {
+    columns: [l.day, l.amount],
+    rows: [...data.bars.map((b) => [b.long, b.display]), [l.average, data.average.display]],
+    numeric: [1],
+  };
 }
 
-export function DailyBars({ id, title, takeaway, locale, theme, width = DEFAULT_WIDTH, showTable, altText, data }: DailyBarsProps): ReactElement {
+export function DailyBars({
+  id,
+  title,
+  takeaway,
+  locale,
+  theme,
+  width = DEFAULT_WIDTH,
+  showTable,
+  altText,
+  data,
+}: DailyBarsProps): ReactElement {
   const l = chartLabels(locale);
   const n = data.bars.length;
   const monthly = n > 10;
@@ -58,32 +72,32 @@ export function DailyBars({ id, title, takeaway, locale, theme, width = DEFAULT_
   const plotH = 180;
   const height = top + plotH + bottom;
   const plotX = left;
-  const plotW = width - left - 8;
+  // The average label lives in a reserved margin at the end of the line, never over a bar. When the full label
+  // would take more than a quarter of the width (phone, monthly) only the word is shown; the amount stays in the
+  // takeaway and the table.
+  const fullLabel = `${l.average} ${data.average.display}`;
+  const avgLabel = textWidth(fullLabel, FONT.xs) > width * 0.25 ? l.average : fullLabel;
+  const avgLabelW = Math.ceil(textWidth(avgLabel, FONT.xs)) + 8;
+  const plotW = width - left - avgLabelW - 8;
   const band = plotW / n;
   const barW = Math.min(BAR_MAX, Math.max(3, band - GAP * 2));
   const y = linear([0, max], [top + plotH, top]);
   const best = spendiest(data.bars);
   const avgY = y(data.average.cents / 100);
-  const avgLabel = `${l.average} ${data.average.display}`;
-  const avgLabelW = textWidth(avgLabel, FONT.xs) + 10;
-  // Put the average label over the quietest run of bars wide enough to hold it, so it never sits on a tall bar.
-  const span = Math.min(n, Math.max(1, Math.ceil(avgLabelW / band)));
-  let avgStart = 0;
-  let quietest = Infinity;
-  for (let i = 0; i + span <= n; i++) {
-    const tallest = Math.max(...data.bars.slice(i, i + span).map((b) => b.cents));
-    if (tallest < quietest) {
-      quietest = tallest;
-      avgStart = i;
-    }
-  }
-  const avgRight = avgStart + span >= n;
-  const avgBoxX = avgRight ? plotX + plotW - avgLabelW : Math.min(plotX + avgStart * band, plotX + plotW - avgLabelW);
-  const avgLabelX = avgRight ? plotX + plotW - 4 : avgBoxX + 4;
   const alt = altText ?? dailyBarsAltText(data, locale);
 
   return (
-    <Figure id={id} title={title} takeaway={takeaway} altText={alt} locale={locale} theme={theme} table={dailyBarsTable(data, locale)} showTable={showTable} width={width}>
+    <Figure
+      id={id}
+      title={title}
+      takeaway={takeaway}
+      altText={alt}
+      locale={locale}
+      theme={theme}
+      table={dailyBarsTable(data, locale)}
+      showTable={showTable}
+      width={width}
+    >
       <Svg width={width} height={height} altText={alt} chartType="daily_bars">
         {yTicks.map((t) => (
           <g key={t}>
@@ -109,16 +123,29 @@ export function DailyBars({ id, title, takeaway, locale, theme, width = DEFAULT_
                 </Label>
               ) : null}
               {i === best ? (
-                <Label x={x + barW / 2} y={y(b.cents / 100) - 6} size={FONT.sm} weight={700} anchor={monthly && i > n - 4 ? 'end' : monthly && i < 3 ? 'start' : 'middle'} numeric>
+                <Label
+                  x={x + barW / 2}
+                  y={y(b.cents / 100) - 6}
+                  size={FONT.sm}
+                  weight={700}
+                  anchor={monthly && i > n - 4 ? 'end' : monthly && i < 3 ? 'start' : 'middle'}
+                  numeric
+                >
                   {b.display}
                 </Label>
               ) : null}
             </g>
           );
         })}
-        <line x1={px(plotX)} x2={px(plotX + plotW)} y1={px(avgY)} y2={px(avgY)} stroke={v(VAR.average)} strokeWidth={1.5} />
-        <rect x={px(avgBoxX)} y={px(avgY - 16)} width={px(avgLabelW)} height={16} fill={v(VAR.sheet)} opacity={0.85} />
-        <Label x={avgLabelX} y={avgY - 4} size={FONT.xs} anchor={avgRight ? 'end' : 'start'} soft>
+        <line
+          x1={px(plotX)}
+          x2={px(plotX + plotW)}
+          y1={px(avgY)}
+          y2={px(avgY)}
+          stroke={v(VAR.average)}
+          strokeWidth={1.5}
+        />
+        <Label x={plotX + plotW + 6} y={avgY + 4} size={FONT.xs} anchor="start" soft>
           {avgLabel}
         </Label>
       </Svg>

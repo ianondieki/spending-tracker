@@ -8,7 +8,7 @@ import { chartLabels } from '../labels.js';
 import { hBarPath, HRule, Label, Tip } from '../primitives.js';
 import { linear, px } from '../scale.js';
 import { v, VAR } from '../theme.js';
-import { fit, textWidth } from '../text.js';
+import { fit, humanName, textWidth } from '../text.js';
 import { FONT } from '../tokens.js';
 
 export interface BudgetItem {
@@ -73,7 +73,7 @@ export function BudgetBullets({ id, title, takeaway, locale, theme, width = DEFA
           return (
             <g key={i}>
               <Label x={0} y={barY + barH / 2 + 5} size={FONT.sm}>
-                {fit(b.name, nameW, FONT.sm)}
+                {fit(humanName(b.name), nameW, FONT.sm)}
               </Label>
               <rect x={px(plotX + 0.5)} y={px(barY + 0.5)} width={px(plotW - 1)} height={barH - 1} fill="none" stroke={v(VAR.rule)} strokeWidth={1} shapeRendering="crispEdges" />
               {projected > spent ? <rect x={px(plotX + spent)} y={px(barY + 3)} width={px(projected - spent)} height={barH - 6} fill="none" stroke={v(VAR.inkSoft)} strokeWidth={1} /> : null}
