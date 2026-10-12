@@ -1,0 +1,763 @@
+{
+  "version": "0.1.0",
+  "source": "android built-in fallback; packages/taxonomy/dist wins when present. Kiswahili names need [[COPY-REVIEW]].",
+  "categories": [
+    {
+      "id": "groceries",
+      "parent_id": null,
+      "name": {
+        "en": "Groceries",
+        "sw": "Mboga na vyakula"
+      },
+      "kind": "spend",
+      "sort_order": 0
+    },
+    {
+      "id": "eating_out",
+      "parent_id": null,
+      "name": {
+        "en": "Eating out",
+        "sw": "Kula nje"
+      },
+      "kind": "spend",
+      "sort_order": 1
+    },
+    {
+      "id": "transport",
+      "parent_id": null,
+      "name": {
+        "en": "Transport",
+        "sw": "Usafiri"
+      },
+      "kind": "spend",
+      "sort_order": 2
+    },
+    {
+      "id": "fuel",
+      "parent_id": "transport",
+      "name": {
+        "en": "Fuel",
+        "sw": "Mafuta"
+      },
+      "kind": "spend",
+      "sort_order": 3
+    },
+    {
+      "id": "airtime_data",
+      "parent_id": null,
+      "name": {
+        "en": "Airtime and data",
+        "sw": "Muda wa maongezi na data"
+      },
+      "kind": "spend",
+      "sort_order": 4
+    },
+    {
+      "id": "utilities",
+      "parent_id": null,
+      "name": {
+        "en": "Utilities",
+        "sw": "Huduma za nyumbani"
+      },
+      "kind": "spend",
+      "sort_order": 5
+    },
+    {
+      "id": "rent",
+      "parent_id": null,
+      "name": {
+        "en": "Rent",
+        "sw": "Kodi"
+      },
+      "kind": "spend",
+      "sort_order": 6
+    },
+    {
+      "id": "health",
+      "parent_id": null,
+      "name": {
+        "en": "Health",
+        "sw": "Afya"
+      },
+      "kind": "spend",
+      "sort_order": 7
+    },
+    {
+      "id": "education",
+      "parent_id": null,
+      "name": {
+        "en": "Education",
+        "sw": "Elimu"
+      },
+      "kind": "spend",
+      "sort_order": 8
+    },
+    {
+      "id": "shopping",
+      "parent_id": null,
+      "name": {
+        "en": "Shopping",
+        "sw": "Manunuzi"
+      },
+      "kind": "spend",
+      "sort_order": 9
+    },
+    {
+      "id": "entertainment",
+      "parent_id": null,
+      "name": {
+        "en": "Entertainment",
+        "sw": "Burudani"
+      },
+      "kind": "spend",
+      "sort_order": 10
+    },
+    {
+      "id": "family_support",
+      "parent_id": null,
+      "name": {
+        "en": "Family and friends",
+        "sw": "Familia na marafiki"
+      },
+      "kind": "spend",
+      "sort_order": 11
+    },
+    {
+      "id": "giving",
+      "parent_id": null,
+      "name": {
+        "en": "Giving",
+        "sw": "Michango"
+      },
+      "kind": "spend",
+      "sort_order": 12
+    },
+    {
+      "id": "insurance",
+      "parent_id": null,
+      "name": {
+        "en": "Insurance",
+        "sw": "Bima"
+      },
+      "kind": "spend",
+      "sort_order": 13
+    },
+    {
+      "id": "savings",
+      "parent_id": null,
+      "name": {
+        "en": "Savings",
+        "sw": "Akiba"
+      },
+      "kind": "transfer",
+      "sort_order": 14
+    },
+    {
+      "id": "loans",
+      "parent_id": null,
+      "name": {
+        "en": "Loans",
+        "sw": "Mikopo"
+      },
+      "kind": "spend",
+      "sort_order": 15
+    },
+    {
+      "id": "fees",
+      "parent_id": null,
+      "name": {
+        "en": "Fees and charges",
+        "sw": "Ada na makato"
+      },
+      "kind": "fee",
+      "sort_order": 16
+    },
+    {
+      "id": "cash",
+      "parent_id": null,
+      "name": {
+        "en": "Cash (untracked)",
+        "sw": "Pesa taslimu"
+      },
+      "kind": "cash",
+      "sort_order": 17
+    },
+    {
+      "id": "transfers",
+      "parent_id": null,
+      "name": {
+        "en": "Transfers",
+        "sw": "Uhamisho"
+      },
+      "kind": "transfer",
+      "sort_order": 18
+    },
+    {
+      "id": "income_salary",
+      "parent_id": null,
+      "name": {
+        "en": "Salary",
+        "sw": "Mshahara"
+      },
+      "kind": "income",
+      "sort_order": 19
+    },
+    {
+      "id": "income_business",
+      "parent_id": null,
+      "name": {
+        "en": "Business income",
+        "sw": "Mapato ya biashara"
+      },
+      "kind": "income",
+      "sort_order": 20
+    },
+    {
+      "id": "income_other",
+      "parent_id": null,
+      "name": {
+        "en": "Other income",
+        "sw": "Mapato mengine"
+      },
+      "kind": "income",
+      "sort_order": 21
+    },
+    {
+      "id": "other",
+      "parent_id": null,
+      "name": {
+        "en": "Other",
+        "sw": "Nyingine"
+      },
+      "kind": "spend",
+      "sort_order": 22
+    }
+  ],
+  "merchants": [
+    {
+      "match": "name",
+      "value": "naivas",
+      "category_id": "groceries",
+      "display_name": "Naivas",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "naivas supermarket",
+      "category_id": "groceries",
+      "display_name": "Naivas",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "carrefour",
+      "category_id": "groceries",
+      "display_name": "Carrefour",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "quickmart",
+      "category_id": "groceries",
+      "display_name": "Quickmart",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "chandarana",
+      "category_id": "groceries",
+      "display_name": "Chandarana",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "cleanshelf",
+      "category_id": "groceries",
+      "display_name": "Cleanshelf",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kplc prepaid",
+      "category_id": "utilities",
+      "display_name": "Kenya Power",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kplc",
+      "category_id": "utilities",
+      "display_name": "Kenya Power",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kenya power",
+      "category_id": "utilities",
+      "display_name": "Kenya Power",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "888880",
+      "category_id": "utilities",
+      "display_name": "Kenya Power",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "888888",
+      "category_id": "utilities",
+      "display_name": "Kenya Power",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "nairobi water",
+      "category_id": "utilities",
+      "display_name": "Nairobi Water",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "444400",
+      "category_id": "utilities",
+      "display_name": "Nairobi Water",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "safaricom airtime",
+      "category_id": "airtime_data",
+      "display_name": "Safaricom",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "safaricom",
+      "category_id": "airtime_data",
+      "display_name": "Safaricom",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "zuku",
+      "category_id": "utilities",
+      "display_name": "Zuku",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "320320",
+      "category_id": "utilities",
+      "display_name": "Zuku",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "safaricom home fibre",
+      "category_id": "utilities",
+      "display_name": "Safaricom Home Fibre",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "dstv",
+      "category_id": "entertainment",
+      "display_name": "DStv",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "444900",
+      "category_id": "entertainment",
+      "display_name": "DStv",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "multichoice",
+      "category_id": "entertainment",
+      "display_name": "DStv",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "showmax",
+      "category_id": "entertainment",
+      "display_name": "Showmax",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "netflix",
+      "category_id": "entertainment",
+      "display_name": "Netflix",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "uber",
+      "category_id": "transport",
+      "display_name": "Uber",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "bolt",
+      "category_id": "transport",
+      "display_name": "Bolt",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "little cab",
+      "category_id": "transport",
+      "display_name": "Little",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "super metro",
+      "category_id": "transport",
+      "display_name": "Super Metro",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "total energies",
+      "category_id": "fuel",
+      "display_name": "TotalEnergies",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "shell",
+      "category_id": "fuel",
+      "display_name": "Shell",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "rubis",
+      "category_id": "fuel",
+      "display_name": "Rubis",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "java house",
+      "category_id": "eating_out",
+      "display_name": "Java House",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kfc",
+      "category_id": "eating_out",
+      "display_name": "KFC",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "artcaffe",
+      "category_id": "eating_out",
+      "display_name": "Artcaffe",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "chicken inn",
+      "category_id": "eating_out",
+      "display_name": "Chicken Inn",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "glovo",
+      "category_id": "eating_out",
+      "display_name": "Glovo",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "uber eats",
+      "category_id": "eating_out",
+      "display_name": "Uber Eats",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "jumia",
+      "category_id": "shopping",
+      "display_name": "Jumia",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kilimall",
+      "category_id": "shopping",
+      "display_name": "Kilimall",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "m-shwari",
+      "category_id": "savings",
+      "display_name": "M-Shwari",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kcb m-pesa",
+      "category_id": "savings",
+      "display_name": "KCB M-PESA",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "fuliza",
+      "category_id": "loans",
+      "display_name": "Fuliza",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "tala",
+      "category_id": "loans",
+      "display_name": "Tala",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "branch",
+      "category_id": "loans",
+      "display_name": "Branch",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "nhif",
+      "category_id": "insurance",
+      "display_name": "NHIF",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "sha",
+      "category_id": "insurance",
+      "display_name": "SHA",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "200222",
+      "category_id": "insurance",
+      "display_name": "SHA",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "britam",
+      "category_id": "insurance",
+      "display_name": "Britam",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "jubilee insurance",
+      "category_id": "insurance",
+      "display_name": "Jubilee",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "equity bank",
+      "category_id": "transfers",
+      "display_name": "Equity Bank",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "247247",
+      "category_id": "transfers",
+      "display_name": "Equity Bank",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "kcb",
+      "category_id": "transfers",
+      "display_name": "KCB",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "522522",
+      "category_id": "transfers",
+      "display_name": "KCB",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "co-operative bank",
+      "category_id": "transfers",
+      "display_name": "Co-op Bank",
+      "confidence": 0.9
+    },
+    {
+      "match": "paybill",
+      "value": "400200",
+      "category_id": "transfers",
+      "display_name": "Co-op Bank",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "ncba",
+      "category_id": "transfers",
+      "display_name": "NCBA",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "absa",
+      "category_id": "transfers",
+      "display_name": "Absa",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "stanbic",
+      "category_id": "transfers",
+      "display_name": "Stanbic",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "i&m",
+      "category_id": "transfers",
+      "display_name": "I&M",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "dtb",
+      "category_id": "transfers",
+      "display_name": "DTB",
+      "confidence": 0.9
+    },
+    {
+      "match": "name",
+      "value": "family bank",
+      "category_id": "transfers",
+      "display_name": "Family Bank",
+      "confidence": 0.9
+    },
+    {
+      "match": "type",
+      "value": "WITHDRAW",
+      "category_id": "cash",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "ATM",
+      "category_id": "cash",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "AIRTIME",
+      "category_id": "airtime_data",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "FEE",
+      "category_id": "fees",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "FULIZA_DRAWDOWN",
+      "category_id": "loans",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "FULIZA_REPAY",
+      "category_id": "loans",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "MSHWARI_DEPOSIT",
+      "category_id": "savings",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "MSHWARI_WITHDRAW",
+      "category_id": "savings",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "MSHWARI_LOAN",
+      "category_id": "loans",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "MSHWARI_LOAN_REPAY",
+      "category_id": "loans",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "LOAN_REPAY",
+      "category_id": "loans",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "KCB_MPESA",
+      "category_id": "savings",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "BANK_TO_MPESA",
+      "category_id": "transfers",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "MPESA_TO_BANK",
+      "category_id": "transfers",
+      "display_name": null,
+      "confidence": 0.7
+    },
+    {
+      "match": "type",
+      "value": "INTERNAL_TRANSFER",
+      "category_id": "transfers",
+      "display_name": null,
+      "confidence": 0.7
+    }
+  ]
+}
