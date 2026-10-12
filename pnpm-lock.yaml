@@ -35,12 +35,24 @@ importers:
 
   apps/api:
     dependencies:
+      '@hesabu/agents':
+        specifier: workspace:*
+        version: link:../../packages/agents
+      '@hesabu/analytics':
+        specifier: workspace:*
+        version: link:../../packages/analytics
+      '@hesabu/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@hono/node-server':
         specifier: ^2.1.4
         version: 2.1.4(hono@4.13.13)
       hono:
         specifier: ^4.13.13
         version: 4.13.13
+      pg-boss:
+        specifier: ^12.37.1
+        version: 12.37.1(@opentelemetry/api@1.9.1)
       zod:
         specifier: ^4.6.6
         version: 4.6.6
