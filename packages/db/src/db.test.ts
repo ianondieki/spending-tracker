@@ -100,6 +100,11 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     const dup = await a.upsertTransactions([tx('33333333-3333-4333-8333-333333333333', { external_ref: 'RJK3H5T2QW', raw_hash: 'c'.repeat(64) })]);
     expect(dup.accepted).toBe(0);
     expect(dup.rejected).toEqual([{ id: '33333333-3333-4333-8333-333333333333', reason: 'duplicate_reference' }]);
+    // The same code under a different family (a Fuliza drawdown funding that payment) is a distinct row.
+    const fuliza = await a.upsertTransactions([
+      tx('44444444-4444-4444-8444-444444444444', { external_ref: 'RJK3H5T2QW', raw_hash: 'd'.repeat(64), type: 'FULIZA_DRAWDOWN', direction: 'in', parser: { pack_id: 'mpesa', pack_version: '1.0.0', family_id: 'fuliza_drawdown' } }),
+    ]);
+    expect(fuliza).toEqual({ accepted: 1, rejected: [] });
   });
 
   it('never returns another user’s rows (tenancy)', async () => {
