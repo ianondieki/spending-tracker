@@ -52,3 +52,4 @@ export class Db {
 }
 export * from './tokens.js';
 export * from './jobs.js';
+export { demoAccounts, demoTransactions, DEMO_CATEGORIES } from './demo-data.js';

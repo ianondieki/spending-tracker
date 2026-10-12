@@ -8,11 +8,24 @@ BACKEND_FILTER := --filter "@hesabu/api..." --filter "@hesabu/worker..." --filte
 # Lane C packages: web and everything it depends on, plus renderer and report-model.
 WEB_FILTER := --filter "@hesabu/web..." --filter "@hesabu/renderer..." --filter "@hesabu/report-model"
 
-.PHONY: dev down check check-backend check-web check-android evals
+.PHONY: dev dev-app down migrate seed-demo check check-backend check-web check-android evals
 
-## dev: start Postgres 16, Mailpit and MinIO in the background
+## dev: start Postgres 16, Mailpit and MinIO in the background, then apply migrations
 dev:
 	$(COMPOSE) up -d
+	pnpm --filter @hesabu/db migrate
+
+## dev-app: also build and run the api and worker containers (profile app)
+dev-app:
+	$(COMPOSE) --profile app up -d --build
+
+## migrate: apply pending database migrations (DATABASE_URL)
+migrate:
+	pnpm --filter @hesabu/db migrate
+
+## seed-demo: load the demo inbox into a demo user and generate last week's and last month's reports
+seed-demo:
+	pnpm --filter @hesabu/db seed:demo
 
 ## down: stop the local stack (keeps volumes)
 down:

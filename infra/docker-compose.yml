@@ -62,6 +62,41 @@ services:
         echo 'bucket hesabu ready'
     restart: 'no'
 
+  # Application services (profile `app`): `docker compose -f infra/docker-compose.yml --profile app up -d --build`.
+  # Day-to-day development runs them on the host instead (`pnpm dev:api`, `pnpm dev:worker`) against the services above.
+  api:
+    profiles: ['app']
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgres://hesabu:hesabu@postgres:5432/hesabu
+      S3_ENDPOINT: http://minio:9000
+      PORT: '8787'
+    ports:
+      - '8787:8787'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    profiles: ['app']
+    build:
+      context: ..
+      dockerfile: apps/worker/Dockerfile
+    env_file:
+      - ../.env
+    environment:
+      DATABASE_URL: postgres://hesabu:hesabu@postgres:5432/hesabu
+      S3_ENDPOINT: http://minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
 volumes:
   pgdata:
   miniodata:
