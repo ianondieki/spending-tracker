@@ -31,6 +31,11 @@ notes: `docs/research/sms-formats.md`.
 | M-PESA GlobalPay card | 1 | `sent to M-PESA CARD for account AMAZON RETAIL …` |
 | Jumbe (split notification) | 1 | Safaricom's own sample, second SMS for till payments since July 2026 |
 
+Pack status (lane D, 2026-10-12): every family in the table above has a draft family in
+`contracts/provider-packs/mpesa.json` (26 families; the Jumbe, balance and failed messages are ignore families; the
+"send without a number" sample is the inferred `pochi_send` family at confidence 0.7), all `verified: false`. All 32
+public lines parse (`pnpm --filter @hesabu/pack-engine corpus`).
+
 ## Families with NO public sample (need the human's export or a real sample from someone)
 
 | Family | What we know | Why it matters |
