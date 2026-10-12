@@ -99,3 +99,7 @@ collapsed. `display_name` is an optional seed field for seeds whose canonical `n
 `isMerchantCounterparty({ counterparty_kind, type })` is false for M-Pesa agents (`agent`, and the WITHDRAW /
 DEPOSIT / ATM types), people, banks and the user's own accounts, so analytics can keep cash withdrawals out of
 "where the money went" merchant lists. The packs already mark withdrawals and deposits with `counterparty_kind: agent`.
+
+`pnpm build` also copies `data/*.json` into `dist/`, because the Android build (`android/app/build.gradle.kts`,
+`copyContractAssets`) syncs `packages/taxonomy/dist/*.json` into the app's `assets/taxonomy/`. Run the root `pnpm build`
+before an Android build that should ship the taxonomy.
