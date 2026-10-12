@@ -18,3 +18,6 @@ export * from './charts/BalanceSparkline.js';
 export * from './charts/FeeMeter.js';
 export * from './resolve.js';
 export { chartStyles } from './styles.js';
+export { ReportPage, type ReportPageProps, type ReportMode } from './report/ReportPage.js';
+export { reportStrings, type ReportStrings } from './report/strings.js';
+export { reportStyles } from './report/styles.js';

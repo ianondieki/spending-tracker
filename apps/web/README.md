@@ -1,23 +1,32 @@
 # @hesabu/web
 
-**Owner:** Lane C (charts, renderer, web). **Purpose:** the Next.js 15 (App Router) web viewer: the signed report
-link `/r/[token]` that opens the full interactive report, plus the pages the email and WhatsApp messages link to.
+**Owner:** Lane C. **Purpose:** the Next.js 15 (App Router) web viewer for signed report links, in the ruled-ledger
+design from `docs/DESIGN_BRIEF.md`.
 
-Scaffolded during the 24-hour sprint: `/` renders "Hesabu" with a placeholder chart; `/r/[token]` is a stub that
-does not verify tokens yet.
+## Routes
 
-## Run
+- `/r/[token]` resolves `GET {API_BASE_URL}/v1/public/reports/{token}`, validates both documents against the frozen
+  contracts (`@hesabu/report-model`) and renders the report. Unknown or expired links are a 404; a missing
+  `API_BASE_URL` or a failing API is an honest error page (fail closed). The token is never logged or echoed.
+- `/dev/report?fixture=weekly-en&theme=dark` renders a fixture without an API (`weekly-en`, `weekly-sw`,
+  `monthly-en`, `monthly-sw`; `theme` light or dark, omit it for the system preference). On outside production,
+  or when `HESABU_DEV_ROUTES=1`.
 
-- `pnpm dev` — `next dev` on http://localhost:3000.
-- `pnpm build` — `next build` (also type-checks). No Google Fonts: nothing in the build needs the network. Set
-  `NEXT_TELEMETRY_DISABLED=1` offline.
-- `pnpm test` — Vitest renders components with `react-dom/server`; tests live in `test/`.
-- `pnpm typecheck` — `next typegen && tsc --noEmit`. `next-env.d.ts` and `.next/types/` are generated (gitignored),
-  so typecheck works on a fresh clone without a full `next build`.
+## Design
 
-## Conventions
+The report page (`ReportPage`, `reportStyles`) and the charts live in `@hesabu/charts`, so the renderer produces the
+same markup for PDF and email. The layout inlines one stylesheet (theme variables, chart frames, ledger) and serves
+Schibsted Grotesk from `public/fonts/` (OFL, Latin subset, variable weight). 360 px and 1440 px layouts; the
+reading column is 720 px; charts are laid out twice (328 and 672) and the stylesheet shows one per viewport. Print
+stylesheet for A4.
 
-- `app/` routes only; shared UI comes from `@hesabu/charts` (runtime import resolves to its `dist/`, so run the
-  root `pnpm build` before `next build`/`next dev`; tests resolve it to source via `vitest.shared.ts`).
-- No `next/font/google` (offline builds). Design tokens come from `contracts/`.
-- Ordinary copy is tagged `[[COPY-REVIEW]]`; legal, claims, pricing and brand text wait for the human.
+## Commands
+
+- `pnpm dev`, `pnpm build`, `pnpm start`, `pnpm test`, `pnpm lint`, `pnpm typecheck` as everywhere.
+- `pnpm screenshots` (after `pnpm build`): Playwright screenshots of every fixture at 360 and 1440 in both themes
+  into `screenshots/`, plus an axe pass (WCAG 2.1 AA and best practice) that fails on any violation.
+- `pnpm lighthouse` (after `pnpm build`): Lighthouse mobile profile on the weekly and monthly fixtures, scores in
+  `screenshots/lighthouse.json`. Last run: accessibility 100, performance 93 (weekly) and 97 (monthly).
+
+Both scripts need Chromium (`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers` in the sprint environment; never run
+`playwright install` there).

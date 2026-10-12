@@ -11,16 +11,23 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf .next"
+    "clean": "rm -rf .next",
+    "screenshots": "HESABU_DEV_ROUTES=1 node scripts/screenshots.mjs",
+    "lighthouse": "HESABU_DEV_ROUTES=1 node scripts/lighthouse.mjs"
   },
   "dependencies": {
     "@hesabu/charts": "workspace:*",
+    "@hesabu/report-model": "workspace:*",
     "next": "~15.5.27",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0"
+    "@types/react-dom": "^19.3.0",
+    "chrome-launcher": "^1.2.2",
+    "lighthouse": "^12.8.2",
+    "playwright": "1.56.1"
   }
 }
