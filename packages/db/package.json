@@ -30,6 +30,8 @@
   },
   "dependencies": {
     "@hesabu/analytics": "workspace:*",
+    "@hesabu/pack-engine": "workspace:*",
+    "@hesabu/taxonomy": "workspace:*",
     "postgres": "^3.4.9"
   },
   "devDependencies": {

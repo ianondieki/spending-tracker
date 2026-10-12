@@ -113,17 +113,26 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     expect(await b.countTransactions()).toBe(0);
     expect(await b.listAccounts()).toEqual([]);
     expect(await b.listReports()).toEqual([]);
-    // Bob cannot take over Alice's transaction id.
-    const steal = await b.upsertTransactions([tx('11111111-1111-4111-8111-111111111111', { note: 'stolen', updated_at: '2030-01-01T00:00:00Z' })]);
-    expect(steal.accepted).toBe(0);
-    expect(steal.rejected[0]?.reason).toBe('conflict');
+    // Ids are per user: Bob storing the same id (identical message on his phone) never touches Alice's row.
+    const same = await b.upsertTransactions([tx('11111111-1111-4111-8111-111111111111', { note: 'bobs', updated_at: '2030-01-01T00:00:00Z' })]);
+    expect(same).toEqual({ accepted: 1, rejected: [] });
     const alices = await db.forUser(alice).listTransactions({ from: '2020-01-01T00:00:00Z', to: '2030-01-01T00:00:00Z' });
     expect(alices.find((t) => t.id === '11111111-1111-4111-8111-111111111111')?.note).toBe('new');
+    const bobs = await b.listTransactions({ from: '2020-01-01T00:00:00Z', to: '2030-01-01T00:00:00Z' });
+    expect(bobs.map((t) => t.note)).toEqual(['bobs']);
     // Reports are invisible across users even by id.
     const r = await db.forUser(alice).ensureReport('weekly', '2026-10-05T00:00:00+03:00', '2026-10-12T00:00:00+03:00');
     expect(await b.getReport(r.id)).toBeNull();
     expect(await b.listDeliveries(r.id)).toEqual([]);
     await expect(b.updateReport(r.id, { status: 'done' })).rejects.toThrow(/not found/);
+  });
+
+  it('deletes only this user’s transactions', async () => {
+    const b = db.forUser(bob);
+    await b.upsertTransactions([tx('55555555-5555-4555-8555-555555555555', { raw_hash: 'e'.repeat(64) })]);
+    expect(await b.deleteAllTransactions()).toBeGreaterThanOrEqual(1);
+    expect(await b.countTransactions()).toBe(0);
+    expect(await db.forUser(alice).countTransactions()).toBeGreaterThan(0);
   });
 
   it('refuses a tenant handle without a user id', () => {

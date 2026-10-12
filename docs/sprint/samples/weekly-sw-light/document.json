@@ -1,0 +1,335 @@
+{
+  "version": "1",
+  "report_id": "5aecf0fc-3883-4e7f-86cf-a1076e6469f2",
+  "kind": "weekly",
+  "locale": "sw",
+  "period_label": "5 hadi 11 Oktoba 2026",
+  "title": "Wiki yako ya pesa",
+  "sections": [
+    {
+      "type": "hero",
+      "total_out": "KSh 9,515",
+      "delta": "KSh -23,375",
+      "delta_direction": "down",
+      "verdict": "Umetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).",
+      "tally": [
+        {
+          "label": "Jumatatu",
+          "value": "KSh 2,620",
+          "cents": 262000
+        },
+        {
+          "label": "Jumanne",
+          "value": "KSh 100",
+          "cents": 10000
+        },
+        {
+          "label": "Jumatano",
+          "value": "KSh 1,500",
+          "cents": 150000
+        },
+        {
+          "label": "Alhamisi",
+          "value": "KSh 895",
+          "cents": 89500
+        },
+        {
+          "label": "Ijumaa",
+          "value": "KSh 1,580",
+          "cents": 158000
+        },
+        {
+          "label": "Jumamosi",
+          "value": "KSh 2,820",
+          "cents": 282000
+        },
+        {
+          "label": "Jumapili",
+          "value": "KSh 0",
+          "cents": 0
+        }
+      ]
+    },
+    {
+      "type": "kpis",
+      "items": [
+        {
+          "label": "Mapato",
+          "value": "KSh 0",
+          "delta": "KSh -85,000",
+          "tone": "in"
+        },
+        {
+          "label": "Matumizi",
+          "value": "KSh 9,515",
+          "delta": "KSh -23,375",
+          "tone": "out"
+        },
+        {
+          "label": "Ada",
+          "value": "KSh 29",
+          "delta": "KSh -233",
+          "tone": "fee"
+        },
+        {
+          "label": "Tofauti",
+          "value": "KSh -9,544",
+          "delta": "KSh -61,392",
+          "tone": "neutral"
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "chart_id": "donut",
+      "chart_type": "donut",
+      "title": "Supamaketi ilichukua sehemu kubwa zaidi: 73% ya matumizi",
+      "takeaway": null,
+      "data_ref": "/categories",
+      "alt_text": "Chati ya duara ya matumizi kwa aina, jumla KSh 9,515: Supamaketi KSh 6,920 (73%); Kutoa kwa wakala KSh 1,500 (16%); Teksi ya app KSh 895 (9%); Airtime na bando KSh 200 (2%)."
+    },
+    {
+      "type": "chart",
+      "chart_id": "daily_bars",
+      "chart_type": "daily_bars",
+      "title": "Matumizi yalikuwa juu zaidi Jumamosi: KSh 2,820",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Chati ya nguzo ya matumizi kwa siku. Siku ya juu zaidi: Jumamosi 2026-10-10, KSh 2,820. Wastani wa kila siku: KSh 1,359."
+    },
+    {
+      "type": "chart",
+      "chart_id": "stacked_in_out",
+      "chart_type": "stacked_in_out",
+      "title": "Pesa iliyotoka ilizidi iliyoingia: tofauti ni KSh -9,544",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 0, matumizi KSh 9,515. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 32,890."
+    },
+    {
+      "type": "chart",
+      "chart_id": "top_bars_merchants",
+      "chart_type": "top_bars",
+      "title": "Ulilipa NAIVAS LTD KILIMANI zaidi: KSh 4,100",
+      "takeaway": null,
+      "data_ref": "/merchants",
+      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: NAIVAS LTD KILIMANI KSh 4,100; QUICKMART LTD KSh 2,820; KASARANI AGENCIES LTD KSh 1,500; UBER KENYA KSh 895; Safaricom KSh 200."
+    },
+    {
+      "type": "chart",
+      "chart_id": "budget_bullets",
+      "chart_type": "budget_bullets",
+      "title": "food groceries imetumia 0% ya bajeti yake",
+      "takeaway": null,
+      "data_ref": "/budgets",
+      "alt_text": "Nguzo za bajeti: food groceries KSh 0 kati ya KSh 6,000, inaelekea KSh 0."
+    },
+    {
+      "type": "chart",
+      "chart_id": "fee_meter",
+      "chart_type": "fee_meter",
+      "title": "Ada zilichukua 0% ya matumizi yako: KSh 29",
+      "takeaway": null,
+      "data_ref": "/totals/fees",
+      "alt_text": "Kipimo cha ada: KSh 29 kama ada, 0% ya matumizi."
+    },
+    {
+      "type": "insights",
+      "title": "Mambo yaliyojitokeza",
+      "items": [
+        {
+          "insight_id": "spend_vs_last",
+          "headline": "Matumizi yameshuka hadi KSh 9,515, kutoka KSh 32,890",
+          "body": "Hayo ni mabadiliko ya KSh -23,375 (-71%) ukilinganisha na kipindi kilichopita.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "top_category:food_groceries.supermarket",
+          "headline": "Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 6,920",
+          "body": "Hiyo ni 73% ya matumizi yako yote katika kipindi hiki.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "biggest_transaction:f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5",
+          "headline": "Malipo yako makubwa zaidi: KSh 2,820 kwa QUICKMART LTD",
+          "body": "Yalitoka tarehe 2026-10-10. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "transaction_ids": [
+                "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "fees_total",
+          "headline": "Ulilipa KSh 29 kama ada",
+          "body": "Ada zilikuwa 0% ya matumizi yako. Idadi ya makato: 1. Ada za kutuma, kutoa pesa, Fuliza na benki zote zimejumuishwa.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "transaction_ids": [
+                "8f226991-1a44-4704-8cd6-678cf18e6c61"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "cash_withdrawn",
+          "headline": "Ulitoa pesa taslimu KSh 1,500",
+          "body": "Idadi ya mara ulizotoa: 1. Unachotumia kwa pesa taslimu hakionekani kwenye jumbe zako, kwa hivyo kinabaki kama jumla moja hapa.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "types": [
+                "WITHDRAW",
+                "ATM"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "spendiest_day:2026-10-10",
+          "headline": "Jumamosi ndiyo siku uliyotumia zaidi",
+          "body": "Ulitumia KSh 2,820 tarehe 2026-10-10.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-10T00:00:00+03:00",
+              "to": "2026-10-11T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "weekend_share",
+          "headline": "Wikendi zilichukua 30% ya matumizi yako",
+          "body": "KSh 2,820 Jumamosi na Jumapili, ukilinganisha na KSh 6,695 kuanzia Jumatatu hadi Ijumaa.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Pesa yako ilikwenda wapi",
+      "columns": [
+        "Aina",
+        "Matumizi",
+        "Sehemu",
+        "Mabadiliko"
+      ],
+      "rows": [
+        [
+          "Supamaketi",
+          "KSh 6,920",
+          "73%",
+          "KSh +210"
+        ],
+        [
+          "Kutoa kwa wakala",
+          "KSh 1,500",
+          "16%",
+          "KSh -500"
+        ],
+        [
+          "Teksi ya app",
+          "KSh 895",
+          "9%",
+          "KSh +35"
+        ],
+        [
+          "Airtime na bando",
+          "KSh 200",
+          "2%",
+          "KSh 0"
+        ]
+      ],
+      "numeric_columns": [
+        1,
+        2,
+        3
+      ],
+      "total_row": [
+        "Jumla",
+        "KSh 9,515",
+        "",
+        "KSh -23,375"
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "fee",
+      "body": "Ulilipa KSh 29 kama ada, yaani 0% ya matumizi yako. Ada za kutuma, kutoa pesa, Fuliza na kuhamisha kwenda benki zote zimehesabiwa hapa."
+    },
+    {
+      "type": "watch",
+      "title": "Ya kuangalia wiki ijayo",
+      "items": [
+        "UBER KENYA: takriban KSh 773 kila wiki",
+        "NAIVAS LTD KILIMANI: takriban KSh 1,460 kila wiki",
+        "QUICKMART LTD: takriban KSh 2,610 kila wiki"
+      ]
+    },
+    {
+      "type": "footer",
+      "accounts_covered": [
+        "Demo Bank",
+        "M-Pesa"
+      ],
+      "computed_note": "Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna kilichokisiwa.",
+      "unknown_count": "Jumbe ambazo bado hazijaeleweka: 0"
+    }
+  ],
+  "whatsapp": {
+    "caption": "*Wiki yako ya pesa*\n5 hadi 11 Oktoba 2026\n\nMatumizi: *KSh 9,515*\nUmetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).\n\n• Matumizi yameshuka hadi KSh 9,515, kutoka KSh 32,890\n• Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 6,920\n• Malipo yako makubwa zaidi: KSh 2,820 kwa QUICKMART LTD\n\nRipoti kamili: https://hesabu.example/r/5aecf0fc-3883-4e7f-86cf-a1076e6469f2",
+    "hero_chart_ids": [
+      "donut"
+    ]
+  },
+  "email": {
+    "subject": "Wiki yako ya pesa: 5 hadi 11 Oktoba 2026",
+    "preheader": "Umetumia KSh 9,515 (KSh -23,375). Ada: KSh 29."
+  },
+  "meta": {
+    "generated_at": "2026-10-12T06:00:00.000Z",
+    "facts_version": "1",
+    "writer": "fallback",
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "fact_check": {
+      "passed": true,
+      "violations": [],
+      "attempts": 0
+    }
+  }
+}

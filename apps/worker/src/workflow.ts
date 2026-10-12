@@ -11,7 +11,7 @@ import {
   AnthropicModelClient, BudgetGuard, FakeModelClient, produceReport, ReportDocumentSchema,
   type AiConfig, type CostLedger, type ModelClient, type ReportDocument,
 } from '@hesabu/agents';
-import { DbCostLedger, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
+import { DbCostLedger, taxonomyCategoryRows, type CategoryRow, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
 
 import type { Renderer } from './adapters/renderer.js';
 import type { Storage } from './adapters/storage.js';
@@ -75,12 +75,14 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     if (!user) throw new Error('user not found');
     const period = periodFromReport(report, user.week_start, now);
     const window = collectionWindow(period);
-    const [transactions, accounts, categories, budgets] = await Promise.all([
+    const [transactions, accounts, userCategories, budgets] = await Promise.all([
       tenant.listTransactions(window),
       tenant.listAccounts(),
       tenant.listCategories(),
       tenant.listBudgets(),
     ]);
+    // System taxonomy names first, the user's own categories (and renames) on top.
+    const categories = mergeCategories(taxonomyCategoryRows(), userCategories);
     const previous = await tenant.findReport(report.kind, previousPeriod(period, { weekStart: user.week_start, now }).start);
     const lateArrivals = previous?.generated_at ? await tenant.countLateArrivals({ from: previous.period_start, to: previous.period_end }, previous.generated_at) : 0;
     const previousTotals = previous?.facts_json ? FactsSheetSchema.safeParse(previous.facts_json) : null;
@@ -136,7 +138,8 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
 
     // 5. render and store artefacts
     const link = await createSignedReportLink(tenant, report.id, { secret: deps.reportLinkSecret, ttlDays: deps.reportLinkTtlDays, appBaseUrl: deps.appBaseUrl, now });
-    const rendered = await deps.renderer.render(document, facts, { theme: 'light', locale: user.locale, baseUrl: deps.appBaseUrl, reportUrl: link.url });
+    const theme = user.theme === 'dark' ? 'dark' : 'light';
+    const rendered = await deps.renderer.render(document, facts, { theme, locale: user.locale, baseUrl: deps.appBaseUrl, reportUrl: link.url });
     const prefix = `reports/${job.user_id}/${report.id}`;
     const hero = await deps.storage.put(`${prefix}/hero.png`, rendered.heroPng, 'image/png');
     const pdf = await deps.storage.put(`${prefix}/report.pdf`, rendered.pdf, 'application/pdf');
@@ -174,6 +177,13 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     await tenant.audit('worker', 'report.failed', { kind: report.kind, period_start: report.period_start, error: message.slice(0, 200) });
     throw err;
   }
+}
+
+export function mergeCategories(system: readonly CategoryRow[], user: readonly CategoryRow[]): CategoryRow[] {
+  const byId = new Map<string, CategoryRow>();
+  for (const c of system) byId.set(c.category_id, c);
+  for (const c of user) byId.set(c.category_id, c);
+  return [...byId.values()];
 }
 
 async function queueDeliveries(deps: WorkflowDeps, tenant: TenantDb, report: ReportRow): Promise<('email' | 'whatsapp')[]> {
