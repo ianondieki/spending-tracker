@@ -11,7 +11,7 @@ Ijumaa                           KSh 1,580
 Jumamosi                         KSh 2,820
 Jumapili                             KSh 0
 Jumla ya matumizi                KSh 9,515
-KSh -23,375 ikilinganishwa na wiki iliyopita
+KSh 23,375 chini ya wiki iliyopita
 
 Umetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).
 
@@ -75,4 +75,4 @@ Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna
 Akaunti zilizojumuishwa: Demo Bank, M-Pesa
 Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
 
-Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoicVhPaUp3NVMifQ.5cOwqWZ_7nKASVri-9jRwbCAA3yP2gCUKC6GBxx_YdM
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiUHRiTFFlMEYifQ.h718gty7eNeR_Ip9ErV34g-5GWl3NXV2iPZQ1Tl7w8I
