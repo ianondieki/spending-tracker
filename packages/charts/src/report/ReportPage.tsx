@@ -262,7 +262,7 @@ function TableBlock({ section }: { readonly section: TableSection }): ReactEleme
   const numeric = new Set(section.numeric_columns);
   return (
     <Block kind="table" title={section.title}>
-      <div className="h-table-scroll">
+      <div className="h-table-scroll" tabIndex={0} role="group" aria-label={section.title}>
         <table className="h-ledger">
           <caption className="h-visually-hidden">{section.title}</caption>
           <thead>

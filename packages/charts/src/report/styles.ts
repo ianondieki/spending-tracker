@@ -29,6 +29,7 @@ export const reportStyles = `
 .h-hero__verdict { margin: 12px 0 0; font-size: 20px; line-height: 1.45; max-width: 36em; }
 .h-sections { margin-top: 32px; }
 .h-table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.h-table-scroll:focus-visible { outline: 2px solid var(--h-biro); outline-offset: 2px; border-radius: 4px; }
 .h-ledger th.h-num { white-space: normal; }
 .h-section { margin-top: 32px; }
 .h-section__title { margin: 0 0 12px; font-size: 20px; font-weight: 500; line-height: 1.45; }
@@ -92,6 +93,8 @@ export const reportStyles = `
   .h-chart-size--web { display: block !important; }
   .h-section, .h-callout, .h-kpis, .h-hero { break-inside: avoid; }
   .h-section__title { break-after: avoid; }
+  .h-kpi__amount { font-size: 24px; }
+  .h-kpis { gap: 0 16px; }
   .h-tally__row, .h-tally__total, .h-tally__rule { animation: none !important; }
 }
 `;

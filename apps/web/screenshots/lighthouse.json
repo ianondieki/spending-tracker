@@ -1,20 +1,20 @@
 [
   {
     "fixture": "weekly-en",
-    "performance": 93,
+    "performance": 98,
     "accessibility": 100,
     "bestPractices": 96,
-    "lcpMs": 2375,
-    "tbtMs": 255,
+    "lcpMs": 2236,
+    "tbtMs": 115,
     "cls": 0
   },
   {
     "fixture": "monthly-en",
-    "performance": 97,
+    "performance": 98,
     "accessibility": 100,
     "bestPractices": 100,
-    "lcpMs": 2469,
-    "tbtMs": 104,
+    "lcpMs": 2228,
+    "tbtMs": 87,
     "cls": 0
   }
 ]

@@ -22,7 +22,7 @@ export const chartStyles = `
 .h-ledger tbody th { color: var(--h-ink); }
 .h-ledger .h-num { text-align: right; }
 .h-ledger td.h-num { white-space: nowrap; }
-.h-ledger .h-num + .h-num { padding-left: 16px; }
+.h-ledger td + td, .h-ledger th + th, .h-ledger th + td { padding-left: 12px; }
 .h-ledger .h-total th, .h-ledger .h-total td { font-weight: 700; border-top: 1px solid var(--h-ink); border-bottom: 3px double var(--h-ink); }
 .h-ledger--compact { font-size: 14px; }
 .h-ledger--compact th, .h-ledger--compact td { padding: 8px 0; }

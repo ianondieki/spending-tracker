@@ -44,12 +44,16 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
   const l = chartLabels(locale);
   const pts = data.points;
   const n = pts.length;
+  const narrow = width < 480;
+  const monthLabel = (label: string) => (narrow ? label.slice(0, 3) : label);
   const allValues = pts.flatMap((p) => [p.in.cents, p.out.cents, p.net.cents]).map((c) => c / 100);
   const max = niceMax(Math.max(...allValues));
   const min = Math.min(0, ...allValues);
   const yTicks = ticks(min, max, 4);
   const left = Math.ceil(textWidth(compactKsh(max), FONT.xs)) + 10;
-  const endLabelW = Math.max(...pts.slice(-1).flatMap((p) => [`${l.in} ${p.in.display}`, `${l.out} ${p.out.display}`, `${l.net} ${p.net.display}`]).map((s) => textWidth(s, FONT.xs))) + 16;
+  // Narrow charts name the series at the line ends and leave the amounts to the takeaway and the table.
+  const endText = (name: string, display: string) => (narrow ? name : `${name} ${display}`);
+  const endLabelW = Math.max(...pts.slice(-1).flatMap((p) => [endText(l.in, p.in.display), endText(l.out, p.out.display), endText(l.net, p.net.display)]).map((s) => textWidth(s, FONT.xs))) + 16;
   const top = 16;
   const plotH = 200;
   const bottom = 26;
@@ -68,7 +72,7 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
   const alt = altText ?? trendLinesAltText(data, locale);
   // Keep the three end labels from overlapping: sort by y and push apart by 14 px.
   const last = pts[n - 1]!;
-  const ends = series.map((s) => ({ s, y: y(s.get(last).cents / 100), text: `${s.name} ${s.get(last).display}` }));
+  const ends = series.map((s) => ({ s, y: y(s.get(last).cents / 100), text: endText(s.name, s.get(last).display) }));
   ends.sort((a, b) => a.y - b.y);
   for (let i = 1; i < ends.length; i++) {
     if (ends[i]!.y - ends[i - 1]!.y < 14) ends[i]!.y = ends[i - 1]!.y + 14;
@@ -106,7 +110,7 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
         ))}
         {pts.map((p, i) => (
           <Label key={i} x={x(i)} y={top + plotH + 18} size={FONT.xs} anchor={i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'} weight={p.isCurrent ? 700 : 400} soft={!p.isCurrent}>
-            {p.label}
+            {monthLabel(p.label)}
           </Label>
         ))}
       </Svg>
