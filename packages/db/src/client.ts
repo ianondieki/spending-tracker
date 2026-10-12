@@ -79,7 +79,7 @@ export async function migrate(sql: Sql): Promise<MigrationResult> {
 export async function dropAll(sql: Sql, env: Env = process.env): Promise<void> {
   if (env['NODE_ENV'] === 'production') throw new Error('dropAll refused in production');
   await sql.unsafe(`
-    DROP TABLE IF EXISTS ai_usage, report_links, audit_log, insights, deliveries, reports, recurrences, budgets, rules,
+    DROP TABLE IF EXISTS email_confirmations, ai_usage, report_links, audit_log, insights, deliveries, reports, recurrences, budgets, rules,
       merchants, categories, transactions, accounts, consents, devices, users, schema_migrations CASCADE;
     DROP TABLE IF EXISTS pgboss.job CASCADE;
   `);

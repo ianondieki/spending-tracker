@@ -20,8 +20,18 @@ export interface Preferences {
   theme: 'light' | 'dark' | 'system';
 }
 
+export interface ConsentRow {
+  purpose: ConsentPurpose;
+  version: string;
+  /** The address this consent was proven for (E.164 number or lower-cased email); null for non-delivery purposes. */
+  address: string | null;
+  granted_at: string;
+}
+
 export interface UserRow extends Preferences {
   id: string;
+  /** Shown in the app; the user sends "JOIN <join_code>" from WhatsApp to prove their number. */
+  join_code: string;
   phone_e164: string | null;
   display_name: string | null;
   created_at: string;

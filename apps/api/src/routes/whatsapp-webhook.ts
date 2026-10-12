@@ -64,18 +64,23 @@ export function whatsappWebhook(db: Db, config: ApiConfig): Hono {
           }
         }
         for (const m of change.value?.messages ?? []) {
-          if (m.type !== 'text' || !m.from) continue;
+          if (m.type !== 'text' || !m.from || !/^\d{7,15}$/.test(m.from)) continue;
+          const from = `+${m.from}`;
           const text = (m.text?.body ?? '').trim().toUpperCase();
-          const userId = await db.system.findUserByWhatsapp(`+${m.from.replace(/^\+/, '')}`);
-          if (!userId) continue;
-          const tenant = db.forUser(userId);
           if (text === 'STOP') {
+            const userId = await db.system.findUserByWhatsapp(from);
+            if (!userId) continue;
+            const tenant = db.forUser(userId);
             await tenant.revokeConsent('whatsapp_delivery');
             await tenant.audit('webhook:whatsapp', 'consent.revoked', { purpose: 'whatsapp_delivery' });
             commands += 1;
-          } else if (text.startsWith('JOIN')) {
-            await tenant.grantConsent('whatsapp_delivery');
-            await tenant.audit('webhook:whatsapp', 'consent.granted', { purpose: 'whatsapp_delivery' });
+          } else {
+            // "JOIN <code>": the code names the account, the sender's number is what gets proven (M2, B1).
+            const join = /^JOIN\s+([A-Z0-9]{6,12})$/.exec(text);
+            if (!join) continue;
+            const userId = await db.system.findUserByJoinCode(join[1] ?? '');
+            if (!userId) continue;
+            await db.system.bindVerifiedWhatsapp(userId, from);
             commands += 1;
           }
         }

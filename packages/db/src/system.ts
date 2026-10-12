@@ -105,10 +105,52 @@ export class SystemDb {
     return r ? { user_id: r['user_id'] as string, report_id: r['report_id'] as string } : null;
   }
 
-  /** A WhatsApp STOP/JOIN arrives with only the phone number. Returns the user id, or null. */
+  /** A WhatsApp STOP arrives with only the phone number; the number is unique, so at most one user owns it. */
   async findUserByWhatsapp(e164: string): Promise<string | null> {
-    const rows = await this.tx((tx) => tx<{ id: string }[]>`SELECT id FROM users WHERE whatsapp_e164 = ${e164} LIMIT 1`);
+    const rows = await this.tx((tx) => tx<{ id: string }[]>`SELECT id FROM users WHERE whatsapp_e164 = ${e164}`);
     return rows[0]?.id ?? null;
+  }
+
+  /** "JOIN <code>": the code names the user; the sender's number is what gets proven. */
+  async findUserByJoinCode(code: string): Promise<string | null> {
+    const rows = await this.tx((tx) => tx<{ id: string }[]>`SELECT id FROM users WHERE join_code = ${code.trim().toUpperCase()}`);
+    return rows[0]?.id ?? null;
+  }
+
+  /**
+   * Binds a number proven by a JOIN message to `userId` and grants the whatsapp_delivery consent for exactly that
+   * number. Any other account that had typed the same number loses it (it was never proven there).
+   */
+  async bindVerifiedWhatsapp(userId: string, e164: string): Promise<void> {
+    await this.tx(async (tx) => {
+      const others = await tx<{ id: string }[]>`UPDATE users SET whatsapp_e164 = NULL, updated_at = now() WHERE whatsapp_e164 = ${e164} AND id <> ${userId} RETURNING id`;
+      for (const o of others) {
+        await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${o.id} AND purpose = 'whatsapp_delivery' AND revoked_at IS NULL`;
+        await tx`INSERT INTO audit_log (user_id, actor, action, details) VALUES (${o.id}, 'webhook:whatsapp', 'whatsapp.number_claimed_elsewhere', '{}'::jsonb)`;
+      }
+      await tx`UPDATE users SET whatsapp_e164 = ${e164}, updated_at = now() WHERE id = ${userId}`;
+      await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${userId} AND purpose = 'whatsapp_delivery' AND revoked_at IS NULL`;
+      await tx`INSERT INTO consents (user_id, purpose, version, address) VALUES (${userId}, 'whatsapp_delivery', '1', ${e164})`;
+      await tx`INSERT INTO audit_log (user_id, actor, action, details) VALUES (${userId}, 'webhook:whatsapp', 'consent.granted', ${tx.json({ purpose: 'whatsapp_delivery', verified: true })})`;
+    });
+  }
+
+  /**
+   * Redeems a magic-link token (by hash): marks it used, sets the user's email to the confirmed address and grants
+   * email_delivery for exactly that address. Null when unknown, expired or already used.
+   */
+  async confirmEmailToken(tokenHash: string, now: Date = new Date()): Promise<{ user_id: string; email: string } | null> {
+    return this.tx(async (tx) => {
+      const rows = await tx<{ id: string; user_id: string; email: string }[]>`UPDATE email_confirmations SET used_at = now()
+        WHERE token_hash = ${tokenHash} AND used_at IS NULL AND expires_at > ${now} RETURNING id, user_id, email`;
+      const r = rows[0];
+      if (!r) return null;
+      await tx`UPDATE users SET email = ${r.email}, updated_at = now() WHERE id = ${r.user_id}`;
+      await tx`UPDATE consents SET revoked_at = now() WHERE user_id = ${r.user_id} AND purpose = 'email_delivery' AND revoked_at IS NULL`;
+      await tx`INSERT INTO consents (user_id, purpose, version, address) VALUES (${r.user_id}, 'email_delivery', '1', ${r.email})`;
+      await tx`INSERT INTO audit_log (user_id, actor, action, details) VALUES (${r.user_id}, 'webhook:email-confirm', 'consent.granted', ${tx.json({ purpose: 'email_delivery', verified: true })})`;
+      return { user_id: r.user_id, email: r.email };
+    });
   }
 
   async findUserByEmail(email: string): Promise<string | null> {

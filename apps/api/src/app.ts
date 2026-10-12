@@ -1,5 +1,7 @@
 import { nextReportAt, resolvePeriod, SyncRequestSchema } from '@hesabu/analytics';
-import { hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
+import { randomBytes } from 'node:crypto';
+
+import { AddressTakenError, hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
 import { Hono, type Context } from 'hono';
 import type { ZodType } from 'zod';
 
@@ -9,7 +11,7 @@ import { emailWebhook } from './routes/email-webhook.js';
 import { extractRoute, type Extractor } from './routes/extract.js';
 import { whatsappWebhook } from './routes/whatsapp-webhook.js';
 
-import { DeliverBodySchema, GenerateBodySchema, PreferencesSchema, RegisterBodySchema, ReportKindQuerySchema } from './schemas.js';
+import { DeliverBodySchema, GenerateBodySchema, PreferencesSchema, RegisterBodySchema, ReportKindQuerySchema, SendEmailLinkBodySchema } from './schemas.js';
 import { toSummary } from './summary.js';
 
 export const API_VERSION = '1.0.0';
@@ -122,14 +124,50 @@ export function createApp(deps: AppDeps): ApiApp {
     });
   });
 
-  // ----- preferences -----
-  app.get('/v1/me/preferences', async (c) => c.json(await c.get('tenant').getPreferences()));
+  // ----- preferences (plus the join code and which addresses are verified, so the app can show "JOIN <code>") -----
+  const prefsView = async (tenant: TenantDb) => {
+    const user = await tenant.getUser();
+    if (!user) throw new Error('user not found');
+    const { email, whatsapp_e164, locale, week_start, weekly_at, monthly_at, channels, theme } = user;
+    const [wa, em] = await Promise.all([tenant.hasConsentFor('whatsapp_delivery', whatsapp_e164), tenant.hasConsentFor('email_delivery', email)]);
+    return { email, whatsapp_e164, locale, week_start, weekly_at, monthly_at, channels, theme, join_code: user.join_code, whatsapp_verified: wa, email_verified: em };
+  };
+  app.get('/v1/me/preferences', async (c) => c.json(await prefsView(c.get('tenant'))));
   app.put('/v1/me/preferences', async (c) => {
     const body = await parseBody(c, PreferencesSchema);
     if (!body.ok) return body.res;
-    const prefs = await c.get('tenant').updatePreferences(body.value);
+    try {
+      await c.get('tenant').updatePreferences(body.value);
+    } catch (err) {
+      if (err instanceof AddressTakenError) return c.json(errorBody('address_taken', 'that WhatsApp number is verified on another account'), 409);
+      throw err;
+    }
     await c.get('tenant').audit(`device:${c.get('deviceId')}`, 'preferences.updated', { keys: Object.keys(body.value) });
-    return c.json(prefs);
+    return c.json(await prefsView(c.get('tenant')));
+  });
+
+  // ----- email magic link: the only way email_delivery consent is granted -----
+  app.post('/v1/me/email/send-link', async (c) => {
+    const body = await parseBody(c, SendEmailLinkBodySchema);
+    if (!body.ok) return body.res;
+    const tenant = c.get('tenant');
+    const prefs = await tenant.getPreferences();
+    const email = (body.value.email ?? prefs.email ?? '').trim().toLowerCase();
+    if (!email) return c.json(errorBody('invalid', 'no email address to confirm'), 400);
+    const token = randomBytes(32).toString('base64url');
+    const expiresAt = new Date(now().getTime() + 60 * 60 * 1000).toISOString();
+    await tenant.createEmailConfirmation(email, hashToken(token), expiresAt);
+    await queue.enqueueEmailLink({ user_id: tenant.userId, email, link: `${config.appBaseUrl}/confirm-email/${token}`, locale: prefs.locale });
+    await tenant.audit(`device:${c.get('deviceId')}`, 'email.link_sent', {});
+    return c.json({ sent: true, expires_at: expiresAt }, 202);
+  });
+
+  app.get('/v1/public/email/confirm/:token', async (c) => {
+    const token = c.req.param('token');
+    if (!/^[A-Za-z0-9_-]{32,64}$/.test(token)) return c.json(errorBody('not_found', 'expired or unknown'), 404);
+    const hit = await db.system.confirmEmailToken(hashToken(token), now());
+    if (!hit) return c.json(errorBody('not_found', 'expired or unknown'), 404);
+    return c.json({ confirmed: true, email: hit.email });
   });
 
   // ----- reports -----

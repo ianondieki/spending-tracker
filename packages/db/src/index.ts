@@ -4,7 +4,7 @@ import { TenantDb } from './tenant.js';
 
 export { connect, dropAll, getDatabaseUrl, migrate } from './client.js';
 export type { ConnectOptions, Env, MigrationResult, Sql } from './client.js';
-export { TenantDb } from './tenant.js';
+export { AddressTakenError, normaliseEmail, TenantDb } from './tenant.js';
 export type { DeliveryPatch, ReportPatch, TransactionWindow } from './tenant.js';
 export { SystemDb } from './system.js';
 export type { RegisterDeviceInput, RegisteredDevice, ScheduleUser } from './system.js';

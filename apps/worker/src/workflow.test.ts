@@ -49,8 +49,8 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     const tenant = db.forUser(userId);
     await tenant.upsertCategories(inbox.categories);
     await tenant.updatePreferences({ email: 'demo@example.test', whatsapp_e164: '+254700000321', channels: ['email', 'whatsapp'], locale: 'en' });
-    await tenant.grantConsent('email_delivery');
-    await tenant.grantConsent('whatsapp_delivery');
+    await tenant.grantConsent('email_delivery', '1', 'demo@example.test');
+    await tenant.grantConsent('whatsapp_delivery', '1', '+254700000321');
     await tenant.upsertBudget({ category_id: 'food_groceries', period: 'weekly', limit_cents: 600_000 });
     const sync = await post('/v1/sync', { device_id: 'demo', app_version: '1.0.0', parser_version: '1.0.0', accounts: inbox.accounts, transactions: inbox.transactions, unknown_message_count: 3, sent_at: NOW.toISOString() });
     expect(sync.status).toBe(200);
@@ -136,10 +136,17 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(deliveries.map((d) => [d.channel, d.status, d.attempts])).toEqual([['email', 'sent', 1], ['whatsapp', 'sent', 1]]);
     expect(deliveries.every((d) => d.provider_message_id)).toBe(true);
 
-    await db.forUser(userId).revokeConsent('whatsapp_delivery');
+    // B1: the consent was proven for +254700000321; pointing the number elsewhere must not deliver there.
+    await db.forUser(userId).updatePreferences({ whatsapp_e164: '+254799999999' });
     const second = deliverJobs[1]!;
     const skipped = await runDeliveryJob({ db, storage, email, whatsapp }, second);
-    expect(skipped.find((o) => o.channel === 'whatsapp')?.status).toBe('skipped');
+    expect(skipped.find((o) => o.channel === 'whatsapp')).toMatchObject({ status: 'skipped', reason: expect.stringContaining('unverified address') });
+    expect(whatsapp.calls.filter((c) => c.to === '+254799999999')).toHaveLength(0);
+    // Even a stale consent row pointing at the old number never sends to the new one.
+    await db.forUser(userId).grantConsent('whatsapp_delivery', '1', '+254700000321');
+    const stale = await runDeliveryJob({ db, storage, email, whatsapp }, { ...second, channels: ['whatsapp'] });
+    expect(stale[0]?.status).toBe('skipped');
+    await db.forUser(userId).updatePreferences({ whatsapp_e164: '+254700000321' });
     const noProvider = await runDeliveryJob({ db, storage, email: null, whatsapp: null }, { ...second, channels: ['email'] });
     expect(noProvider[0]).toMatchObject({ channel: 'email', status: 'already' }); // email for report 2 was sent just above
   });

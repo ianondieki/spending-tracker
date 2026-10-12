@@ -177,6 +177,19 @@ describe.skipIf(!reachable)('db (Postgres)', () => {
     expect(await a.hasConsent('ai_fallback')).toBe(true);
     await a.revokeConsent('ai_fallback');
     expect(await a.hasConsent('ai_fallback')).toBe(false);
+    // Delivery consents carry the proven address and die when the address changes.
+    await expect(a.grantConsent('whatsapp_delivery')).rejects.toThrow(/proven address/);
+    await a.updatePreferences({ whatsapp_e164: '+254700000001' });
+    await a.grantConsent('whatsapp_delivery', '1', '+254700000001');
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000001')).toBe(true);
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000002')).toBe(false);
+    await a.updatePreferences({ locale: 'en' }); // unrelated change keeps it
+    expect(await a.hasConsentFor('whatsapp_delivery', '+254700000001')).toBe(true);
+    await a.updatePreferences({ whatsapp_e164: '+254700000002' });
+    expect(await a.hasConsent('whatsapp_delivery')).toBe(false);
+    await expect(db.forUser(bob).updatePreferences({ whatsapp_e164: '+254700000002' })).rejects.toThrow(/another account/);
+    expect((await a.getUser())?.join_code).toMatch(/^[A-F0-9]{8}$/);
+    expect(await db.system.findUserByJoinCode((await a.getUser())!.join_code.toLowerCase())).toBe(alice);
     await a.upsertBudget({ category_id: 'groceries', period: 'weekly', limit_cents: 500_000 });
     await a.upsertBudget({ category_id: 'groceries', period: 'weekly', limit_cents: 600_000 });
     expect(await a.listBudgets()).toMatchObject([{ category_id: 'groceries', limit_cents: 600_000 }]);

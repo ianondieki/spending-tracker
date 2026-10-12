@@ -261,12 +261,72 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
   });
 
+  it('B1/M2: JOIN needs the user’s code, proves the sender’s number, and a changed number loses the consent', async () => {
+    const tenant = db.forUser(userId);
+    const prefs = (await (await get('/v1/me/preferences')).json()) as { join_code: string; whatsapp_verified: boolean };
+    expect(prefs.join_code).toMatch(/^[A-F0-9]{8}$/);
+    expect(prefs.whatsapp_verified).toBe(false);
+    const send = async (from: string, body: string) => {
+      const payload = JSON.stringify({ entry: [{ changes: [{ value: { messages: [{ from, type: 'text', text: { body } }] } }] }] });
+      const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
+      return (await (await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload })).json()) as { commands: number };
+    };
+    // A bare JOIN, or a JOIN with someone else's code, proves nothing.
+    expect((await send('254711111111', 'JOIN')).commands).toBe(0);
+    expect((await send('254711111111', 'JOIN NOTACODE1')).commands).toBe(0);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(false);
+    // The real code from the real phone binds that number and grants consent for exactly it.
+    expect((await send('254711111111', `join ${prefs.join_code.toLowerCase()}`)).commands).toBe(1);
+    const after = (await (await get('/v1/me/preferences')).json()) as { whatsapp_e164: string; whatsapp_verified: boolean };
+    expect(after).toMatchObject({ whatsapp_e164: '+254711111111', whatsapp_verified: true });
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(true);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254799999999')).toBe(false);
+    // The exploit: pointing the number at a victim after consent. The consent dies with the change.
+    const moved = await json('/v1/me/preferences', { whatsapp_e164: '+254799999999' }, token, 'PUT');
+    expect(((await moved.json()) as { whatsapp_verified: boolean }).whatsapp_verified).toBe(false);
+    expect(await tenant.hasConsentFor('whatsapp_delivery', '+254799999999')).toBe(false);
+    expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+    // A second account cannot type a number that is verified elsewhere; a JOIN from it moves the number instead.
+    const other = (await (await json('/v1/devices/register', { device_id: 'dev-other', platform: 'android', app_version: '1.0.0' }, '')).json()) as { device_token: string; user_id: string };
+    expect((await send('254711111111', `JOIN ${prefs.join_code}`)).commands).toBe(1); // back on the first account
+    const taken = await json('/v1/me/preferences', { whatsapp_e164: '+254711111111' }, other.device_token, 'PUT');
+    expect(taken.status).toBe(409);
+    const otherPrefs = (await (await get('/v1/me/preferences', other.device_token)).json()) as { join_code: string };
+    expect((await send('254711111111', `JOIN ${otherPrefs.join_code}`)).commands).toBe(1);
+    expect(await db.forUser(other.user_id).hasConsentFor('whatsapp_delivery', '+254711111111')).toBe(true);
+    expect((await tenant.getPreferences()).whatsapp_e164).toBeNull();
+    expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+  });
+
+  it('B1: email consent comes only from the magic link and is bound to that address', async () => {
+    const tenant = db.forUser(userId);
+    await json('/v1/me/preferences', { email: 'owner@example.test' }, token, 'PUT');
+    expect(await tenant.hasConsentFor('email_delivery', 'owner@example.test')).toBe(false);
+    const sent = await json('/v1/me/email/send-link', {});
+    expect(sent.status).toBe(202);
+    const job = queue.emailLinks.at(-1)!;
+    expect(job).toMatchObject({ user_id: userId, email: 'owner@example.test' });
+    const linkToken = job.link.split('/confirm-email/')[1]!;
+    expect((await get('/v1/public/email/confirm/not-a-real-token-at-all-0000000000', '')).status).toBe(404);
+    const confirm = await get(`/v1/public/email/confirm/${linkToken}`, '');
+    expect(confirm.status).toBe(200);
+    expect(await confirm.json()).toEqual({ confirmed: true, email: 'owner@example.test' });
+    expect((await get(`/v1/public/email/confirm/${linkToken}`, '')).status).toBe(404); // single use
+    expect(await tenant.hasConsentFor('email_delivery', 'Owner@Example.test')).toBe(true);
+    expect(((await (await get('/v1/me/preferences')).json()) as { email_verified: boolean }).email_verified).toBe(true);
+    await json('/v1/me/preferences', { email: 'victim@example.test' }, token, 'PUT');
+    expect(await tenant.hasConsentFor('email_delivery', 'victim@example.test')).toBe(false);
+    expect(await tenant.hasConsent('email_delivery')).toBe(false);
+    // Granting a delivery consent without an address is refused outright.
+    await expect(tenant.grantConsent('email_delivery')).rejects.toThrow(/proven address/);
+  });
+
   it('maps email provider events onto deliveries', async () => {
     const tenant = db.forUser(userId);
     const report = (await tenant.listReports('weekly'))[0]!;
     const delivery = await tenant.ensureDelivery(report.id, 'email');
     await tenant.updateDelivery(delivery.id, { status: 'sent', provider_message_id: 'email-1' });
-    await tenant.grantConsent('email_delivery');
+    await tenant.grantConsent('email_delivery', '1', 'me@example.test');
     const res = await app.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'email.bounced', data: { email_id: 'email-1', bounce: { message: 'mailbox full' } } }) });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true, handled: true });

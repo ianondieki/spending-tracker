@@ -19,15 +19,13 @@ const inbox = demoInboxAvailable() ? parseDemoInbox() : null;
 if (inbox) console.log(`demo inbox: ${inbox.stats.messages} messages, ${inbox.stats.parsed} parsed, ${inbox.stats.duplicates} duplicate dropped, ${inbox.stats.transfer_pairs} transfer pairs, ${inbox.stats.balance_breaks} balance breaks`);
 else console.warn('corpus/demo/demo-inbox.jsonl not found; seeding the inline sample ledger instead');
 await tenant.upsertCategories(inbox ? inbox.categories : [...DEMO_CATEGORIES]);
-await tenant.updatePreferences({
-  email: process.env['REPORT_TO_EMAIL'] || 'demo@example.test',
-  whatsapp_e164: process.env['REPORT_TO_WHATSAPP'] || '+254700000321',
-  channels: ['email', 'whatsapp', 'share'],
-  locale: 'en',
-});
+const demoEmail = process.env['REPORT_TO_EMAIL'] || 'demo@example.test';
+const demoWhatsapp = process.env['REPORT_TO_WHATSAPP'] || '+254700000321';
+await tenant.updatePreferences({ email: demoEmail, whatsapp_e164: demoWhatsapp, channels: ['email', 'whatsapp', 'share'], locale: 'en' });
 await tenant.grantConsent('sync');
-await tenant.grantConsent('email_delivery');
-await tenant.grantConsent('whatsapp_delivery');
+// Demo user only: the consents are bound to the addresses set above, as a real JOIN / magic link would do.
+await tenant.grantConsent('email_delivery', '1', demoEmail);
+await tenant.grantConsent('whatsapp_delivery', '1', demoWhatsapp);
 await tenant.upsertBudget({ category_id: inbox ? 'food_groceries' : 'groceries', period: 'weekly', limit_cents: 600_000 });
 await tenant.upsertBudget({ category_id: inbox ? 'transport' : 'eating_out', period: 'monthly', limit_cents: 800_000 });
 await tenant.upsertAccounts(inbox ? inbox.accounts : demoAccounts(now));
