@@ -1,0 +1,21 @@
+# secrets and local config
+.env
+.env.*
+!.env.example
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+# build output (filled in per package from Phase 1)
+node_modules/
+dist/
+build/
+.next/
+.turbo/
+android/.gradle/
+android/**/build/
+# local artefacts
+*.log
+playwright-report/
+test-results/
