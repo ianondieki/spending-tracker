@@ -58,7 +58,10 @@ export function buildExtractUser(items: readonly UnknownMessage[], offset: numbe
  * is `{ proposals: [] }` when the client fails). Proposals for indexes outside the batch, and repeats, are
  * dropped.
  */
-export async function extractUnknownMessages(items: readonly UnknownMessage[], client: ModelClient): Promise<ExtractionResult> {
+export async function extractUnknownMessages(
+  items: readonly UnknownMessage[],
+  client: ModelClient,
+): Promise<ExtractionResult> {
   const proposals: ExtractionProposal[] = [];
   let usage = ZERO_USAGE;
   for (let offset = 0; offset < items.length; offset += EXTRACT_BATCH_SIZE) {

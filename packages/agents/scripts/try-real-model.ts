@@ -18,7 +18,9 @@ const kind = args.includes('monthly') ? 'monthly' : 'weekly';
 const locale = args.includes('sw') ? 'sw' : 'en';
 
 if (!dryRun && (env['AI_ENABLED'] !== 'true' || !env['ANTHROPIC_API_KEY'])) {
-  console.log('Skipped: set AI_ENABLED=true and ANTHROPIC_API_KEY to run against the real model (or pass --dry-run).');
+  console.log(
+    'Skipped: set AI_ENABLED=true and ANTHROPIC_API_KEY to run against the real model (or pass --dry-run).',
+  );
   process.exit(0);
 }
 
@@ -59,7 +61,10 @@ console.log(
     {
       writer: result.writer,
       fallback_reason: result.fallback_reason,
-      selection: result.selection === null ? null : { source: result.selection.source, ids: result.selection.selected.map((s) => s.id) },
+      selection:
+        result.selection === null
+          ? null
+          : { source: result.selection.source, ids: result.selection.selected.map((s) => s.id) },
       attempts: result.attempts,
       usage: result.usage,
       cost_usd: result.cost_usd,

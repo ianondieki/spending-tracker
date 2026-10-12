@@ -29,7 +29,9 @@ export interface SelectionResult {
 }
 
 export function engineOrder(facts: FactsSheet, kind: ReportKind): SelectedInsight[] {
-  return facts.candidate_insights.slice(0, MAX_INSIGHTS[kind]).map((c) => ({ id: c.id, rationale: 'engine order' }));
+  return facts.candidate_insights
+    .slice(0, MAX_INSIGHTS[kind])
+    .map((c) => ({ id: c.id, rationale: 'engine order' }));
 }
 
 export function buildSelectUser(facts: FactsSheet, kind: ReportKind): string {
@@ -50,7 +52,11 @@ export function buildSelectUser(facts: FactsSheet, kind: ReportKind): string {
   ].join('\n');
 }
 
-export async function insightSelect(facts: FactsSheet, kind: ReportKind, client: ModelClient): Promise<SelectionResult> {
+export async function insightSelect(
+  facts: FactsSheet,
+  kind: ReportKind,
+  client: ModelClient,
+): Promise<SelectionResult> {
   if (facts.candidate_insights.length === 0) {
     return { selected: [], source: 'fallback', usage: null, model: null, failure: 'empty' };
   }
@@ -80,7 +86,13 @@ export async function insightSelect(facts: FactsSheet, kind: ReportKind, client:
     if (selected.length >= MAX_INSIGHTS[kind]) break;
   }
   if (selected.length === 0) {
-    return { selected: engineOrder(facts, kind), source: 'fallback', usage: result.usage, model: result.model, failure: 'empty' };
+    return {
+      selected: engineOrder(facts, kind),
+      source: 'fallback',
+      usage: result.usage,
+      model: result.model,
+      failure: 'empty',
+    };
   }
   return { selected, source: 'model', usage: result.usage, model: result.model };
 }

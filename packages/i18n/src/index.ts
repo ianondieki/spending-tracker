@@ -37,7 +37,10 @@ type Catalog = Readonly<Partial<Record<string, string>>>;
 type InsightCatalog = Readonly<Partial<Record<string, InsightTemplate>>>;
 
 const messages: Readonly<Record<Locale, Catalog>> = { en, sw };
-const insightCatalogs: Readonly<Record<Locale, InsightCatalog>> = { en: enInsights, sw: swInsights };
+const insightCatalogs: Readonly<Record<Locale, InsightCatalog>> = {
+  en: enInsights,
+  sw: swInsights,
+};
 
 /** Thrown when a template cannot be filled safely. */
 export class TemplateError extends Error {
@@ -71,7 +74,11 @@ export function placeholdersOf(template: string): string[] {
  * Replaces `{name}` with `params[name]`. Throws when a placeholder has no value, or when `allowed` is given and
  * the placeholder is not in it. Single pass, so a value that itself contains `{x}` is never expanded.
  */
-export function substitute(template: string, params: TemplateParams, allowed?: readonly string[]): string {
+export function substitute(
+  template: string,
+  params: TemplateParams,
+  allowed?: readonly string[],
+): string {
   return template.replace(PLACEHOLDER, (_match, name: string) => {
     if (allowed !== undefined && !allowed.includes(name)) {
       throw new TemplateError(`placeholder {${name}} is not allowed in this template`);
@@ -85,7 +92,11 @@ export function substitute(template: string, params: TemplateParams, allowed?: r
 }
 
 /** `t()` plus substitution. */
-export function renderTemplate(locale: Locale, key: MessageKey, params: TemplateParams = {}): string {
+export function renderTemplate(
+  locale: Locale,
+  key: MessageKey,
+  params: TemplateParams = {},
+): string {
   return substitute(t(locale, key), params);
 }
 
@@ -115,7 +126,11 @@ export function selectInsightCopy(template: InsightTemplate, params: TemplatePar
  * Renders a candidate insight from the engine's params. Only the params the engine emits for `kind` may appear
  * as placeholders, and each one used must have a value; anything else throws.
  */
-export function renderInsight(locale: Locale, kind: InsightKind, params: TemplateParams): InsightCopy {
+export function renderInsight(
+  locale: Locale,
+  kind: InsightKind,
+  params: TemplateParams,
+): InsightCopy {
   const template = insightTemplate(locale, kind);
   const allowed: readonly string[] = INSIGHT_PARAMS[kind];
   const copy = selectInsightCopy(template, params);

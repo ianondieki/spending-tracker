@@ -38,10 +38,26 @@ describe('workflow and configuration', () => {
 
   it('exports the public surface', () => {
     for (const name of [
-      'ReportDocumentSchema', 'factCheck', 'writeFallback', 'produceReport', 'insightSelect', 'writeReport',
-      'judgeReport', 'extractUnknownMessages', 'redact', 'AnthropicModelClient', 'FakeModelClient', 'BudgetGuard',
-      'InMemoryCostLedger', 'PRICING', 'estimateCostUsd', 'ReportDraftSchema', 'WRITE_V1', 'INSIGHT_SELECT_V1',
-      'JUDGE_V1', 'EXTRACT_V1',
+      'ReportDocumentSchema',
+      'factCheck',
+      'writeFallback',
+      'produceReport',
+      'insightSelect',
+      'writeReport',
+      'judgeReport',
+      'extractUnknownMessages',
+      'redact',
+      'AnthropicModelClient',
+      'FakeModelClient',
+      'BudgetGuard',
+      'InMemoryCostLedger',
+      'PRICING',
+      'estimateCostUsd',
+      'ReportDraftSchema',
+      'WRITE_V1',
+      'INSIGHT_SELECT_V1',
+      'JUDGE_V1',
+      'EXTRACT_V1',
     ]) {
       expect(agents, name).toHaveProperty(name);
     }

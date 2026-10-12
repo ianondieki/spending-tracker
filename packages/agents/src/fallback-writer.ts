@@ -3,7 +3,12 @@
  * alone: no model, no invented numbers, every figure a display string from the sheet. Used when AI is off,
  * the budget is spent, or any model step fails; it must always produce a valid document.
  */
-import { type CandidateInsight, type CategoryFact, type Delta, type FactsSheet } from '@hesabu/analytics';
+import {
+  type CandidateInsight,
+  type CategoryFact,
+  type Delta,
+  type FactsSheet,
+} from '@hesabu/analytics';
 import { type Locale, type MessageKey, renderInsight, renderTemplate, t } from '@hesabu/i18n';
 
 import {
@@ -47,7 +52,9 @@ export const LIMITS = {
 } as const;
 
 /** Chart ids are stable strings shared with the renderer; data_ref points into the FactsSheet (chart-spec.md). */
-export const CHART_CATALOGUE: Readonly<Record<string, { readonly type: ChartType; readonly data_ref: string }>> = {
+export const CHART_CATALOGUE: Readonly<
+  Record<string, { readonly type: ChartType; readonly data_ref: string }>
+> = {
   donut: { type: 'donut', data_ref: '/categories' },
   daily_bars: { type: 'daily_bars', data_ref: '/daily' },
   stacked_in_out: { type: 'stacked_in_out', data_ref: '/totals' },
@@ -91,7 +98,15 @@ function clamp(text: string, max: number): string {
 function chart(id: string, title: string, alt: string): ChartSection {
   const entry = CHART_CATALOGUE[id];
   if (entry === undefined) throw new Error(`unknown chart id ${id}`);
-  return { type: 'chart', chart_id: id, chart_type: entry.type, title, takeaway: null, data_ref: entry.data_ref, alt_text: alt };
+  return {
+    type: 'chart',
+    chart_id: id,
+    chart_type: entry.type,
+    title,
+    takeaway: null,
+    data_ref: entry.data_ref,
+    alt_text: alt,
+  };
 }
 
 function heroSection(facts: FactsSheet, kind: ReportKind, locale: Locale): Section {
@@ -102,8 +117,16 @@ function heroSection(facts: FactsSheet, kind: ReportKind, locale: Locale): Secti
   });
   const tally =
     kind === 'weekly'
-      ? facts.daily.map((day) => ({ label: locale === 'sw' ? day.weekday_sw : day.weekday_en, value: day.out.display, cents: day.out.cents }))
-      : facts.categories.slice(0, 7).map((c) => ({ label: categoryName(c, locale), value: c.out.display, cents: c.out.cents }));
+      ? facts.daily.map((day) => ({
+          label: locale === 'sw' ? day.weekday_sw : day.weekday_en,
+          value: day.out.display,
+          cents: day.out.cents,
+        }))
+      : facts.categories.slice(0, 7).map((c) => ({
+          label: categoryName(c, locale),
+          value: c.out.display,
+          cents: c.out.cents,
+        }));
   return {
     type: 'hero',
     total_out: facts.totals.out.display,
@@ -119,10 +142,30 @@ function kpiSection(facts: FactsSheet, locale: Locale): Section {
   return {
     type: 'kpis',
     items: [
-      { label: t(locale, 'kpi.in'), value: totals.in.display, delta: deltaOrNull(deltas.in), tone: 'in' },
-      { label: t(locale, 'kpi.out'), value: totals.out.display, delta: deltaOrNull(deltas.out), tone: 'out' },
-      { label: t(locale, 'kpi.fees'), value: totals.fees.display, delta: deltaOrNull(deltas.fees), tone: 'fee' },
-      { label: t(locale, 'kpi.net'), value: totals.net.display, delta: deltaOrNull(deltas.net), tone: 'neutral' },
+      {
+        label: t(locale, 'kpi.in'),
+        value: totals.in.display,
+        delta: deltaOrNull(deltas.in),
+        tone: 'in',
+      },
+      {
+        label: t(locale, 'kpi.out'),
+        value: totals.out.display,
+        delta: deltaOrNull(deltas.out),
+        tone: 'out',
+      },
+      {
+        label: t(locale, 'kpi.fees'),
+        value: totals.fees.display,
+        delta: deltaOrNull(deltas.fees),
+        tone: 'fee',
+      },
+      {
+        label: t(locale, 'kpi.net'),
+        value: totals.net.display,
+        delta: deltaOrNull(deltas.net),
+        tone: 'neutral',
+      },
     ],
   };
 }
@@ -134,7 +177,8 @@ function budgetCategoryName(facts: FactsSheet, categoryId: string, locale: Local
 
 function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): ChartSection[] {
   const charts: ChartSection[] = [];
-  const r = (key: MessageKey, params: Record<string, string> = {}): string => renderTemplate(locale, key, params);
+  const r = (key: MessageKey, params: Record<string, string> = {}): string =>
+    renderTemplate(locale, key, params);
   const { totals } = facts;
 
   // Donut: share of spending by category.
@@ -144,7 +188,13 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
   } else {
     const items = facts.categories
       .slice(0, 6)
-      .map((c) => r('chart.item.amount_share', { name: categoryName(c, locale), amount: c.out.display, share: c.share.display }))
+      .map((c) =>
+        r('chart.item.amount_share', {
+          name: categoryName(c, locale),
+          amount: c.out.display,
+          share: c.share.display,
+        }),
+      )
       .join(LIST_SEPARATOR);
     charts.push(
       chart(
@@ -158,14 +208,21 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
   // Daily bars with the average line.
   const peak = facts.spendiest_day;
   if (peak === null || peak.out.cents <= 0) {
-    charts.push(chart('daily_bars', r('chart.daily_bars.title_empty'), r('chart.daily_bars.alt_empty')));
+    charts.push(
+      chart('daily_bars', r('chart.daily_bars.title_empty'), r('chart.daily_bars.alt_empty')),
+    );
   } else {
     const weekday = locale === 'sw' ? peak.weekday_sw : peak.weekday_en;
     charts.push(
       chart(
         'daily_bars',
         r('chart.daily_bars.title', { weekday, amount: peak.out.display }),
-        r('chart.daily_bars.alt', { weekday, date: peak.date, amount: peak.out.display, average: facts.average_daily_out.display }),
+        r('chart.daily_bars.alt', {
+          weekday,
+          date: peak.date,
+          amount: peak.out.display,
+          average: facts.average_daily_out.display,
+        }),
       ),
     );
   }
@@ -201,7 +258,10 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
     charts.push(
       chart(
         'top_bars_merchants',
-        r('chart.top_bars.merchants.title', { name: topMerchant.name, amount: topMerchant.out.display }),
+        r('chart.top_bars.merchants.title', {
+          name: topMerchant.name,
+          amount: topMerchant.out.display,
+        }),
         r('chart.top_bars.merchants.alt', { items }),
       ),
     );
@@ -212,7 +272,8 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
     const current = months.find((m) => m.is_current) ?? months.at(-1);
     const firstMonth = months[0];
     if (current !== undefined && firstMonth !== undefined) {
-      const label = (m: { label_en: string; label_sw: string }): string => (locale === 'sw' ? m.label_sw : m.label_en);
+      const label = (m: { label_en: string; label_sw: string }): string =>
+        locale === 'sw' ? m.label_sw : m.label_en;
       charts.push(
         chart(
           'trend_lines',
@@ -274,7 +335,10 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
       charts.push(
         chart(
           'budget_bullets',
-          r('chart.budget_bullets.title', { category: budgetCategoryName(facts, first.category_id, locale), used: first.used.display }),
+          r('chart.budget_bullets.title', {
+            category: budgetCategoryName(facts, first.category_id, locale),
+            used: first.used.display,
+          }),
           r('chart.budget_bullets.alt', { items }),
         ),
       );
@@ -285,8 +349,14 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
     charts.push(
       chart(
         'fee_meter',
-        r('chart.fee_meter.title', { fee_ratio: totals.fee_ratio.display, fees: totals.fees.display }),
-        r('chart.fee_meter.alt', { fees: totals.fees.display, fee_ratio: totals.fee_ratio.display }),
+        r('chart.fee_meter.title', {
+          fee_ratio: totals.fee_ratio.display,
+          fees: totals.fees.display,
+        }),
+        r('chart.fee_meter.alt', {
+          fees: totals.fees.display,
+          fee_ratio: totals.fee_ratio.display,
+        }),
       ),
     );
   }
@@ -294,17 +364,30 @@ function chartSections(facts: FactsSheet, kind: ReportKind, locale: Locale): Cha
 }
 
 /** Renders one candidate from its template; null when it cannot be rendered safely or does not fit. */
-export function renderCandidate(candidate: CandidateInsight, locale: Locale): InsightsSection['items'][number] | null {
+export function renderCandidate(
+  candidate: CandidateInsight,
+  locale: Locale,
+): InsightsSection['items'][number] | null {
   try {
     const copy = renderInsight(locale, candidate.kind, candidate.params);
     if (copy.headline.length > LIMITS.headline || copy.body.length > LIMITS.body) return null;
-    return { insight_id: candidate.id, headline: copy.headline, body: copy.body, drilldown: candidate.drilldown };
+    return {
+      insight_id: candidate.id,
+      headline: copy.headline,
+      body: copy.body,
+      drilldown: candidate.drilldown,
+    };
   } catch {
     return null;
   }
 }
 
-function insightsSection(facts: FactsSheet, kind: ReportKind, locale: Locale, ids?: readonly string[]): InsightsSection | null {
+function insightsSection(
+  facts: FactsSheet,
+  kind: ReportKind,
+  locale: Locale,
+  ids?: readonly string[],
+): InsightsSection | null {
   const byId = new Map(facts.candidate_insights.map((c) => [c.id, c]));
   const ordered =
     ids === undefined
@@ -316,7 +399,9 @@ function insightsSection(facts: FactsSheet, kind: ReportKind, locale: Locale, id
     const item = renderCandidate(candidate, locale);
     if (item !== null) items.push(item);
   }
-  return items.length === 0 ? null : { type: 'insights', title: t(locale, 'section.insights'), items };
+  return items.length === 0
+    ? null
+    : { type: 'insights', title: t(locale, 'section.insights'), items };
 }
 
 function categoryTable(facts: FactsSheet, locale: Locale): Section | null {
@@ -324,12 +409,27 @@ function categoryTable(facts: FactsSheet, locale: Locale): Section | null {
   return {
     type: 'table',
     title: t(locale, 'section.categories'),
-    columns: [t(locale, 'table.category'), t(locale, 'table.spent'), t(locale, 'table.share'), t(locale, 'table.change')],
+    columns: [
+      t(locale, 'table.category'),
+      t(locale, 'table.spent'),
+      t(locale, 'table.share'),
+      t(locale, 'table.change'),
+    ],
     rows: facts.categories
       .slice(0, 8)
-      .map((c) => [categoryName(c, locale), c.out.display, c.share.display, deltaOrNull(c.delta) ?? '']),
+      .map((c) => [
+        categoryName(c, locale),
+        c.out.display,
+        c.share.display,
+        deltaOrNull(c.delta) ?? '',
+      ]),
     numeric_columns: [1, 2, 3],
-    total_row: [t(locale, 'table.total'), facts.totals.out.display, '', deltaOrNull(facts.deltas.out) ?? ''],
+    total_row: [
+      t(locale, 'table.total'),
+      facts.totals.out.display,
+      '',
+      deltaOrNull(facts.deltas.out) ?? '',
+    ],
   };
 }
 
@@ -347,13 +447,25 @@ function watchSection(facts: FactsSheet, kind: ReportKind, locale: Locale): Watc
   for (const r of facts.recurring) {
     const date = isoDay(r.next_expected);
     if (r.is_subscription && date !== null && date >= firstDayAfter) {
-      candidates.push(renderTemplate(locale, 'watch.subscription_due', { merchant: r.merchant, amount: r.typical_amount.display, date }));
+      candidates.push(
+        renderTemplate(locale, 'watch.subscription_due', {
+          merchant: r.merchant,
+          amount: r.typical_amount.display,
+          date,
+        }),
+      );
     }
   }
   for (const b of facts.budgets) {
     const category = budgetCategoryName(facts, b.category_id, locale);
     if (b.status === 'over') {
-      candidates.push(renderTemplate(locale, 'watch.budget_over', { category, spent: b.spent.display, limit: b.limit.display }));
+      candidates.push(
+        renderTemplate(locale, 'watch.budget_over', {
+          category,
+          spent: b.spent.display,
+          limit: b.limit.display,
+        }),
+      );
     } else if (b.status === 'watch') {
       candidates.push(
         b.projected.cents > b.spent.cents
@@ -363,13 +475,22 @@ function watchSection(facts: FactsSheet, kind: ReportKind, locale: Locale): Watc
               limit: b.limit.display,
               projected: b.projected.display,
             })
-          : renderTemplate(locale, 'watch.budget_used', { category, spent: b.spent.display, limit: b.limit.display }),
+          : renderTemplate(locale, 'watch.budget_used', {
+              category,
+              spent: b.spent.display,
+              limit: b.limit.display,
+            }),
       );
     }
   }
   for (const r of facts.recurring) {
     if (!r.is_subscription && (r.cadence === 'weekly' || r.cadence === 'monthly')) {
-      candidates.push(renderTemplate(locale, `watch.recurring.${r.cadence}`, { merchant: r.merchant, amount: r.typical_amount.display }));
+      candidates.push(
+        renderTemplate(locale, `watch.recurring.${r.cadence}`, {
+          merchant: r.merchant,
+          amount: r.typical_amount.display,
+        }),
+      );
     }
   }
   const items = candidates.filter((s) => s.length <= LIMITS.watchItem).slice(0, 3);
@@ -382,7 +503,9 @@ function footerSection(facts: FactsSheet, locale: Locale): Section {
     type: 'footer',
     accounts_covered: facts.accounts.map((a) => a.label),
     computed_note: t(locale, 'footer.computed_note'),
-    unknown_count: renderTemplate(locale, 'footer.unknown_count', { count: facts.unknown_messages.display }),
+    unknown_count: renderTemplate(locale, 'footer.unknown_count', {
+      count: facts.unknown_messages.display,
+    }),
   };
 }
 
@@ -399,10 +522,17 @@ export function buildCaption(opts: {
   headlines: readonly string[];
   link: string | null;
 }): string {
-  const head = [`*${plain(opts.title)}*`, plain(opts.periodLabel), '', opts.spentLine, plain(opts.verdict)];
+  const head = [
+    `*${plain(opts.title)}*`,
+    plain(opts.periodLabel),
+    '',
+    opts.spentLine,
+    plain(opts.verdict),
+  ];
   const tail = opts.link === null ? [] : ['', opts.link];
   let bullets = opts.headlines.slice(0, 3).map((h) => `• ${plain(h)}`);
-  const compose = (): string => [...head, ...(bullets.length > 0 ? ['', ...bullets] : []), ...tail].join('\n');
+  const compose = (): string =>
+    [...head, ...(bullets.length > 0 ? ['', ...bullets] : []), ...tail].join('\n');
   let caption = compose();
   while (caption.length > LIMITS.caption && bullets.length > 0) {
     bullets = bullets.slice(0, -1);
@@ -432,7 +562,10 @@ export function writeFallback(facts: FactsSheet, opts: FallbackOptions): ReportD
       type: 'callout',
       tone: 'fee',
       body: clamp(
-        renderTemplate(locale, 'callout.fees', { fees: facts.totals.fees.display, fee_ratio: facts.totals.fee_ratio.display }),
+        renderTemplate(locale, 'callout.fees', {
+          fees: facts.totals.fees.display,
+          fee_ratio: facts.totals.fee_ratio.display,
+        }),
         LIMITS.callout,
       ),
     });
@@ -451,7 +584,9 @@ export function writeFallback(facts: FactsSheet, opts: FallbackOptions): ReportD
     link:
       opts.baseUrl === undefined
         ? null
-        : renderTemplate(locale, 'report.full_report_link', { url: reportUrl(opts.baseUrl, opts.report_id) }),
+        : renderTemplate(locale, 'report.full_report_link', {
+            url: reportUrl(opts.baseUrl, opts.report_id),
+          }),
   });
 
   const subject = renderTemplate(locale, `email.subject.${kind}`, { period: label });
@@ -478,7 +613,10 @@ export function writeFallback(facts: FactsSheet, opts: FallbackOptions): ReportD
       preheader:
         preheader.length <= LIMITS.preheader
           ? preheader
-          : clamp(renderTemplate(locale, 'email.preheader_short', { total: facts.totals.out.display }), LIMITS.preheader),
+          : clamp(
+              renderTemplate(locale, 'email.preheader_short', { total: facts.totals.out.display }),
+              LIMITS.preheader,
+            ),
     },
   };
   const check = factCheck(body, facts);

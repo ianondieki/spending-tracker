@@ -21,10 +21,14 @@ describe('redact', () => {
   });
 
   it('masks account numbers of nine or more digits', () => {
-    expect(redact('SKL9M8N7P6 Confirmed. Ksh2,500.00 sent to KPLC PREPAID for account 37188812345 on 6/10/26')).toBe(
-      '[CODE] Confirmed. Ksh2,500.00 sent to KPLC PREPAID for account [ACCOUNT] on 6/10/26',
+    expect(
+      redact(
+        'SKL9M8N7P6 Confirmed. Ksh2,500.00 sent to KPLC PREPAID for account 37188812345 on 6/10/26',
+      ),
+    ).toBe('[CODE] Confirmed. Ksh2,500.00 sent to KPLC PREPAID for account [ACCOUNT] on 6/10/26');
+    expect(redact('Acc 0123456789012 debited with KES 3,000.00')).toBe(
+      'Acc [ACCOUNT] debited with KES 3,000.00',
     );
-    expect(redact('Acc 0123456789012 debited with KES 3,000.00')).toBe('Acc [ACCOUNT] debited with KES 3,000.00');
   });
 
   it('masks national ID numbers (seven or eight digits)', () => {
@@ -33,7 +37,9 @@ describe('redact', () => {
   });
 
   it('masks emails', () => {
-    expect(redact('Statement sent to jane.doe@example.co.ke today')).toBe('Statement sent to [EMAIL] today');
+    expect(redact('Statement sent to jane.doe@example.co.ke today')).toBe(
+      'Statement sent to [EMAIL] today',
+    );
   });
 
   it('leaves amounts alone, however they are written', () => {

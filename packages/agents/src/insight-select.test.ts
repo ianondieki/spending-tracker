@@ -6,11 +6,15 @@ import { INSIGHT_SELECT_V1 } from './prompts/insight-select.v1.js';
 import { sampleFacts } from './test-fixtures.js';
 
 const facts = sampleFacts('weekly');
-const pick = (...ids: string[]) => ({ selected: ids.map((id) => ({ id, rationale: `because ${id}` })) });
+const pick = (...ids: string[]) => ({
+  selected: ids.map((id) => ({ id, rationale: `because ${id}` })),
+});
 
 describe('insightSelect', () => {
   it('keeps the model order and drops unknown and repeated ids', async () => {
-    const client = new FakeModelClient(fakeOk(pick('ins_sub', 'made_up', 'ins_fees', 'ins_sub', 'ins_new')));
+    const client = new FakeModelClient(
+      fakeOk(pick('ins_sub', 'made_up', 'ins_fees', 'ins_sub', 'ins_new')),
+    );
     const result = await insightSelect(facts, 'weekly', client);
     expect(result.source).toBe('model');
     expect(result.selected.map((s) => s.id)).toEqual(['ins_sub', 'ins_fees', 'ins_new']);
@@ -29,12 +33,18 @@ describe('insightSelect', () => {
       const result = await insightSelect(facts, 'weekly', new FakeModelClient(fakeFail(reason)));
       expect(result.source).toBe('fallback');
       expect(result.failure).toBe(reason);
-      expect(result.selected.map((s) => s.id)).toEqual(facts.candidate_insights.slice(0, 7).map((c) => c.id));
+      expect(result.selected.map((s) => s.id)).toEqual(
+        facts.candidate_insights.slice(0, 7).map((c) => c.id),
+      );
     }
   });
 
   it('falls back when nothing the model chose is a real candidate', async () => {
-    const result = await insightSelect(facts, 'weekly', new FakeModelClient(fakeOk(pick('x', 'y'))));
+    const result = await insightSelect(
+      facts,
+      'weekly',
+      new FakeModelClient(fakeOk(pick('x', 'y'))),
+    );
     expect(result.source).toBe('fallback');
     expect(result.failure).toBe('empty');
     expect(result.selected).toHaveLength(7);

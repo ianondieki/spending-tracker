@@ -5,7 +5,14 @@
  */
 
 /** Workflow steps in order. Only `insight-select` and `write` may call a model; the rest are deterministic. */
-export const WORKFLOW_STEPS = ['collect', 'insight-select', 'write', 'check', 'render', 'deliver'] as const;
+export const WORKFLOW_STEPS = [
+  'collect',
+  'insight-select',
+  'write',
+  'check',
+  'render',
+  'deliver',
+] as const;
 export type WorkflowStep = (typeof WORKFLOW_STEPS)[number];
 
 export * from './contracts/report-document.js';

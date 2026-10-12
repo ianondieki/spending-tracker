@@ -22,7 +22,8 @@ const PHONE = /(?<![\d+])(\+?254[ -]?|0)([17](?:[ -]?\d){8})(?![\d])/g;
  * Ten uppercase letters/digits with at least one of each, e.g. RJK3H5T2QW (all-letter words are left alone).
  * An already-masked phone (07XXXXX678) is not a code, so a second pass leaves it as it is.
  */
-const MPESA_CODE = /\b(?!\d{2}X{3,}\d{3}\b)(?=[A-Z0-9]{10}\b)(?=[A-Z0-9]*\d)(?=[A-Z0-9]*[A-Z])[A-Z0-9]{10}\b/g;
+const MPESA_CODE =
+  /\b(?!\d{2}X{3,}\d{3}\b)(?=[A-Z0-9]{10}\b)(?=[A-Z0-9]*\d)(?=[A-Z0-9]*[A-Z])[A-Z0-9]{10}\b/g;
 
 /** A currency marker right before a number marks it as an amount. */
 const AMOUNT_PREFIX = /(?:ksh?s?|kes|sh)\.?\s?$/i;

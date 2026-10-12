@@ -24,8 +24,18 @@ export const JudgeVerdictSchema = z.strictObject({
 export type JudgeVerdict = z.infer<typeof JudgeVerdictSchema>;
 
 export type JudgeResult =
-  | { readonly ok: true; readonly verdict: JudgeVerdict; readonly usage: Usage; readonly model: string }
-  | { readonly ok: false; readonly reason: FailureReason; readonly usage?: Usage; readonly model?: string };
+  | {
+      readonly ok: true;
+      readonly verdict: JudgeVerdict;
+      readonly usage: Usage;
+      readonly model: string;
+    }
+  | {
+      readonly ok: false;
+      readonly reason: FailureReason;
+      readonly usage?: Usage;
+      readonly model?: string;
+    };
 
 export function buildJudgeUser(doc: ReportDocument, facts: FactsSheet): string {
   const { meta: _meta, ...report } = doc;
@@ -39,7 +49,11 @@ export function buildJudgeUser(doc: ReportDocument, facts: FactsSheet): string {
 }
 
 /** Never throws; a failure is returned as `ok: false` and the report goes out regardless. */
-export async function judgeReport(doc: ReportDocument, facts: FactsSheet, client: ModelClient): Promise<JudgeResult> {
+export async function judgeReport(
+  doc: ReportDocument,
+  facts: FactsSheet,
+  client: ModelClient,
+): Promise<JudgeResult> {
   try {
     const result = await client.structured({
       step: 'judge',
@@ -51,7 +65,12 @@ export async function judgeReport(doc: ReportDocument, facts: FactsSheet, client
     if (!result.ok) {
       return result.usage === undefined
         ? { ok: false, reason: result.reason }
-        : { ok: false, reason: result.reason, usage: result.usage, ...(result.model === undefined ? {} : { model: result.model }) };
+        : {
+            ok: false,
+            reason: result.reason,
+            usage: result.usage,
+            ...(result.model === undefined ? {} : { model: result.model }),
+          };
     }
     return { ok: true, verdict: result.value, usage: result.usage, model: result.model };
   } catch {

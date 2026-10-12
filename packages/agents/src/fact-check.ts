@@ -77,7 +77,9 @@ export function collectCopy(doc: CheckableDocument): CopyString[] {
       case 'table':
         add(`${at}.title`, section.title);
         section.columns.forEach((c, j) => add(`${at}.columns[${j}]`, c));
-        section.rows.forEach((row, r) => row.forEach((cell, c) => add(`${at}.rows[${r}][${c}]`, cell)));
+        section.rows.forEach((row, r) =>
+          row.forEach((cell, c) => add(`${at}.rows[${r}][${c}]`, cell)),
+        );
         (section.total_row ?? []).forEach((cell, c) => add(`${at}.total_row[${c}]`, cell));
         break;
       case 'list':
@@ -106,26 +108,73 @@ export function collectCopy(doc: CheckableDocument): CopyString[] {
 
 const MONTHS = [
   // English, full and short
-  'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December',
-  'Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Sept', 'Oct', 'Nov', 'Dec',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Sept',
+  'Oct',
+  'Nov',
+  'Dec',
   // Kiswahili, full and short
-  'Januari', 'Februari', 'Machi', 'Aprili', 'Mei', 'Juni', 'Julai', 'Agosti', 'Septemba', 'Oktoba', 'Novemba', 'Desemba',
-  'Mac', 'Ago', 'Okt', 'Des',
+  'Januari',
+  'Februari',
+  'Machi',
+  'Aprili',
+  'Mei',
+  'Juni',
+  'Julai',
+  'Agosti',
+  'Septemba',
+  'Oktoba',
+  'Novemba',
+  'Desemba',
+  'Mac',
+  'Ago',
+  'Okt',
+  'Des',
 ];
 const MONTH_ALT = [...new Set(MONTHS)].sort((a, b) => b.length - a.length).join('|');
 
 const URL = /\bhttps?:\/\/[^\s)>\]]+/gi;
-const ISO_DATE = /(?<!\d)(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?(?!\d)/g;
+const ISO_DATE =
+  /(?<!\d)(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?(?!\d)/g;
 const CLOCK = /(?<![\d:])(?:[01]?\d|2[0-3]):[0-5]\d(?![\d:])/g;
-const DAY_BEFORE_MONTH = new RegExp(`(?<![\\d.,])(\\d{1,2})(st|nd|rd|th)?(\\s+(?:of\\s+)?)(?=(?:${MONTH_ALT})\\b)`, 'g');
-const DAY_AFTER_MONTH = new RegExp(`\\b((?:${MONTH_ALT})\\.?\\s+)(\\d{1,2})(st|nd|rd|th)?(?![\\d,]*\\d)`, 'g');
+const DAY_BEFORE_MONTH = new RegExp(
+  `(?<![\\d.,])(\\d{1,2})(st|nd|rd|th)?(\\s+(?:of\\s+)?)(?=(?:${MONTH_ALT})\\b)`,
+  'g',
+);
+const DAY_AFTER_MONTH = new RegExp(
+  `\\b((?:${MONTH_ALT})\\.?\\s+)(\\d{1,2})(st|nd|rd|th)?(?![\\d,]*\\d)`,
+  'g',
+);
 const MONEY = /KSh\s?[+-]?\d[\d,]*(?:\.\d+)?/g;
 const PERCENT = /(?<![\d.,])-?\d+(?:\.\d+)?%/g;
 const BARE = /\d+(?:,\d{3})*(?:\.\d+)?/g;
 
 /** True for a string that is exactly one money, percent or bare-number token. */
 function isPlainToken(s: string): boolean {
-  return /^KSh\s?[+-]?\d[\d,]*(?:\.\d+)?$/.test(s) || /^-?\d+(?:\.\d+)?%$/.test(s) || /^-?\d+(?:,\d{3})*(?:\.\d+)?$/.test(s);
+  return (
+    /^KSh\s?[+-]?\d[\d,]*(?:\.\d+)?$/.test(s) ||
+    /^-?\d+(?:\.\d+)?%$/.test(s) ||
+    /^-?\d+(?:,\d{3})*(?:\.\d+)?$/.test(s)
+  );
 }
 
 export interface AllowList {
@@ -153,7 +202,15 @@ function namesIn(facts: FactsSheet): string[] {
     ...facts.recurring.map((r) => r.merchant),
     ...facts.trend_months.flatMap((m) => [m.label_en, m.label_sw]),
   ];
-  const NAME_PARAMS = ['merchant', 'counterparty', 'top_person', 'top_source', 'account', 'category_en', 'category_sw'];
+  const NAME_PARAMS = [
+    'merchant',
+    'counterparty',
+    'top_person',
+    'top_source',
+    'account',
+    'category_en',
+    'category_sw',
+  ];
   for (const insight of facts.candidate_insights) {
     for (const key of NAME_PARAMS) {
       const v = insight.params[key];
@@ -199,7 +256,8 @@ function validIsoParts(y: string, m: string, d: string, hh?: string, mm?: string
   const year = Number(y);
   const month = Number(m);
   const day = Number(d);
-  if (!(year >= 1900 && year <= 2099 && month >= 1 && month <= 12 && day >= 1 && day <= 31)) return false;
+  if (!(year >= 1900 && year <= 2099 && month >= 1 && month <= 12 && day >= 1 && day <= 31))
+    return false;
   if (hh !== undefined && mm !== undefined) return Number(hh) <= 23 && Number(mm) <= 59;
   return true;
 }
@@ -208,12 +266,16 @@ function validIsoParts(y: string, m: string, d: string, hh?: string, mm?: string
 export function unsupportedTokens(text: string, allow: AllowList): string[] {
   let s = text.replace(URL, ' ');
   for (const mask of allow.masks) s = maskWhole(s, mask);
-  s = s.replace(ISO_DATE, (m: string, y: string, mo: string, d: string, hh?: string, mi?: string) =>
-    validIsoParts(y, mo, d, hh, mi) ? ' ' : m,
+  s = s.replace(
+    ISO_DATE,
+    (m: string, y: string, mo: string, d: string, hh?: string, mi?: string) =>
+      validIsoParts(y, mo, d, hh, mi) ? ' ' : m,
   );
   s = s.replace(CLOCK, ' ');
-  s = s.replace(DAY_BEFORE_MONTH, (m: string, day: string, _suffix: string | undefined, gap: string) =>
-    Number(day) >= 1 && Number(day) <= 31 ? ` ${gap}` : m,
+  s = s.replace(
+    DAY_BEFORE_MONTH,
+    (m: string, day: string, _suffix: string | undefined, gap: string) =>
+      Number(day) >= 1 && Number(day) <= 31 ? ` ${gap}` : m,
   );
   s = s.replace(DAY_AFTER_MONTH, (m: string, month: string, day: string) =>
     Number(day) >= 1 && Number(day) <= 31 ? `${month} ` : m,

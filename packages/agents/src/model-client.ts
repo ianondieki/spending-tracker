@@ -27,7 +27,8 @@ export interface StructuredRequest<T> {
   readonly effort?: Effort;
 }
 
-export type FailureReason = 'refusal' | 'max_tokens' | 'parse' | 'api_error' | 'budget' | 'disabled';
+export type FailureReason =
+  'refusal' | 'max_tokens' | 'parse' | 'api_error' | 'budget' | 'disabled';
 
 export type StructuredResult<T> =
   | { readonly ok: true; readonly value: T; readonly usage: Usage; readonly model: string }
@@ -55,7 +56,8 @@ export function describeModelError(error: unknown): string {
   if (error instanceof Anthropic.APIConnectionError) return 'connection_error';
   if (error instanceof Anthropic.AuthenticationError) return 'authentication_error (401)';
   if (error instanceof Anthropic.BadRequestError) return 'bad_request (400)';
-  if (error instanceof Anthropic.APIError) return `api_error (${String(error.status ?? 'no status')})`;
+  if (error instanceof Anthropic.APIError)
+    return `api_error (${String(error.status ?? 'no status')})`;
   if (error instanceof Anthropic.AnthropicError) return 'sdk_error';
   return 'unknown_error';
 }
@@ -120,7 +122,8 @@ export class AnthropicModelClient implements ModelClient {
         try {
           return base.parse(content);
         } catch (error) {
-          parseProblem = error instanceof Error ? error.message.slice(0, 300) : 'unparseable output';
+          parseProblem =
+            error instanceof Error ? error.message.slice(0, 300) : 'unparseable output';
           return null;
         }
       },
@@ -157,12 +160,24 @@ export class AnthropicModelClient implements ModelClient {
       case 'model_context_window_exceeded':
         return { ok: false, reason: 'max_tokens', detail: response.stop_reason, usage, model };
       default:
-        return { ok: false, reason: 'api_error', detail: `unexpected stop_reason: ${String(response.stop_reason)}`, usage, model };
+        return {
+          ok: false,
+          reason: 'api_error',
+          detail: `unexpected stop_reason: ${String(response.stop_reason)}`,
+          usage,
+          model,
+        };
     }
 
     const value = response.parsed_output;
     if (value === null || value === undefined) {
-      return { ok: false, reason: 'parse', detail: parseProblem ?? 'no structured output', usage, model };
+      return {
+        ok: false,
+        reason: 'parse',
+        detail: parseProblem ?? 'no structured output',
+        usage,
+        model,
+      };
     }
     return { ok: true, value, usage, model };
   }
@@ -171,7 +186,10 @@ export class AnthropicModelClient implements ModelClient {
 /** A scripted reply: a fixed result, or a function of the request. */
 export type FakeReply =
   | StructuredResult<unknown>
-  | ((req: StructuredRequest<unknown>, callIndex: number) => StructuredResult<unknown> | Promise<StructuredResult<unknown>>);
+  | ((
+      req: StructuredRequest<unknown>,
+      callIndex: number,
+    ) => StructuredResult<unknown> | Promise<StructuredResult<unknown>>);
 
 export interface FakeCall {
   readonly step: string;
@@ -199,23 +217,43 @@ export class FakeModelClient implements ModelClient {
 
   async structured<T>(req: StructuredRequest<T>): Promise<StructuredResult<T>> {
     const index = this.calls.length;
-    this.calls.push({ step: req.step, system: req.system, user: req.user, effort: req.effort, maxTokens: req.maxTokens });
+    this.calls.push({
+      step: req.step,
+      system: req.system,
+      user: req.user,
+      effort: req.effort,
+      maxTokens: req.maxTokens,
+    });
     const reply = this.replies[index] ?? (this.repeatLast ? this.replies.at(-1) : undefined);
-    if (reply === undefined) return { ok: false, reason: 'api_error', detail: 'fake: no scripted reply' };
-    const result = typeof reply === 'function' ? await reply(req as StructuredRequest<unknown>, index) : reply;
+    if (reply === undefined)
+      return { ok: false, reason: 'api_error', detail: 'fake: no scripted reply' };
+    const result =
+      typeof reply === 'function' ? await reply(req as StructuredRequest<unknown>, index) : reply;
     if (!result.ok) return result;
     const parsed = req.schema.safeParse(result.value);
     if (!parsed.success) {
-      return { ok: false, reason: 'parse', detail: parsed.error.message.slice(0, 300), usage: result.usage, model: result.model };
+      return {
+        ok: false,
+        reason: 'parse',
+        detail: parsed.error.message.slice(0, 300),
+        usage: result.usage,
+        model: result.model,
+      };
     }
     return { ok: true, value: parsed.data, usage: result.usage, model: result.model };
   }
 }
 
-export function fakeOk<T>(value: T, usage: Usage = ZERO_USAGE, model = 'claude-opus-5-5'): StructuredResult<T> {
+export function fakeOk<T>(
+  value: T,
+  usage: Usage = ZERO_USAGE,
+  model = 'claude-opus-5-5',
+): StructuredResult<T> {
   return { ok: true, value, usage, model };
 }
 
 export function fakeFail(reason: FailureReason, usage?: Usage): StructuredResult<never> {
-  return usage === undefined ? { ok: false, reason } : { ok: false, reason, usage, model: 'claude-opus-5-5' };
+  return usage === undefined
+    ? { ok: false, reason }
+    : { ok: false, reason, usage, model: 'claude-opus-5-5' };
 }

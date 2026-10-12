@@ -30,7 +30,13 @@ export const DraftInsightsSectionSchema = z.strictObject({
   type: z.literal('insights'),
   title: z.string().nullable().optional(),
   items: z
-    .array(z.strictObject({ insight_id: z.string(), headline: z.string().max(90), body: z.string().max(280) }))
+    .array(
+      z.strictObject({
+        insight_id: z.string(),
+        headline: z.string().max(90),
+        body: z.string().max(280),
+      }),
+    )
     .max(12),
 });
 
@@ -51,13 +57,21 @@ export const ReportDraftSchema = z.strictObject({
   period_label: z.string(),
   title: z.string().max(80),
   sections: z.array(DraftSectionSchema).min(3),
-  whatsapp: z.strictObject({ caption: z.string().max(1000), hero_chart_ids: z.array(z.string()).max(1) }),
+  whatsapp: z.strictObject({
+    caption: z.string().max(1000),
+    hero_chart_ids: z.array(z.string()).max(1),
+  }),
   email: z.strictObject({ subject: z.string().max(80), preheader: z.string().max(120) }),
 });
 export type ReportDraft = z.infer<typeof ReportDraftSchema>;
 
 export type WriteResult =
-  | { readonly ok: true; readonly draft: ReportDraft; readonly usage: Usage; readonly model: string }
+  | {
+      readonly ok: true;
+      readonly draft: ReportDraft;
+      readonly usage: Usage;
+      readonly model: string;
+    }
   | {
       readonly ok: false;
       readonly reason: FailureReason;
@@ -129,24 +143,32 @@ export function structuralProblems(
   const used = new Set<string>();
   const chartIds = new Set<string>();
   const expectedLabel = periodLabel(facts, ctx.locale);
-  if (draft.period_label !== expectedLabel) problems.push(`period_label: must be exactly the period label given`);
+  if (draft.period_label !== expectedLabel)
+    problems.push(`period_label: must be exactly the period label given`);
   draft.sections.forEach((section, i) => {
     if (section.type === 'insights') {
       section.items.forEach((item, j) => {
-        if (!selected.has(item.insight_id)) problems.push(`sections[${i}].insights.items[${j}]: insight_id is not one of the selected ids`);
-        else if (used.has(item.insight_id)) problems.push(`sections[${i}].insights.items[${j}]: insight_id used twice`);
+        if (!selected.has(item.insight_id))
+          problems.push(
+            `sections[${i}].insights.items[${j}]: insight_id is not one of the selected ids`,
+          );
+        else if (used.has(item.insight_id))
+          problems.push(`sections[${i}].insights.items[${j}]: insight_id used twice`);
         used.add(item.insight_id);
       });
     } else if (section.type === 'chart') {
       const entry = CHART_CATALOGUE[section.chart_id];
       if (entry === undefined) problems.push(`sections[${i}].chart: unknown chart_id`);
       else if (entry.type !== section.chart_type || entry.data_ref !== section.data_ref) {
-        problems.push(`sections[${i}].chart(${section.chart_id}): chart_type and data_ref must match the catalogue`);
+        problems.push(
+          `sections[${i}].chart(${section.chart_id}): chart_type and data_ref must match the catalogue`,
+        );
       }
       chartIds.add(section.chart_id);
     }
   });
-  if (!draft.sections.some((s) => s.type === 'hero')) problems.push('sections: a hero section is required');
+  if (!draft.sections.some((s) => s.type === 'hero'))
+    problems.push('sections: a hero section is required');
   for (const id of draft.whatsapp.hero_chart_ids) {
     if (!chartIds.has(id)) problems.push(`whatsapp.hero_chart_ids: no chart section with that id`);
   }
@@ -161,11 +183,19 @@ export function checkDraft(
   ctx: Pick<ReportContext, 'locale'>,
 ): { factViolations: string[]; problems: string[] } {
   const factViolations = factCheck(draft, facts).violations;
-  return { factViolations, problems: [...factViolations, ...structuralProblems(draft, facts, selectedIds, ctx)] };
+  return {
+    factViolations,
+    problems: [...factViolations, ...structuralProblems(draft, facts, selectedIds, ctx)],
+  };
 }
 
 /** Fills identity fields, insight drill-downs (from the engine's candidates) and meta. */
-export function assembleDocument(draft: ReportDraft, facts: FactsSheet, ctx: ReportContext, meta: ReportMeta): ReportDocument {
+export function assembleDocument(
+  draft: ReportDraft,
+  facts: FactsSheet,
+  ctx: ReportContext,
+  meta: ReportMeta,
+): ReportDocument {
   const drilldowns = new Map(facts.candidate_insights.map((c) => [c.id, c.drilldown]));
   return {
     version: '1',
@@ -176,7 +206,13 @@ export function assembleDocument(draft: ReportDraft, facts: FactsSheet, ctx: Rep
     title: draft.title,
     sections: draft.sections.map((section) =>
       section.type === 'insights'
-        ? { ...section, items: section.items.map((item) => ({ ...item, drilldown: drilldowns.get(item.insight_id) ?? null })) }
+        ? {
+            ...section,
+            items: section.items.map((item) => ({
+              ...item,
+              drilldown: drilldowns.get(item.insight_id) ?? null,
+            })),
+          }
         : section,
     ),
     whatsapp: draft.whatsapp,

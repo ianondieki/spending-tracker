@@ -6,7 +6,11 @@
 import { type FactsSheet } from '@hesabu/analytics';
 import { type Locale } from '@hesabu/i18n';
 
-import { type ReportDocument, ReportDocumentSchema, type ReportMeta } from './contracts/report-document.js';
+import {
+  type ReportDocument,
+  ReportDocumentSchema,
+  type ReportMeta,
+} from './contracts/report-document.js';
 import {
   addUsage,
   type BudgetGuard,
@@ -49,11 +53,7 @@ export interface WriteAttempt {
 }
 
 export type FallbackReason =
-  | 'budget'
-  | 'selection_unavailable'
-  | 'write_failed'
-  | 'schema_invalid'
-  | 'fact_check_failed';
+  'budget' | 'selection_unavailable' | 'write_failed' | 'schema_invalid' | 'fact_check_failed';
 
 export interface PipelineResult {
   readonly document: ReportDocument;
@@ -69,19 +69,27 @@ export interface PipelineResult {
 /** Input tokens recorded in meta include cached reads and cache writes (everything the model read). */
 function metaTokens(usage: Usage): { input_tokens: number; output_tokens: number } {
   return {
-    input_tokens: usage.input_tokens + usage.cache_read_input_tokens + usage.cache_creation_input_tokens,
+    input_tokens:
+      usage.input_tokens + usage.cache_read_input_tokens + usage.cache_creation_input_tokens,
     output_tokens: usage.output_tokens,
   };
 }
 
-export async function produceReport(facts: FactsSheet, ctx: PipelineContext, deps: PipelineDeps): Promise<PipelineResult> {
+export async function produceReport(
+  facts: FactsSheet,
+  ctx: PipelineContext,
+  deps: PipelineDeps,
+): Promise<PipelineResult> {
   const reportCtx = { ...ctx, locale: deps.locale, now: deps.now };
   let usage: Usage = ZERO_USAGE;
   let cost = 0;
   const attempts: WriteAttempt[] = [];
   let selection: SelectionResult | null = null;
 
-  const account = async (step: string, r: { usage?: Usage | null; model?: string | null }): Promise<void> => {
+  const account = async (
+    step: string,
+    r: { usage?: Usage | null; model?: string | null },
+  ): Promise<void> => {
     if (r.usage === undefined || r.usage === null) return;
     const model = r.model ?? DEFAULT_MODEL;
     usage = addUsage(usage, r.usage);
@@ -92,8 +100,12 @@ export async function produceReport(facts: FactsSheet, ctx: PipelineContext, dep
   };
 
   const fallback = (reason: FallbackReason): PipelineResult => {
-    const insightIds = selection?.source === 'model' ? selection.selected.map((s) => s.id) : undefined;
-    const doc = writeFallback(facts, { ...reportCtx, ...(insightIds === undefined ? {} : { insightIds }) });
+    const insightIds =
+      selection?.source === 'model' ? selection.selected.map((s) => s.id) : undefined;
+    const doc = writeFallback(facts, {
+      ...reportCtx,
+      ...(insightIds === undefined ? {} : { insightIds }),
+    });
     const document: ReportDocument = {
       ...doc,
       meta: {
@@ -103,20 +115,36 @@ export async function produceReport(facts: FactsSheet, ctx: PipelineContext, dep
         fact_check: { ...doc.meta.fact_check, attempts: attempts.length },
       },
     };
-    return { document, writer: 'fallback', usage, cost_usd: roundUsd(cost), selection, attempts, fallback_reason: reason, judge: null };
+    return {
+      document,
+      writer: 'fallback',
+      usage,
+      cost_usd: roundUsd(cost),
+      selection,
+      attempts,
+      fallback_reason: reason,
+      judge: null,
+    };
   };
 
   if (!(await deps.guard.canSpend(deps.now))) return fallback('budget');
 
   selection = await insightSelect(facts, ctx.kind, deps.client);
   await account('insight-select', selection);
-  if (selection.failure === 'budget' || selection.failure === 'disabled') return fallback('selection_unavailable');
+  if (selection.failure === 'budget' || selection.failure === 'disabled')
+    return fallback('selection_unavailable');
   const selectedIds = selection.selected.map((s) => s.id);
 
   let problems: string[] = [];
   for (let attempt = 1; attempt <= MAX_WRITE_ATTEMPTS; attempt += 1) {
     if (!(await deps.guard.canSpend(deps.now))) return fallback('budget');
-    const written = await writeReport(facts, selectedIds, reportCtx, deps.client, attempt > 1 ? { previousProblems: problems } : {});
+    const written = await writeReport(
+      facts,
+      selectedIds,
+      reportCtx,
+      deps.client,
+      attempt > 1 ? { previousProblems: problems } : {},
+    );
     await account('write', written);
     if (!written.ok) {
       attempts.push({ violations: [], failure: written.reason });
@@ -132,12 +160,19 @@ export async function produceReport(facts: FactsSheet, ctx: PipelineContext, dep
       model: written.model,
       ...metaTokens(usage),
       cost_usd: roundUsd(cost),
-      fact_check: { passed: check.factViolations.length === 0, violations: check.factViolations, attempts: attempt },
+      fact_check: {
+        passed: check.factViolations.length === 0,
+        violations: check.factViolations,
+        attempts: attempt,
+      },
     };
     const assembled = assembleDocument(written.draft, facts, reportCtx, meta);
     const valid = ReportDocumentSchema.safeParse(assembled);
     if (!valid.success) {
-      attempts.push({ violations: valid.error.issues.slice(0, 10).map((i) => `${i.path.join('.')}: ${i.message}`), failure: 'schema' });
+      attempts.push({
+        violations: valid.error.issues.slice(0, 10).map((i) => `${i.path.join('.')}: ${i.message}`),
+        failure: 'schema',
+      });
       return fallback('schema_invalid');
     }
     attempts.push({ violations: problems });
@@ -148,9 +183,21 @@ export async function produceReport(facts: FactsSheet, ctx: PipelineContext, dep
     if (deps.runJudge === true) {
       judge = await judgeReport(document, facts, deps.client);
       await account('judge', judge);
-      document = { ...document, meta: { ...document.meta, ...metaTokens(usage), cost_usd: roundUsd(cost) } };
+      document = {
+        ...document,
+        meta: { ...document.meta, ...metaTokens(usage), cost_usd: roundUsd(cost) },
+      };
     }
-    return { document, writer: 'model', usage, cost_usd: roundUsd(cost), selection, attempts, fallback_reason: null, judge };
+    return {
+      document,
+      writer: 'model',
+      usage,
+      cost_usd: roundUsd(cost),
+      selection,
+      attempts,
+      fallback_reason: null,
+      judge,
+    };
   }
   return fallback('fact_check_failed');
 }

@@ -1,22 +1,36 @@
 import { describe, expect, it } from 'vitest';
 
 import { type Section } from './contracts/report-document.js';
-import { buildAllowList, type CheckableDocument, collectCopy, factCheck, unsupportedTokens } from './fact-check.js';
+import {
+  buildAllowList,
+  type CheckableDocument,
+  collectCopy,
+  factCheck,
+  unsupportedTokens,
+} from './fact-check.js';
 import { sampleFacts } from './test-fixtures.js';
 
 const facts = sampleFacts('weekly');
 const allow = buildAllowList(facts);
 
 /** A small document whose every number is a display string from the sheet. */
-function docFromDisplayStrings(extra: { verdict?: string; headline?: string; body?: string; caption?: string } = {}): CheckableDocument {
+function docFromDisplayStrings(
+  extra: { verdict?: string; headline?: string; body?: string; caption?: string } = {},
+): CheckableDocument {
   const sections: Section[] = [
     {
       type: 'hero',
       total_out: facts.totals.out.display,
       delta: facts.deltas.out.display,
       delta_direction: facts.deltas.out.direction,
-      verdict: extra.verdict ?? `You spent ${facts.deltas.out.pct.display} more than last week (${facts.deltas.out.display}).`,
-      tally: facts.daily.map((d) => ({ label: d.weekday_en, value: d.out.display, cents: d.out.cents })),
+      verdict:
+        extra.verdict ??
+        `You spent ${facts.deltas.out.pct.display} more than last week (${facts.deltas.out.display}).`,
+      tally: facts.daily.map((d) => ({
+        label: d.weekday_en,
+        value: d.out.display,
+        cents: d.out.cents,
+      })),
     },
     {
       type: 'insights',
@@ -25,7 +39,9 @@ function docFromDisplayStrings(extra: { verdict?: string; headline?: string; bod
         {
           insight_id: 'ins_fees',
           headline: extra.headline ?? `You paid ${facts.totals.fees.display} in fees`,
-          body: extra.body ?? `That is ${facts.totals.fee_ratio.display} of your spending across 9 charges.`,
+          body:
+            extra.body ??
+            `That is ${facts.totals.fee_ratio.display} of your spending across 9 charges.`,
         },
       ],
     },
@@ -40,8 +56,15 @@ function docFromDisplayStrings(extra: { verdict?: string; headline?: string; bod
     title: 'Your week in money',
     period_label: facts.period.label_en,
     sections,
-    whatsapp: { caption: extra.caption ?? `*Your week in money*\n${facts.period.label_en}\nSpent: *${facts.totals.out.display}*` },
-    email: { subject: `Your week in money: ${facts.period.label_en}`, preheader: `You spent ${facts.totals.out.display}.` },
+    whatsapp: {
+      caption:
+        extra.caption ??
+        `*Your week in money*\n${facts.period.label_en}\nSpent: *${facts.totals.out.display}*`,
+    },
+    email: {
+      subject: `Your week in money: ${facts.period.label_en}`,
+      preheader: `You spent ${facts.totals.out.display}.`,
+    },
   };
 }
 
@@ -51,22 +74,34 @@ describe('factCheck', () => {
   });
 
   it('rejects an invented bare number', () => {
-    const result = factCheck(docFromDisplayStrings({ body: 'You made 47 payments this week.' }), facts);
+    const result = factCheck(
+      docFromDisplayStrings({ body: 'You made 47 payments this week.' }),
+      facts,
+    );
     expect(result.passed).toBe(false);
     expect(result.violations).toEqual(['sections[1].insights.items[0].body: 47']);
   });
 
   it('rejects an invented percent', () => {
-    const result = factCheck(docFromDisplayStrings({ verdict: 'You spent 37% more than last week.' }), facts);
+    const result = factCheck(
+      docFromDisplayStrings({ verdict: 'You spent 37% more than last week.' }),
+      facts,
+    );
     expect(result.violations).toEqual(['sections[0].hero.verdict: 37%']);
   });
 
   it('rejects an invented KSh amount, and a real amount in the wrong format', () => {
     const result = factCheck(
-      docFromDisplayStrings({ headline: 'You paid KSh 99,999 in fees', caption: 'Spent *KSh 12450* this week' }),
+      docFromDisplayStrings({
+        headline: 'You paid KSh 99,999 in fees',
+        caption: 'Spent *KSh 12450* this week',
+      }),
       facts,
     );
-    expect(result.violations).toEqual(['sections[1].insights.items[0].headline: KSh 99,999', 'whatsapp.caption: KSh 12450']);
+    expect(result.violations).toEqual([
+      'sections[1].insights.items[0].headline: KSh 99,999',
+      'whatsapp.caption: KSh 12450',
+    ]);
   });
 
   it('rejects a rounded or recomputed number even when close to a real one', () => {

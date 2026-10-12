@@ -52,7 +52,9 @@ export function addUsage(a: Usage, b: Usage): Usage {
 }
 
 export function priceFor(model: string): ModelPrice {
-  return Object.hasOwn(PRICING, model) ? (PRICING[model] ?? CONSERVATIVE_PRICE) : CONSERVATIVE_PRICE;
+  return Object.hasOwn(PRICING, model)
+    ? (PRICING[model] ?? CONSERVATIVE_PRICE)
+    : CONSERVATIVE_PRICE;
 }
 
 /** Cost of one call in USD (unrounded). An unknown model is priced at the highest known rates. */
@@ -120,7 +122,9 @@ export class InMemoryCostLedger implements CostLedger {
 
   async spentTodayUsd(now: Date): Promise<number> {
     const today = nairobiDay(now);
-    return this.entries.filter((e) => nairobiDay(e.at) === today).reduce((sum, e) => sum + e.cost_usd, 0);
+    return this.entries
+      .filter((e) => nairobiDay(e.at) === today)
+      .reduce((sum, e) => sum + e.cost_usd, 0);
   }
 }
 

@@ -17,7 +17,12 @@ describe.runIf(hasSample)('engine sample sheet (contract)', () => {
     for (const locale of ['en', 'sw'] as const) {
       it(`${kind} ${locale}: the fallback validates and passes the fact-check`, () => {
         const facts = analytics.FactsSheetSchema.parse((sample as (k: string) => unknown)(kind));
-        const doc = writeFallback(facts, { report_id: 'contract', kind, locale, now: new Date('2026-10-12T07:00:00Z') });
+        const doc = writeFallback(facts, {
+          report_id: 'contract',
+          kind,
+          locale,
+          now: new Date('2026-10-12T07:00:00Z'),
+        });
         expect(ReportDocumentSchema.safeParse(doc).success).toBe(true);
         expect(doc.meta.fact_check.violations).toEqual([]);
       });

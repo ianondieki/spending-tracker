@@ -5,12 +5,20 @@
  */
 import { type CandidateInsight, type FactsSheet } from '@hesabu/analytics';
 
-const DROP_KEYS = new Set(['drilldown', 'balance_series', 'transaction_ids', 'display_strings', 'candidate_insights']);
+const DROP_KEYS = new Set([
+  'drilldown',
+  'balance_series',
+  'transaction_ids',
+  'display_strings',
+  'candidate_insights',
+]);
 
 export function compactFactsJson(facts: FactsSheet): string {
   return JSON.stringify(facts, (key, value: unknown) => (DROP_KEYS.has(key) ? undefined : value));
 }
 
 export function candidatesJson(candidates: readonly CandidateInsight[]): string {
-  return JSON.stringify(candidates.map((c) => ({ id: c.id, kind: c.kind, severity: c.severity, params: c.params })));
+  return JSON.stringify(
+    candidates.map((c) => ({ id: c.id, kind: c.kind, severity: c.severity, params: c.params })),
+  );
 }
