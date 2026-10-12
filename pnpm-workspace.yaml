@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm 10 runs no dependency install scripts unless listed here.
+onlyBuiltDependencies:
+  - esbuild
+  - sharp
+  - '@swc/core'
+  - unrs-resolver

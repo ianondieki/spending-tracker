@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TZ: Africa/Nairobi
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  node:
+    name: node (lint, typecheck, test, build)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: hesabu
+          POSTGRES_USER: hesabu
+          POSTGRES_PASSWORD: hesabu
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hesabu -d hesabu"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      DATABASE_URL: postgres://hesabu:hesabu@localhost:5432/hesabu
+      # Tests never reach a real LLM, email, WhatsApp or payment provider.
+      AI_ENABLED: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  android:
+    name: android (debug APK, unit tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Detect Android project
+        id: detect
+        run: |
+          if [ -f android/gradlew ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "android/gradlew not found; skipping the Android build"
+          fi
+      - if: steps.detect.outputs.present == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - if: steps.detect.outputs.present == 'true'
+        uses: gradle/actions/setup-gradle@v4
+      - if: steps.detect.outputs.present == 'true'
+        name: Build debug APK and run unit tests
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug testDebugUnitTest --no-daemon
+      - if: steps.detect.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: hesabu-debug-apk
+          path: android/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error

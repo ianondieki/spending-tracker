@@ -1,0 +1,67 @@
+# Local stack for Hesabu: `make dev` (docker compose -f infra/docker-compose.yml up -d).
+# Credentials here are development-only and match .env.example; never reuse them anywhere real.
+name: hesabu
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: hesabu
+      POSTGRES_USER: hesabu
+      POSTGRES_PASSWORD: hesabu
+      TZ: Africa/Nairobi
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hesabu -d hesabu']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # Catches every email sent locally. SMTP on 1025, web UI on http://localhost:8025.
+  mailpit:
+    image: axllent/mailpit:v1.27.0
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: '1'
+      MP_SMTP_AUTH_ALLOW_INSECURE: '1'
+    ports:
+      - '8025:8025'
+      - '1025:1025'
+
+  # S3-compatible object storage for report assets (hero PNG, chart PNGs, PDFs). Console on http://localhost:9001.
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: hesabu
+      MINIO_ROOT_PASSWORD: hesabu-dev-secret
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -sf http://localhost:9000/minio/health/live || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  # One-shot: creates the `hesabu` bucket once MinIO is healthy, then exits.
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        mc alias set local http://minio:9000 hesabu hesabu-dev-secret &&
+        mc mb --ignore-existing local/hesabu &&
+        echo 'bucket hesabu ready'
+    restart: 'no'
+
+volumes:
+  pgdata:
+  miniodata:

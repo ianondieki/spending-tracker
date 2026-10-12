@@ -1,0 +1,23 @@
+{
+  "name": "@hesabu/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Hesabu HTTP API (Hono on Node): device-token auth, sync, reports, deliveries, webhooks.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.4",
+    "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

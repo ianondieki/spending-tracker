@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+.next/
+coverage/
+pnpm-lock.yaml
+next-env.d.ts
+*.tsbuildinfo
+# Owned by other lanes or hand-formatted prose.
+android/
+tools/
+corpus/
+contracts/
+docs/
+prompts/
+*.md

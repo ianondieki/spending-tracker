@@ -1,0 +1,26 @@
+{
+  "name": "@hesabu/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Hesabu web viewer (Next.js 15 App Router): signed report links at /r/[token].",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "clean": "rm -rf .next"
+  },
+  "dependencies": {
+    "@hesabu/charts": "workspace:*",
+    "next": "~15.5.27",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0"
+  }
+}

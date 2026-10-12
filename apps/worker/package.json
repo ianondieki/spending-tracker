@@ -1,0 +1,22 @@
+{
+  "name": "@hesabu/worker",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Hesabu background worker: scheduler (Africa/Nairobi), report workflow, delivery jobs.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@hesabu/analytics": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}
