@@ -25,6 +25,8 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
     sealed interface Outcome {
         data class Done(val uploaded: Int, val rejected: Int) : Outcome
         data object NotConfigured : Outcome
+        /** An http:// address while the local-testing toggle is off. */
+        data object CleartextBlocked : Outcome
         data object NothingToDo : Outcome
         data class Retry(val reason: String) : Outcome
         data class Failed(val reason: String) : Outcome
@@ -37,10 +39,12 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
         val client = clientFactory(settings.serverUrl)
         try {
             val deviceId = graph.settings.deviceId()
-            if (graph.secrets.deviceToken == null) {
+            suspend fun register() {
                 val reg = client.register(deviceId, BuildConfig.VERSION_NAME)
                 graph.secrets.deviceToken = reg.deviceToken
             }
+            if (graph.secrets.deviceToken == null) register()
+            var reRegistered = false
             var uploaded = 0
             var rejected = 0
             var batches = 0
@@ -66,12 +70,21 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
                     sentAt = Normalisers.epochMillisToIso(now),
                 )
                 val response = try {
-                    client.sync(request)
+                    try {
+                        client.sync(request)
+                    } catch (e: SyncClient.Unauthorised) {
+                        // Token revoked or rotated: drop it, register once more, retry this batch once. Never loop.
+                        graph.secrets.deviceToken = null
+                        if (reRegistered) throw e
+                        reRegistered = true
+                        register()
+                        client.sync(request)
+                    }
                 } catch (e: SyncClient.Unauthorised) {
-                    // Token revoked or rotated: drop it and let the next run re-register.
                     graph.secrets.deviceToken = null
                     graph.db.syncQueueDao().recordFailure(ids, "unauthorised")
-                    return Outcome.Retry("unauthorised")
+                    graph.settings.set(SettingsKeys.LastSyncError, "unauthorised")
+                    return Outcome.Failed("unauthorised")
                 } catch (e: SyncClient.ServerError) {
                     graph.db.syncQueueDao().recordFailure(ids, "${e.status}")
                     graph.settings.set(SettingsKeys.LastSyncError, "server ${e.status}")
@@ -91,8 +104,15 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
             graph.settings.set(SettingsKeys.LastSyncAt, System.currentTimeMillis())
             graph.settings.set(SettingsKeys.LastSyncError, null)
             return if (uploaded == 0 && rejected == 0) Outcome.NothingToDo else Outcome.Done(uploaded, rejected)
+        } catch (e: SyncClient.CleartextBlocked) {
+            graph.settings.set(SettingsKeys.LastSyncError, "cleartext_blocked")
+            return Outcome.CleartextBlocked
         } catch (e: SyncClient.NotConfigured) {
             return Outcome.NotConfigured
+        } catch (e: SyncClient.Unauthorised) {
+            graph.secrets.deviceToken = null
+            graph.settings.set(SettingsKeys.LastSyncError, "unauthorised")
+            return Outcome.Failed("unauthorised")
         } catch (e: SyncClient.ServerError) {
             graph.settings.set(SettingsKeys.LastSyncError, "server ${e.status}")
             return if (e.retryable) Outcome.Retry("server ${e.status}") else Outcome.Failed("server ${e.status}")
@@ -116,9 +136,9 @@ class SyncWorker(appContext: Context, params: WorkerParameters) : CoroutineWorke
 
     override suspend fun doWork(): Result {
         val graph = HesabuApplication.graph(applicationContext)
-        val syncer = Syncer(graph) { url -> SyncClient(url, { graph.secrets.deviceToken }) }
+        val syncer = Syncer(graph) { url -> graph.syncClient(url) }
         return when (val out = syncer.syncOnce()) {
-            is Syncer.Outcome.Done, Syncer.Outcome.NothingToDo, Syncer.Outcome.NotConfigured -> Result.success()
+            is Syncer.Outcome.Done, Syncer.Outcome.NothingToDo, Syncer.Outcome.NotConfigured, Syncer.Outcome.CleartextBlocked -> Result.success()
             is Syncer.Outcome.Retry -> if (runAttemptCount < 6) Result.retry() else Result.failure()
             is Syncer.Outcome.Failed -> { Log.w(TAG, "sync failed: ${out.reason}"); Result.failure() }
         }

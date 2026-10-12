@@ -40,12 +40,14 @@ class SyncerTest {
     private val bodies = ArrayList<String>()
     private var failSync: HttpStatusCode? = null
     private var rejectFirst = false
+    /** When true the server rejects every token, even a fresh one. */
+    private var rejectToken = false
 
     @Before
     fun setUp() = runTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         graph = AppGraph(context, dbFactory = { HesabuDatabase.inMemory(it) }, cipherFactory = { InsecureTestBodyCipher() }, secretsFactory = { InMemorySecretStore() })
-        graph.settings.set(SettingsKeys.ServerUrl, "http://test.local")
+        graph.settings.set(SettingsKeys.ServerUrl, "https://test.local")
         graph.secrets.deviceToken = null
     }
 
@@ -56,7 +58,7 @@ class SyncerTest {
         when (req.url.encodedPath) {
             "/v1/devices/register" -> respond("""{"device_token":"tok-1","user_id":"u1"}""", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
             "/v1/sync" -> {
-                if (req.headers[HttpHeaders.Authorization] != "Bearer tok-1") respond("""{"code":"unauthorised","message":"no"}""", HttpStatusCode.Unauthorized, headersOf(HttpHeaders.ContentType, "application/json"))
+                if (rejectToken || req.headers[HttpHeaders.Authorization] != "Bearer tok-1") respond("""{"code":"unauthorised","message":"no"}""", HttpStatusCode.Unauthorized, headersOf(HttpHeaders.ContentType, "application/json"))
                 else failSync?.let { respond("""{"code":"err","message":"boom"}""", it, headersOf(HttpHeaders.ContentType, "application/json")) } ?: run {
                     val txs = Json.parseToJsonElement(body).jsonObject["transactions"]!!.jsonArray
                     val rejected = if (rejectFirst) """[{"id":"${txs.first().jsonObject["id"]!!.jsonPrimitive.content}","reason":"bad"}]""" else "[]"
@@ -68,7 +70,7 @@ class SyncerTest {
         }
     }
 
-    private fun syncer() = Syncer(graph) { url -> SyncClient(url, { graph.secrets.deviceToken }, engine()) }
+    private fun syncer() = Syncer(graph) { url -> graph.syncClient(url, engine()) }
 
     private suspend fun seed(n: Int) {
         val msgs = (1..n).map { i ->
@@ -122,11 +124,34 @@ class SyncerTest {
     }
 
     @Test
-    fun lostTokenIsDroppedForReRegistration() = runTest {
+    fun lostTokenIsReplacedOnceWithinTheRun() = runTest {
         seed(1)
         graph.secrets.deviceToken = "stale"
-        assertEquals(Syncer.Outcome.Retry("unauthorised"), syncer().syncOnce())
+        assertEquals(Syncer.Outcome.Done(1, 0), syncer().syncOnce())
+        assertEquals("tok-1", graph.secrets.deviceToken)
+        // stale sync (401) -> register -> sync again: exactly one registration, no loop.
+        assertEquals(listOf("/v1/sync", "/v1/devices/register", "/v1/sync"), requests.map { it.url.encodedPath })
+    }
+
+    @Test
+    fun aSecondUnauthorisedInTheSameRunFailsInsteadOfLooping() = runTest {
+        seed(1)
+        rejectToken = true
+        graph.secrets.deviceToken = "stale"
+        assertEquals(Syncer.Outcome.Failed("unauthorised"), syncer().syncOnce())
         assertNull(graph.secrets.deviceToken)
+        assertEquals(1, requests.count { it.url.encodedPath == "/v1/devices/register" })
+        assertEquals(2, requests.count { it.url.encodedPath == "/v1/sync" })
+        assertEquals("unauthorised", graph.currentSettings().lastSyncError)
+    }
+
+    @Test
+    fun httpServerIsBlockedUntilTheToggleIsOn() = runTest {
+        graph.settings.set(SettingsKeys.ServerUrl, "http://tunnel.example")
+        seed(1)
+        assertEquals(Syncer.Outcome.CleartextBlocked, syncer().syncOnce())
+        assertTrue(requests.isEmpty())
+        graph.settings.set(SettingsKeys.AllowCleartext, true)
         assertEquals(Syncer.Outcome.Done(1, 0), syncer().syncOnce())
     }
 
