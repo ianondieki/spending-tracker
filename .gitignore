@@ -22,3 +22,8 @@ test-results/
 # TypeScript incremental state and Next-generated type stubs (recreated by `next typegen`/`next build`)
 *.tsbuildinfo
 next-env.d.ts
+
+# raw SMS exports must never be committed; only the redacted JSONL in corpus/
+*.xml
+!tools/redact-sms/fixtures/*.xml
+!android/**/*.xml

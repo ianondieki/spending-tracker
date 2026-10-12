@@ -1,0 +1,188 @@
+{
+  "$comment": [
+    "UNVERIFIED: sender IDs below are expected values gathered from public parser projects and general knowledge.",
+    "Only 'MPESA', 'AirtelMoney' and 'TKASH' were seen as the `address` of a message in public code; every other",
+    "entry must be checked against a real SMS Backup & Restore export (run with --list-senders to see what your",
+    "phone actually has) before a provider pack relies on it. Matching is case-insensitive on the whole sender",
+    "string after whitespace normalisation. See docs/research/sms-formats.md for sources.",
+    "`public_counterparties` are institution names that the redactor keeps verbatim when they appear as a",
+    "counterparty (they are not personal data and they anchor message families such as bank-to-M-PESA).",
+    "Everything else that follows an anchor like 'sent to' or 'paid to' is replaced with REDACTED PERSON /",
+    "REDACTED MERCHANT."
+  ],
+  "version": 1,
+  "providers": {
+    "mpesa": {
+      "label": "M-PESA (Safaricom)",
+      "kind": "mobile_money",
+      "senders": ["MPESA", "M-PESA"],
+      "verified": {"MPESA": "seen as address in public parser fixtures", "M-PESA": "unverified"}
+    },
+    "airtel-money": {
+      "label": "Airtel Money Kenya",
+      "kind": "mobile_money",
+      "senders": ["AirtelMoney", "Airtel Money", "AIRTELMONEY", "AIRTEL", "Airtel"],
+      "verified": {"AirtelMoney": "seen as address in one public demo fixture", "others": "unverified"}
+    },
+    "tkash": {
+      "label": "T-Kash (Telkom Kenya)",
+      "kind": "mobile_money",
+      "senders": ["T-Kash", "TKASH", "T-KASH", "TKash", "Telkom", "TELKOM"],
+      "verified": {"TKASH": "listed as sender in one public operator table", "others": "unverified"}
+    },
+    "banks/equity": {
+      "label": "Equity Bank Kenya",
+      "kind": "bank",
+      "senders": ["EQUITY", "EQUITYBANK", "Equity Bank", "EquityBank", "EQUITEL", "Equitel"],
+      "verified": "unverified"
+    },
+    "banks/kcb": {
+      "label": "KCB Bank Kenya",
+      "kind": "bank",
+      "senders": ["KCB", "KCB-BANK", "KCBBANK", "KCB Bank", "KCB-MPESA", "KCB M-PESA"],
+      "verified": "unverified"
+    },
+    "banks/coop": {
+      "label": "Co-operative Bank of Kenya",
+      "kind": "bank",
+      "senders": ["CO-OPBANK", "COOPBANK", "Co-opBank", "Co-op Bank", "MCoopCash", "M-COOP CASH"],
+      "verified": "unverified"
+    },
+    "banks/ncba": {
+      "label": "NCBA Bank Kenya",
+      "kind": "bank",
+      "senders": ["NCBA", "NCBA BANK", "NCBABANK", "NCBA Loop", "LOOP"],
+      "verified": "unverified"
+    },
+    "banks/absa": {
+      "label": "Absa Bank Kenya",
+      "kind": "bank",
+      "senders": ["ABSA", "ABSABANK", "Absa Bank", "Absa", "TIMIZA", "Timiza"],
+      "verified": "unverified"
+    },
+    "banks/stanbic": {
+      "label": "Stanbic Bank Kenya",
+      "kind": "bank",
+      "senders": ["Stanbic", "STANBIC", "StanbicBank", "STANBICBANK"],
+      "verified": "unverified"
+    },
+    "banks/stanchart": {
+      "label": "Standard Chartered Kenya",
+      "kind": "bank",
+      "senders": ["StanChart", "STANCHART", "SCB", "SCBKE", "StdChart", "Standard Chartered"],
+      "verified": "unverified"
+    },
+    "banks/im": {
+      "label": "I&M Bank Kenya",
+      "kind": "bank",
+      "senders": ["I&M", "I&M Bank", "IMBANK", "IM BANK", "I&MBANK"],
+      "verified": "unverified"
+    },
+    "banks/dtb": {
+      "label": "Diamond Trust Bank Kenya",
+      "kind": "bank",
+      "senders": ["DTB", "DTBKENYA", "DTB Kenya", "DTBBANK", "Diamond Trust"],
+      "verified": "unverified"
+    },
+    "banks/family": {
+      "label": "Family Bank Kenya",
+      "kind": "bank",
+      "senders": ["FamilyBank", "FAMILYBANK", "Family Bank", "FAMILY BANK", "PesaPap"],
+      "verified": "unverified"
+    },
+    "banks/nbk": {
+      "label": "National Bank of Kenya",
+      "kind": "bank",
+      "senders": ["NBK", "NBKBANK", "National Bank"],
+      "verified": "unverified"
+    },
+    "banks/hfc": {
+      "label": "HF Group (HFC)",
+      "kind": "bank",
+      "senders": ["HFC", "HFCBANK", "HF Group"],
+      "verified": "unverified"
+    },
+    "banks/gtbank": {
+      "label": "GTBank Kenya",
+      "kind": "bank",
+      "senders": ["GTBANK", "GTBank", "GTBANKKE"],
+      "verified": "unverified"
+    },
+    "banks/sidian": {
+      "label": "Sidian Bank",
+      "kind": "bank",
+      "senders": ["SIDIAN", "SidianBank", "Sidian Bank"],
+      "verified": "unverified"
+    },
+    "banks/boa": {
+      "label": "Bank of Africa Kenya",
+      "kind": "bank",
+      "senders": ["BOA", "BOAKENYA", "Bank of Africa"],
+      "verified": "unverified"
+    },
+    "banks/prime": {
+      "label": "Prime Bank Kenya",
+      "kind": "bank",
+      "senders": ["PRIMEBANK", "Prime Bank"],
+      "verified": "unverified"
+    },
+    "banks/postbank": {
+      "label": "Kenya Post Office Savings Bank",
+      "kind": "bank",
+      "senders": ["POSTBANK", "PostBank", "Postbank"],
+      "verified": "unverified"
+    },
+    "banks/pesalink": {
+      "label": "PesaLink (IPSL) notifications",
+      "kind": "bank",
+      "senders": ["PESALINK", "PesaLink", "Pesalink"],
+      "verified": "unverified"
+    },
+    "wallets/mshwari": {
+      "label": "M-Shwari (NCBA) when it texts from its own ID",
+      "kind": "wallet",
+      "senders": ["MSHWARI", "M-Shwari", "M-SHWARI"],
+      "verified": "unverified; M-Shwari transfer confirmations normally arrive from MPESA"
+    },
+    "wallets/fuliza": {
+      "label": "Fuliza when it texts from its own ID",
+      "kind": "wallet",
+      "senders": ["FULIZA", "Fuliza"],
+      "verified": "unverified; Fuliza confirmations normally arrive from MPESA"
+    },
+    "wallets/hustler-fund": {
+      "label": "Hustler Fund",
+      "kind": "wallet",
+      "senders": ["HUSTLERFUND", "Hustler Fund", "HUSTLER FUND"],
+      "verified": "unverified"
+    },
+    "lenders/tala": {
+      "label": "Tala",
+      "kind": "wallet",
+      "senders": ["TALA", "Tala"],
+      "verified": "unverified"
+    },
+    "lenders/branch": {
+      "label": "Branch",
+      "kind": "wallet",
+      "senders": ["BRANCH", "Branch"],
+      "verified": "unverified"
+    }
+  },
+  "public_counterparties": [
+    "KCB", "KCB BANK", "KCB PAYBILL", "LIPA NA KCB", "KCB M-PESA", "KCB MONEY TRANSFER",
+    "EQUITY", "EQUITY BANK", "EQUITY PAYBILL", "EQUITEL",
+    "CO-OP", "CO-OP BANK", "CO-OPERATIVE BANK", "COOP BANK", "COOPERATIVE BANK",
+    "NCBA", "NCBA BANK", "STANBIC", "STANBIC BANK", "STANDARD CHARTERED", "STANDARD CHARTERED BANK",
+    "DTB", "DIAMOND TRUST", "I&M", "IM BANK", "I&M BANK", "ABSA", "ABSA BANK", "BARCLAYS",
+    "FAMILY BANK", "NATIONAL BANK", "NBK", "HFC", "GTBANK", "SIDIAN", "PRIME BANK", "BANK OF AFRICA",
+    "POSTBANK", "PESALINK",
+    "M-SHWARI", "MSHWARI", "M-PESA", "MPESA", "M-PESA CARD", "M-PESA AGENT", "ZIIDI", "FULIZA", "HUSTLER FUND",
+    "SAFARICOM", "SAFARICOM DATA BUNDLES", "SAFARICOM POSTPAID BUNDLES", "SAFARICOM OFFERS",
+    "SAFARICOM LIMITED", "SAFARICOM HOME", "SAFARICOM LTD",
+    "AIRTEL", "AIRTEL MONEY", "AIRTEL NETWORKS KENYA", "TELKOM", "T-KASH",
+    "KPLC", "KPLC PREPAID", "KPLC POSTPAID", "KENYA POWER", "NAIROBI WATER", "NAIROBI CITY WATER", "ZUKU",
+    "KRA", "NTSA", "ECITIZEN", "E-CITIZEN", "SHA", "NHIF", "NSSF", "HELB",
+    "WESTERN UNION", "WORLDREMIT", "MONEYGRAM"
+  ]
+}
