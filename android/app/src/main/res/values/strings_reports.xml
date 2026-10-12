@@ -110,4 +110,5 @@
     <string name="chart_a11y_fees">Fees %1$s.</string>
     <string name="chart_a11y_fees_ratio">Fees %1$s, %2$s of spending.</string>
     <string name="chart_a11y_balance">Ends at %1$s. Lowest %2$s, highest %3$s.</string>
+    <string name="reports_delivery_unverified">%1$s skipped until you verify the address in Settings</string>
 </resources>

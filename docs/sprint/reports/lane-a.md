@@ -103,6 +103,14 @@ thing to run.
 
 ## Known gaps and where to resume
 
+- **First thing to resume (openapi 1.1.0 additions, not yet built):** Settings should read `join_code`,
+  `whatsapp_verified` and `email_verified` from `GET /v1/me/preferences`, show "Send JOIN <join_code> to <business
+  number> from WhatsApp" with the verified state, offer "Send me a confirmation email" (`POST /v1/me/email/send-link`)
+  and show `email_verified`; `PUT /v1/me/preferences` can answer 409 `address_taken` when another user verified that
+  WhatsApp number, which Settings must explain. Done from this addendum: share re-fetches the report summary before
+  every download because artefact URLs are signed for 15 minutes; a delivery skipped for an unverified address says
+  so on the Reports list; the single re-register on 401 covers expired and revoked tokens.
+
 - Kiswahili copy is machine-drafted and tagged `[[COPY-REVIEW]]`; category names in Kiswahili likewise.
 - Share image / PDF is unit-tested for URL handling only; the sample report has no artefact URLs, so the download
   path needs a server to exercise end to end.

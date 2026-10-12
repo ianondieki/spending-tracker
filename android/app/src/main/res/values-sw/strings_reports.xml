@@ -109,4 +109,5 @@
     <string name="chart_a11y_fees">Ada %1$s.</string>
     <string name="chart_a11y_fees_ratio">Ada %1$s, %2$s ya matumizi.</string>
     <string name="chart_a11y_balance">Inaishia %1$s. Chini kabisa %2$s, juu kabisa %3$s.</string>
+    <string name="reports_delivery_unverified">%1$s imerukwa hadi uthibitishe anwani kwenye Mipangilio</string>
 </resources>

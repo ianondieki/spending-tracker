@@ -104,6 +104,10 @@ private fun deliveryText(d: ReportDelivery): String {
             else -> R.string.reports_channel_share
         },
     )
+    // The server skips delivery until the address is verified; say what to do rather than just "skipped".
+    if (d.status == "skipped" && d.lastError?.contains("unverified", ignoreCase = true) == true) {
+        return stringResource(R.string.reports_delivery_unverified, channel)
+    }
     return stringResource(
         when (d.status) {
             "sent" -> R.string.reports_delivery_sent

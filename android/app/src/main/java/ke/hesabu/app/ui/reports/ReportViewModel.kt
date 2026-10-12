@@ -65,18 +65,27 @@ class ReportViewModel(
         }
     }
 
-    /** Downloads the artefact for [kind] and hands it to the share sheet; a missing URL does nothing. */
+    /**
+     * Downloads the artefact for [kind] and hands it to the share sheet; a missing URL does nothing. Artefact URLs
+     * are signed and valid for 15 minutes, minted per request, so the summary is re-fetched right before the
+     * download and the URL is never taken from the cache.
+     */
     fun share(kind: ShareKind) {
         val ready = _state.value as? UiState.Ready ?: return
-        val artefacts = ready.detail.summary.artefacts
-        val url = when (kind) {
-            ShareKind.Image -> artefacts.heroPngUrl
-            ShareKind.Pdf -> artefacts.pdfUrl
+        val cachedUrl = when (kind) {
+            ShareKind.Image -> ready.detail.summary.artefacts.heroPngUrl
+            ShareKind.Pdf -> ready.detail.summary.artefacts.pdfUrl
         }
-        if (url.isNullOrBlank() || downloader == null || _share.value is ShareState.Preparing) return
+        if (cachedUrl.isNullOrBlank() || downloader == null || _share.value is ShareState.Preparing) return
         _share.value = ShareState.Preparing(kind)
         viewModelScope.launch {
             _share.value = try {
+                val fresh = repository.report(reportId, refresh = true)
+                val url = when (kind) {
+                    ShareKind.Image -> fresh.summary.artefacts.heroPngUrl
+                    ShareKind.Pdf -> fresh.summary.artefacts.pdfUrl
+                } ?: throw IllegalStateException("artefact no longer available")
+                _state.value = UiState.Ready(fresh)
                 shareChannel.send(downloader.download(reportId, url, kind))
                 ShareState.Idle
             } catch (e: CancellationException) {
