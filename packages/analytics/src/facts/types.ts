@@ -1,6 +1,6 @@
 /** Inputs to the facts engine. The output is `FactsSheet` from `contracts/facts-sheet.ts`. */
 import type { Period } from '../contracts/facts-sheet.js';
-import type { Account, Transaction } from '../contracts/transaction.js';
+import type { Account, Counterparty, Transaction } from '../contracts/transaction.js';
 
 export type CategoryKind = 'spend' | 'transfer' | 'fee' | 'savings' | 'loan' | 'income' | 'cash' | 'other';
 
@@ -40,6 +40,12 @@ export interface FactsInput {
   readonly late_arrival_count?: number;
   /** ISO date-time; also the clock for `previous_period.days_elapsed`, so the output never reads the real clock. */
   readonly generated_at: string;
+  /**
+   * Display name for a counterparty (canonical merchant name from the taxonomy when it matches a seed, say).
+   * Return null to use the engine's own normaliser (`displayName`). The result is used everywhere a name is
+   * shown: merchants, people, largest, recurring, anomalies and insight params.
+   */
+  readonly merchantName?: (counterparty: Counterparty) => string | null;
   /** The record to beat for `personal_record` insights. */
   readonly previous_report_totals?: { readonly out_cents: number; readonly in_cents: number; readonly fees_cents: number } | null;
 }

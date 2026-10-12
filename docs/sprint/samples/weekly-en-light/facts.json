@@ -182,7 +182,7 @@
         "value": 3,
         "display": "3"
       },
-      "top_merchant": "NAIVAS LTD KILIMANI",
+      "top_merchant": "Naivas",
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -218,7 +218,7 @@
         "value": 1,
         "display": "1"
       },
-      "top_merchant": "KASARANI AGENCIES LTD",
+      "top_merchant": null,
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -254,7 +254,7 @@
         "value": 1,
         "display": "1"
       },
-      "top_merchant": "UBER KENYA",
+      "top_merchant": "Uber",
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -290,7 +290,7 @@
         "value": 2,
         "display": "2"
       },
-      "top_merchant": "Safaricom",
+      "top_merchant": "Safaricom airtime & bundles",
       "drilldown": {
         "kind": "transactions",
         "filter": {
@@ -304,7 +304,7 @@
   ],
   "merchants": [
     {
-      "name": "NAIVAS LTD KILIMANI",
+      "name": "Naivas",
       "category_id": "food_groceries.supermarket",
       "out": {
         "cents": 410000,
@@ -320,12 +320,12 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "NAIVAS LTD KILIMANI"
+          "merchant": "Naivas"
         }
       }
     },
     {
-      "name": "QUICKMART LTD",
+      "name": "Quickmart",
       "category_id": "food_groceries.supermarket",
       "out": {
         "cents": 282000,
@@ -341,33 +341,12 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "QUICKMART LTD"
+          "merchant": "Quickmart"
         }
       }
     },
     {
-      "name": "KASARANI AGENCIES LTD",
-      "category_id": "cash_withdrawals.agent",
-      "out": {
-        "cents": 150000,
-        "display": "KSh 1,500"
-      },
-      "count": {
-        "value": 1,
-        "display": "1"
-      },
-      "is_new": false,
-      "drilldown": {
-        "kind": "transactions",
-        "filter": {
-          "from": "2026-10-05T00:00:00+03:00",
-          "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "KASARANI AGENCIES LTD"
-        }
-      }
-    },
-    {
-      "name": "UBER KENYA",
+      "name": "Uber",
       "category_id": "transport.ride_hailing",
       "out": {
         "cents": 89500,
@@ -383,12 +362,12 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "UBER KENYA"
+          "merchant": "Uber"
         }
       }
     },
     {
-      "name": "Safaricom",
+      "name": "Safaricom airtime & bundles",
       "category_id": "airtime_bundles",
       "out": {
         "cents": 20000,
@@ -404,7 +383,7 @@
         "filter": {
           "from": "2026-10-05T00:00:00+03:00",
           "to": "2026-10-12T00:00:00+03:00",
-          "merchant": "Safaricom"
+          "merchant": "Safaricom airtime & bundles"
         }
       }
     }
@@ -698,7 +677,7 @@
         "display": "KSh 2,820"
       },
       "direction": "out",
-      "counterparty": "QUICKMART LTD",
+      "counterparty": "Quickmart",
       "category_id": "food_groceries.supermarket",
       "type": "BUY_GOODS"
     },
@@ -710,21 +689,9 @@
         "display": "KSh 2,620"
       },
       "direction": "out",
-      "counterparty": "NAIVAS LTD KILIMANI",
+      "counterparty": "Naivas",
       "category_id": "food_groceries.supermarket",
       "type": "BUY_GOODS"
-    },
-    {
-      "id": "8f226991-1a44-4704-8cd6-678cf18e6c61",
-      "occurred_at": "2026-10-07T04:05:00.000Z",
-      "amount": {
-        "cents": 150000,
-        "display": "KSh 1,500"
-      },
-      "direction": "out",
-      "counterparty": "KASARANI AGENCIES LTD",
-      "category_id": "cash_withdrawals.agent",
-      "type": "WITHDRAW"
     },
     {
       "id": "f11099a5-3e73-4631-8102-108d7ee99a22",
@@ -734,7 +701,7 @@
         "display": "KSh 1,480"
       },
       "direction": "out",
-      "counterparty": "NAIVAS LTD KILIMANI",
+      "counterparty": "Naivas",
       "category_id": "food_groceries.supermarket",
       "type": "BUY_GOODS"
     },
@@ -746,15 +713,27 @@
         "display": "KSh 895"
       },
       "direction": "out",
-      "counterparty": "UBER KENYA",
+      "counterparty": "Uber",
       "category_id": "transport.ride_hailing",
       "type": "BUY_GOODS"
+    },
+    {
+      "id": "a6c9207b-075d-4985-b0fa-d661e85d0216",
+      "occurred_at": "2026-10-06T04:30:00.000Z",
+      "amount": {
+        "cents": 10000,
+        "display": "KSh 100"
+      },
+      "direction": "out",
+      "counterparty": "Safaricom airtime & bundles",
+      "category_id": "airtime_bundles",
+      "type": "AIRTIME"
     }
   ],
   "new_merchants": [],
   "recurring": [
     {
-      "merchant": "UBER KENYA",
+      "merchant": "Uber",
       "category_id": "transport.ride_hailing",
       "cadence": "weekly",
       "typical_amount": {
@@ -768,7 +747,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "UBER KENYA",
+          "merchant": "Uber",
           "transaction_ids": [
             "d2cf2b7d-f975-4dc2-af67-f91e727d7288",
             "b6b98a06-ee93-4872-9b3a-da08cb573029",
@@ -783,7 +762,7 @@
       }
     },
     {
-      "merchant": "NAIVAS LTD KILIMANI",
+      "merchant": "Naivas",
       "category_id": "food_groceries.supermarket",
       "cadence": "weekly",
       "typical_amount": {
@@ -797,7 +776,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "NAIVAS LTD KILIMANI",
+          "merchant": "Naivas",
           "transaction_ids": [
             "bee14aa8-35f6-44c9-9785-79d9f309590b",
             "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
@@ -810,7 +789,7 @@
       }
     },
     {
-      "merchant": "QUICKMART LTD",
+      "merchant": "Quickmart",
       "category_id": "food_groceries.supermarket",
       "cadence": "weekly",
       "typical_amount": {
@@ -824,7 +803,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "QUICKMART LTD",
+          "merchant": "Quickmart",
           "transaction_ids": [
             "13a975c8-66f2-44d1-bcb0-9703f0f1bf5b",
             "8e4b2bcc-b190-48cc-b0f8-23043437714b",
@@ -839,7 +818,7 @@
       }
     },
     {
-      "merchant": "Safaricom",
+      "merchant": "Safaricom airtime & bundles",
       "category_id": "airtime_bundles",
       "cadence": "irregular",
       "typical_amount": {
@@ -853,7 +832,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "Safaricom",
+          "merchant": "Safaricom airtime & bundles",
           "transaction_ids": [
             "d2e8b9af-b637-4310-9017-caa62a24424e",
             "a130022f-8f0c-4b2d-920f-eaf059593016",
@@ -876,33 +855,7 @@
       }
     },
     {
-      "merchant": "KASARANI AGENCIES LTD",
-      "category_id": "cash_withdrawals.agent",
-      "cadence": "irregular",
-      "typical_amount": {
-        "cents": 150000,
-        "display": "KSh 1,500"
-      },
-      "last_paid": "2026-10-07T04:05:00.000Z",
-      "next_expected": null,
-      "confidence": 0,
-      "is_subscription": false,
-      "drilldown": {
-        "kind": "transactions",
-        "filter": {
-          "merchant": "KASARANI AGENCIES LTD",
-          "transaction_ids": [
-            "ea8aaca4-e876-4b83-b856-38b0f2dd9bad",
-            "f98e7a7c-5e0b-4ab8-a2f1-6c4168fbfe1f",
-            "f355ac60-93b9-45bb-ba82-37e5bab020e8",
-            "7ca865b6-c79c-4b15-a6b5-0c26c514b957",
-            "8f226991-1a44-4704-8cd6-678cf18e6c61"
-          ]
-        }
-      }
-    },
-    {
-      "merchant": "KPLC PREPAID",
+      "merchant": "Kenya Power (prepaid tokens)",
       "category_id": "utilities.electricity",
       "cadence": "irregular",
       "typical_amount": {
@@ -916,7 +869,7 @@
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "KPLC PREPAID",
+          "merchant": "Kenya Power (prepaid tokens)",
           "transaction_ids": [
             "ebcc1603-c03f-48fc-9e17-758ce72c1b6d",
             "3d0aa74b-b680-4e50-8ce1-79b5dbacde0c",
@@ -1026,7 +979,7 @@
       "severity": "info",
       "params": {
         "amount": "KSh 2,820",
-        "counterparty": "QUICKMART LTD",
+        "counterparty": "Quickmart",
         "date": "2026-10-10",
         "category_id": "food_groceries.supermarket"
       },
@@ -1137,18 +1090,18 @@
       }
     },
     {
-      "id": "recurring_found:UBER KENYA",
+      "id": "recurring_found:Uber",
       "kind": "recurring_found",
       "severity": "info",
       "params": {
-        "merchant": "UBER KENYA",
+        "merchant": "Uber",
         "amount": "KSh 773",
         "cadence": "weekly"
       },
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "UBER KENYA",
+          "merchant": "Uber",
           "transaction_ids": [
             "d2cf2b7d-f975-4dc2-af67-f91e727d7288",
             "b6b98a06-ee93-4872-9b3a-da08cb573029",
@@ -1163,18 +1116,18 @@
       }
     },
     {
-      "id": "recurring_found:NAIVAS LTD KILIMANI",
+      "id": "recurring_found:Naivas",
       "kind": "recurring_found",
       "severity": "info",
       "params": {
-        "merchant": "NAIVAS LTD KILIMANI",
+        "merchant": "Naivas",
         "amount": "KSh 1,460",
         "cadence": "weekly"
       },
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "NAIVAS LTD KILIMANI",
+          "merchant": "Naivas",
           "transaction_ids": [
             "bee14aa8-35f6-44c9-9785-79d9f309590b",
             "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
@@ -1187,18 +1140,18 @@
       }
     },
     {
-      "id": "recurring_found:QUICKMART LTD",
+      "id": "recurring_found:Quickmart",
       "kind": "recurring_found",
       "severity": "info",
       "params": {
-        "merchant": "QUICKMART LTD",
+        "merchant": "Quickmart",
         "amount": "KSh 2,610",
         "cadence": "weekly"
       },
       "drilldown": {
         "kind": "transactions",
         "filter": {
-          "merchant": "QUICKMART LTD",
+          "merchant": "Quickmart",
           "transaction_ids": [
             "13a975c8-66f2-44d1-bcb0-9703f0f1bf5b",
             "8e4b2bcc-b190-48cc-b0f8-23043437714b",
@@ -1340,11 +1293,11 @@
     "food_groceries.supermarket",
     "Supermarket",
     "Supamaketi",
-    "QUICKMART LTD",
+    "Quickmart",
     "2026-10-10",
-    "UBER KENYA",
+    "Uber",
     "weekly",
-    "NAIVAS LTD KILIMANI",
+    "Naivas",
     "housing_rent.rent",
     "Rent",
     "Kodi ya nyumba",

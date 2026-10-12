@@ -29,8 +29,8 @@ Chati ya nguzo ya matumizi kwa siku. Siku ya juu zaidi: Jumanne 2026-09-01, KSh 
 Pesa iliyoingia ilizidi iliyotoka: tofauti ni KSh 23,191
 Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 86,500, matumizi KSh 62,890. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 24,135.
 
-Ulilipa MAKAO PROPERTIES zaidi: KSh 18,000
-Chati ya nguzo ya maeneo uliyolipa zaidi: MAKAO PROPERTIES KSh 18,000; NAIVAS LTD KILIMANI KSh 14,740; QUICKMART LTD KSh 10,440; KASARANI AGENCIES LTD KSh 8,500; UBER KENYA KSh 3,090; KPLC PREPAID KSh 3,000; NETFLIX KSh 1,100; Safaricom KSh 900.
+Ulilipa Makao Properties zaidi: KSh 18,000
+Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900.
 
 Matumizi ya mwezi huu: KSh 62,890, ukilinganisha na miezi iliyopita
 Chati ya mistari ya mapato, matumizi na tofauti kwa kila mwezi, kuanzia Apr 2026 hadi Sep 2026. Mwezi huu: mapato KSh 86,500, matumizi KSh 62,890, tofauti KSh 23,191.
@@ -59,10 +59,10 @@ Mambo yaliyojitokeza
   Mabadiliko kutoka kipindi kilichopita: KSh +5,000 (143%).
 - Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 25,180
   Hiyo ni 40% ya matumizi yako yote katika kipindi hiki.
-- Malipo yako makubwa zaidi: KSh 18,000 kwa MAKAO PROPERTIES
+- Malipo yako makubwa zaidi: KSh 18,000 kwa Makao Properties
   Yalitoka tarehe 2026-09-01. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako.
-- Ulilipa mahali papya: MAKAO PROPERTIES
-  Hii ni mara ya kwanza MAKAO PROPERTIES kuonekana kwenye jumbe zako. Jumla hadi sasa: KSh 18,000. Idadi ya malipo: 1.
+- Ulilipa mahali papya: Makao Properties
+  Hii ni mara ya kwanza Makao Properties kuonekana kwenye jumbe zako. Jumla hadi sasa: KSh 18,000. Idadi ya malipo: 1.
 - Ulilipa KSh 419 kama ada
   Ada zilikuwa 1% ya matumizi yako. Idadi ya makato: 13. Ada za kutuma, kutoa pesa, Fuliza na benki zote zimejumuishwa.
 - Ulitoa pesa taslimu KSh 8,500
@@ -70,9 +70,9 @@ Mambo yaliyojitokeza
 - Uliweka akiba 6% ya mapato yako
   Pesa KSh 5,000 zilienda kwenye akiba, kati ya KSh 86,500 zilizoingia.
 - Pesa zilizoingia: KSh 86,500
-  Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa ACME LOGISTICS LTD SALARY.
+  Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Salary.
 - Ulituma KSh 3,000 kwa watu
-  Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa JANE WANJIRU: KSh 3,000.
+  Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa Jane Wanjiru: KSh 3,000.
 
 Pesa yako ilikwenda wapi
 ------------------------
@@ -90,12 +90,12 @@ Jumla  |  KSh 62,890  |    |  KSh +38,755
 
 Ya kuangalia mwezi ujao
 -----------------------
-1. NAIVAS LTD KILIMANI: takriban KSh 2,015 kila wiki
-2. UBER KENYA: takriban KSh 738 kila wiki
-3. QUICKMART LTD: takriban KSh 2,550 kila wiki
+1. Naivas: takriban KSh 2,015 kila wiki
+2. Uber: takriban KSh 738 kila wiki
+3. Quickmart: takriban KSh 2,550 kila wiki
 
 Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna kilichokisiwa.
 Akaunti zilizojumuishwa: Demo Bank, M-Pesa
 Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
 
-Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiIxYmEzYzI1ZC1kOTBkLTRhZTctOTMwOS1jMDJkNzg3ZDRiZjEiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoib2gzRUI3WjcifQ.t_oAJMiWns5FEVJxltptXWqm90ZHN-K-FPoH9MU0kWM
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWQ3MTVhZS01MGRjLTRmY2MtYmRjNi05NzdjYmM5MGFjMDAiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiZFNjaW9VMlQifQ.N6qbEpQZkhTFrBwAPyEX_Gluv9NmbwoHImU2ZkXOOO8

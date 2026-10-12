@@ -41,7 +41,7 @@ export function computeFacts(input: FactsInput): FactsSheet {
   const nextEndMs = Date.parse(periodContaining(period.kind, parseIsoDate(period.end), opts).end);
   const names = categoryNamer(input.categories);
 
-  const window = prepare(input.transactions, endMs);
+  const window = prepare(input.transactions, endMs, input.merchantName);
   const cur = slice(window, startMs, endMs);
   const prev = slice(window, Date.parse(prevPeriod.start), Date.parse(prevPeriod.end));
   const spend = cur.filter(isSpend);

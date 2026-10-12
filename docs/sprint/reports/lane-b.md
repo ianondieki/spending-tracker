@@ -64,6 +64,29 @@ Tests: `make check-backend` (or per package `pnpm --filter @hesabu/<pkg> test`).
 `DATABASE_URL` (default `postgres://hesabu:hesabu@localhost:5432/hesabu`); without a reachable database they are
 skipped locally and fail in CI.
 
+## Package 3 (orchestrator review of the samples)
+
+- **Names.** Every name a report shows (merchants, people, largest, recurring, anomalies, insight params, and so
+  `display_strings`) now comes from one place: `FactsInput.merchantName` when the caller supplies it, else the
+  engine's `displayName` normaliser (title case, LTD/LIMITED/PLC dropped, acronyms such as KPLC and DSTV kept,
+  "M-PESA" → "M-Pesa"). The worker supplies `merchantDisplayName`: the taxonomy's canonical merchant name when a seed
+  matches by pay bill, till or alias (Naivas, Quickmart, Kenya Power (prepaid tokens), Netflix), then
+  `normaliseMerchantName` from `@hesabu/taxonomy` when that export exists (Lane D is adding it; picked up at runtime
+  with no code change), else the engine's own. Drill-down filters by merchant carry the display name, so the app
+  must apply the same canonicalisation when it filters (noted for Lane A).
+- **Cash is not a merchant.** Agent withdrawals (type WITHDRAW/ATM or counterparty kind agent) never appear in
+  `merchants`, `largest`, `recurring`, `top_merchant` or the `biggest_transaction` insight; they stay in
+  `totals.cash_withdrawn` and the `cash_withdrawn` insight ("You withdrew KSh 8,500 in cash"). Transfers were already
+  excluded from spending; people (kind person) go to `people`, never `merchants`.
+- **Totals semantics, confirmed.** `totals.out` excludes transfers (`is_transfer` or transfer types), savings
+  (M-Shwari deposits), loan repayments and fee-only rows. `totals.fees` is separate: fee_cents on every row plus
+  FEE-type rows; it is **not** inside `totals.out`. The hero "Total spent" is `totals.out`; fees appear in the KPI
+  row, the fee callout and the fee meter. `net = in − out − fees`. **Cash withdrawals are inside `totals.out`**,
+  under the taxonomy category "Cash withdrawals" / "Kutoa kwa wakala", and also reported separately as
+  `totals.cash_withdrawn`. If the product wants fees inside "Total spent", that is a one-line change in
+  `packages/analytics/src/facts/totals.ts` plus the README; it was left as the contract reads today.
+- Samples regenerated (`docs/sprint/samples/`); analytics 71 tests, worker 23.
+
 ## Design decisions worth knowing
 
 - **Tenancy.** The only way to touch user data is `db.forUser(id)`; no method takes a user id. RLS policies are a

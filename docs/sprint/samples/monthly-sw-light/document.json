@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "report_id": "1ba3c25d-d90d-4ae7-9309-c02d787d4bf1",
+  "report_id": "5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
   "kind": "monthly",
   "locale": "sw",
   "period_label": "Septemba 2026",
@@ -110,10 +110,10 @@
       "type": "chart",
       "chart_id": "top_bars_merchants",
       "chart_type": "top_bars",
-      "title": "Ulilipa MAKAO PROPERTIES zaidi: KSh 18,000",
+      "title": "Ulilipa Makao Properties zaidi: KSh 18,000",
       "takeaway": null,
       "data_ref": "/merchants",
-      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: MAKAO PROPERTIES KSh 18,000; NAIVAS LTD KILIMANI KSh 14,740; QUICKMART LTD KSh 10,440; KASARANI AGENCIES LTD KSh 8,500; UBER KENYA KSh 3,090; KPLC PREPAID KSh 3,000; NETFLIX KSh 1,100; Safaricom KSh 900."
+      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900."
     },
     {
       "type": "chart",
@@ -237,7 +237,7 @@
         },
         {
           "insight_id": "biggest_transaction:abcf87f5-9be4-4176-8a23-e2595fe93ae7",
-          "headline": "Malipo yako makubwa zaidi: KSh 18,000 kwa MAKAO PROPERTIES",
+          "headline": "Malipo yako makubwa zaidi: KSh 18,000 kwa Makao Properties",
           "body": "Yalitoka tarehe 2026-09-01. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako.",
           "drilldown": {
             "kind": "transactions",
@@ -249,15 +249,15 @@
           }
         },
         {
-          "insight_id": "new_merchant:MAKAO PROPERTIES",
-          "headline": "Ulilipa mahali papya: MAKAO PROPERTIES",
-          "body": "Hii ni mara ya kwanza MAKAO PROPERTIES kuonekana kwenye jumbe zako. Jumla hadi sasa: KSh 18,000. Idadi ya malipo: 1.",
+          "insight_id": "new_merchant:Makao Properties",
+          "headline": "Ulilipa mahali papya: Makao Properties",
+          "body": "Hii ni mara ya kwanza Makao Properties kuonekana kwenye jumbe zako. Jumla hadi sasa: KSh 18,000. Idadi ya malipo: 1.",
           "drilldown": {
             "kind": "transactions",
             "filter": {
               "from": "2026-09-01T00:00:00+03:00",
               "to": "2026-10-01T00:00:00+03:00",
-              "merchant": "MAKAO PROPERTIES"
+              "merchant": "Makao Properties"
             }
           }
         },
@@ -324,7 +324,7 @@
         {
           "insight_id": "income_received",
           "headline": "Pesa zilizoingia: KSh 86,500",
-          "body": "Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa ACME LOGISTICS LTD SALARY.",
+          "body": "Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Salary.",
           "drilldown": {
             "kind": "transactions",
             "filter": {
@@ -340,7 +340,7 @@
         {
           "insight_id": "sent_to_people",
           "headline": "Ulituma KSh 3,000 kwa watu",
-          "body": "Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa JANE WANJIRU: KSh 3,000.",
+          "body": "Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa Jane Wanjiru: KSh 3,000.",
           "drilldown": {
             "kind": "transactions",
             "filter": {
@@ -434,9 +434,9 @@
       "type": "watch",
       "title": "Ya kuangalia mwezi ujao",
       "items": [
-        "NAIVAS LTD KILIMANI: takriban KSh 2,015 kila wiki",
-        "UBER KENYA: takriban KSh 738 kila wiki",
-        "QUICKMART LTD: takriban KSh 2,550 kila wiki"
+        "Naivas: takriban KSh 2,015 kila wiki",
+        "Uber: takriban KSh 738 kila wiki",
+        "Quickmart: takriban KSh 2,550 kila wiki"
       ]
     },
     {
@@ -450,7 +450,7 @@
     }
   ],
   "whatsapp": {
-    "caption": "*Mwezi wako wa pesa*\nSeptemba 2026\n\nMatumizi: *KSh 62,890*\nUmetumia 161% zaidi ya mwezi uliopita (KSh +38,755).\n\n• Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135\n• Ulitumia Fuliza ya KSh 1,599\n• Supamaketi imepanda hadi KSh 25,180\n\nRipoti kamili: https://hesabu.example/r/1ba3c25d-d90d-4ae7-9309-c02d787d4bf1",
+    "caption": "*Mwezi wako wa pesa*\nSeptemba 2026\n\nMatumizi: *KSh 62,890*\nUmetumia 161% zaidi ya mwezi uliopita (KSh +38,755).\n\n• Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135\n• Ulitumia Fuliza ya KSh 1,599\n• Supamaketi imepanda hadi KSh 25,180\n\nRipoti kamili: https://hesabu.example/r/5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
     "hero_chart_ids": [
       "donut"
     ]
