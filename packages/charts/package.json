@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "tokens": "cp ../../contracts/design-tokens.json src/design-tokens.json"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -30,5 +31,8 @@
     "@types/react-dom": "^19.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
+  },
+  "dependencies": {
+    "@hesabu/report-model": "workspace:*"
   }
 }

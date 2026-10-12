@@ -1,18 +1,34 @@
 # @hesabu/charts
 
-**Owner:** Lane C (charts, renderer, web). **Purpose:** the chart catalogue as React components (donut, daily bars with average, top-N bars, trend, fee meter, sparkline) in light and dark themes, rendered by the web viewer and by the renderer to PNG.
+**Owner:** Lane C. **Purpose:** the ten report chart types from `contracts/chart-spec.md` as React SVG components,
+rendered by the web viewer, the renderer (PNG, PDF, email) and re-implemented in Compose from the same data shapes.
 
-Scaffolded during the 24-hour sprint with placeholder code; the owning lane replaces `src/` as it builds.
+## Rules baked in
 
-## Conventions
+- Deterministic: no DOM measurement, no randomness; text is measured with `text.ts` estimates. Snapshot-tested.
+- Tokens as CSS variables (`theme.ts`): `--h-ink`, `--h-in`, `--h-fee`, `--h-cat-1..6` and so on. No literal colour
+  reaches a mark. `themeStyle(theme)` sets them inline on the figure (self-contained markup); `themeStylesheet()`
+  sets them on `:root` and `[data-theme]` for a page.
+- The grid is the ruled line; spend is ink, never red; fees are the one warm colour; bars ≤ 24 px with a 4 px rounded
+  data end and square baseline; 2 px lines; markers with a 2 px surface ring; direct labels, legends only for
+  more than three series.
+- Every chart exports `<name>AltText(data, locale)` and `<name>Table(data, locale)`; the `Figure` frame renders the
+  takeaway, the SVG (`role="img"` with the alt text) and the data table twin behind a native `<details>` toggle.
+- Both locales (`chartLabels(locale)`), both themes, two widths (`DEFAULT_WIDTH` 672, `PHONE_WIDTH` 328).
 
-- ESM + TypeScript strict (`tsconfig.base.json`), NodeNext resolution: relative imports end in `.js`.
-- `src/index.ts` is the public surface. Other workspace packages import `@hesabu/charts` only.
-- Types resolve from `src/` (no build needed for `pnpm typecheck`); runtime imports resolve to `dist/`
-  (`pnpm build` at the root builds in dependency order).
-- Tests live in `src/**/*.test.ts` (Vitest). Sibling packages resolve to their source in tests via the alias in
-  `vitest.shared.ts`, so tests never need a prior build.
+## Use
 
-## Scripts
+```tsx
+import { resolveChart } from '@hesabu/charts';
+// section: a `chart` section of a ReportDocument; facts: its FactsSheet
+const element = resolveChart(section, facts, { locale: 'en', theme: 'dark', width: 672 });
+```
 
-`pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm build` · `pnpm clean`
+Or any chart directly: `<Donut id="categories" title="…" locale="en" data={donutData(facts, 'en')} />`.
+
+`chartStyles` is the stylesheet for the frame and the ruled ledger table (`.h-ledger`), to inline or import.
+
+## Commands
+
+`pnpm test` (snapshots in `src/__snapshots__/`, `-u` to refresh after a deliberate change), `pnpm lint`,
+`pnpm typecheck`, `pnpm build`, `pnpm tokens` (re-copies `contracts/design-tokens.json`; a test fails when stale).
