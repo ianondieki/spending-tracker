@@ -89,6 +89,18 @@ skipped locally and fail in CI.
   `packages/analytics/src/facts/totals.ts` plus the README; it was left as the contract reads today.
 - Samples regenerated (`docs/sprint/samples/`); analytics 71 tests, worker 23.
 
+## Package 4 (check-in 3, final)
+
+- `infra/deploy/`: `fly.toml` (app `hesabu-backend`, region jnb, `api` and `worker` process group, Fly Postgres or an
+  external `DATABASE_URL`), `fly.web.toml` (second app for the viewer), `render.yaml` (api web service, worker, web,
+  Postgres; frankfurt), `Dockerfile.backend` (api + worker on the Playwright image so the renderer has Chromium),
+  `Dockerfile.web`, and a README with both paths, the secret names per service, the one-time steps (migrations,
+  seed, WhatsApp webhook and verify token, Resend webhook) and the laptop + cloudflared/ngrok alternative. **Nothing
+  was executed against a provider and the images are unbuilt** (no Docker daemon here).
+- `docs/sprint/SHOWCASE.md`: the ten-minute script with layers A (live), B (demo mode + laptop stack behind a
+  tunnel) and C (committed samples, web fixtures, screenshots), one line to say and a fallback per step, the exact
+  commands and the pre-flight checklist.
+
 ## Design decisions worth knowing
 
 - **Tenancy.** The only way to touch user data is `db.forUser(id)`; no method takes a user id. RLS policies are a

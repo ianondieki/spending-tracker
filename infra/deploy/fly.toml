@@ -1,0 +1,49 @@
+# Fly.io: the backend app (API + worker as a process group) in Johannesburg. NOT deployed by the sprint; see README.md.
+#   fly launch --no-deploy --copy-config --config infra/deploy/fly.toml   # once, from the repo root
+#   fly postgres create --name hesabu-db --region jnb && fly postgres attach hesabu-db --app hesabu-backend
+#   fly secrets set DEVICE_TOKEN_SECRET=... REPORT_LINK_SECRET=... (see README.md for the full list)
+#   fly deploy --config infra/deploy/fly.toml
+app = "hesabu-backend"
+primary_region = "jnb"
+
+[build]
+  dockerfile = "infra/deploy/Dockerfile.backend"
+
+[env]
+  TZ = "Africa/Nairobi"
+  NODE_ENV = "production"
+  PORT = "8787"
+  AI_ENABLED = "false"          # flip to "true" with ANTHROPIC_API_KEY set as a secret
+  AI_DAILY_BUDGET_USD = "2"
+  REPORT_LINK_TTL_DAYS = "30"
+  WHATSAPP_API_VERSION = "v21.0"
+  # APP_BASE_URL = "https://hesabu-web.fly.dev"   # the web app's public URL (report links point here)
+
+[processes]
+  api = "node api/dist/index.js"
+  worker = "node worker/dist/main.js"
+
+[http_service]
+  processes = ["api"]
+  internal_port = 8787
+  force_https = true
+  auto_stop_machines = "off"     # webhooks and the scheduler must keep answering
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [http_service.checks]
+    [http_service.checks.health]
+      path = "/health"
+      interval = "30s"
+      timeout = "5s"
+      grace_period = "20s"
+
+[[vm]]
+  processes = ["api"]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+[[vm]]
+  processes = ["worker"]
+  size = "shared-cpu-2x"
+  memory = "2gb"                 # Chromium for the renderer

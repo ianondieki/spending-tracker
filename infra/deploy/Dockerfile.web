@@ -1,0 +1,24 @@
+# The Next.js web viewer (apps/web). Build from the repo root:
+#   docker build -f infra/deploy/Dockerfile.web -t hesabu-web .
+FROM node:22-alpine AS build
+RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
+WORKDIR /repo
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json tsconfig.base.json ./
+COPY apps/web/package.json apps/web/
+COPY packages/charts/package.json packages/charts/
+COPY packages/report-model/package.json packages/report-model/
+RUN pnpm install --frozen-lockfile --filter "@hesabu/web..."
+COPY apps/web apps/web
+COPY packages/charts packages/charts
+COPY packages/report-model packages/report-model
+COPY contracts contracts
+RUN pnpm --filter "@hesabu/web..." run build
+
+FROM node:22-alpine
+RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
+ENV NODE_ENV=production TZ=Africa/Nairobi NEXT_TELEMETRY_DISABLED=1 PORT=3000
+WORKDIR /repo
+COPY --from=build /repo /repo
+EXPOSE 3000
+CMD ["pnpm", "--filter", "@hesabu/web", "start", "--", "-p", "3000"]

@@ -1,0 +1,26 @@
+# Fly.io: the web viewer as a second app (one fly.toml per app). NOT deployed by the sprint; see README.md.
+#   fly launch --no-deploy --copy-config --config infra/deploy/fly.web.toml
+#   fly secrets set API_BASE_URL=https://hesabu-backend.fly.dev --app hesabu-web
+#   fly deploy --config infra/deploy/fly.web.toml
+app = "hesabu-web"
+primary_region = "jnb"
+
+[build]
+  dockerfile = "infra/deploy/Dockerfile.web"
+
+[env]
+  TZ = "Africa/Nairobi"
+  NODE_ENV = "production"
+  PORT = "3000"
+  NEXT_TELEMETRY_DISABLED = "1"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
