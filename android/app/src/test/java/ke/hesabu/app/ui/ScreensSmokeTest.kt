@@ -92,7 +92,7 @@ class ScreensSmokeTest {
     fun accountsRender() {
         val state = AccountsViewModel.State(loading = false, rows = listOf(AccountsViewModel.Row(SampleData.account, 100_000, 50_000, 2_300, 4)))
         compose.setContent { HesabuTheme { AccountsContent(state) } }
-        compose.onNodeWithText("KSh 3,450.00").assertIsDisplayed()
+        compose.onNodeWithText("KSh 3,450").assertIsDisplayed()
     }
 
     @Test

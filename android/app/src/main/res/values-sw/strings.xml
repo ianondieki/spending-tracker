@@ -96,7 +96,6 @@
     <string name="home_week_nothing_yet">Hakuna matumizi bado wiki hii.</string>
     <string name="home_kpi_in">Umepokea</string>
     <string name="home_kpi_fees">Ada</string>
-    <string name="home_kpi_vs_last_week">Kuliko wiki iliyopita</string>
     <string name="home_see_transactions">Ona miamala yote</string>
     <string name="home_teach_title">Fundisha Hesabu</string>
     <string name="home_teach_action">Fundisha Hesabu</string>
@@ -272,4 +271,8 @@
     <string name="settings_number_title">Nambari yako ya M-PESA</string>
     <string name="settings_number_body">Hutumika tu kuweka lebo kwenye akaunti yako. Hesabu huhifadhi tarakimu mbili za kwanza na tatu za mwisho.</string>
     <string name="settings_number_label">Nambari ya simu</string>
+
+    <string name="home_delta_more">%1$s zaidi ya wiki iliyopita</string>
+    <string name="home_delta_less">%1$s chini ya wiki iliyopita</string>
+    <string name="home_delta_same">Sawa na wiki iliyopita</string>
 </resources>
