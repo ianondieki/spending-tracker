@@ -283,19 +283,20 @@ describe('integer helpers', () => {
 });
 
 describe('display names and what counts as a merchant', () => {
-  it('normalises raw counterparty names for display', async () => {
-    const { displayName } = await import('./classify.js');
-    expect(displayName('NAIVAS LTD KILIMANI')).toBe('Naivas Kilimani');
-    expect(displayName('KPLC PREPAID')).toBe('KPLC Prepaid');
-    expect(displayName('QUICKMART LTD')).toBe('Quickmart');
-    expect(displayName('MAKAO PROPERTIES')).toBe('Makao Properties');
-    expect(displayName('M-PESA')).toBe('M-Pesa');
-    expect(displayName('DSTV KENYA')).toBe('DSTV Kenya');
-    expect(displayName('JOHN K')).toBe('John K');
-    expect(displayName('Java House')).toBe('Java House');
-    expect(displayName('AGENT 123456 KINOO')).toBe('Agent 123456 Kinoo');
-    expect(displayName('  ')).toBeNull();
-    expect(displayName(null)).toBeNull();
+  it('shows taxonomy names for merchants and title case for people', () => {
+    const sheet = computeFacts({
+      ...sampleFactsInput('weekly'),
+      transactions: [
+        makeTransaction(1, { occurred_at: at('2026-09-22', '10:00'), counterparty: { kind: 'till', name: 'NAIVAS LTD KILIMANI' }, amount_cents: 300_000 }),
+        makeTransaction(2, { occurred_at: at('2026-09-22', '11:00'), counterparty: { kind: 'paybill', name: 'SOMETHING ODD', paybill: '888880' }, amount_cents: 100_000 }),
+        makeTransaction(3, { occurred_at: at('2026-09-22', '12:00'), counterparty: { kind: 'till', name: 'MAKAO PROPERTIES LTD' }, amount_cents: 50_000 }),
+        makeTransaction(4, { type: 'SEND_MONEY', occurred_at: at('2026-09-22', '13:00'), counterparty: { kind: 'person', name: 'JOHN K', ref_masked: '07XXXXX111' }, amount_cents: 20_000 }),
+      ],
+    });
+    expect(sheet.merchants.map((m) => m.name)).toEqual(['Naivas Kilimani', 'KPLC Prepaid', 'Makao Properties']);
+    expect(sheet.people.map((p) => p.name)).toEqual(['John K']);
+    expect(sheet.largest.map((t) => t.counterparty)).toEqual(['Naivas Kilimani', 'KPLC Prepaid', 'Makao Properties', 'John K']);
+    for (const name of ['Naivas Kilimani', 'KPLC Prepaid', 'Makao Properties', 'John K']) expect(sheet.display_strings).toContain(name);
   });
 
   it('uses the caller-supplied canonical name everywhere it shows a name', () => {

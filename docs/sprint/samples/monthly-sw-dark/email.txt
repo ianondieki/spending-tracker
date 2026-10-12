@@ -30,7 +30,7 @@ Pesa iliyoingia ilizidi iliyotoka: tofauti ni KSh 23,191
 Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 86,500, matumizi KSh 62,890. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 24,135.
 
 Ulilipa Makao Properties zaidi: KSh 18,000
-Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900.
+Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas Kilimani KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; KPLC Prepaid KSh 3,000; Netflix KSh 1,100; Safaricom KSh 900; Monthly Ledger Fee KSh 120.
 
 Matumizi ya mwezi huu: KSh 62,890, ukilinganisha na miezi iliyopita
 Chati ya mistari ya mapato, matumizi na tofauti kwa kila mwezi, kuanzia Apr 2026 hadi Sep 2026. Mwezi huu: mapato KSh 86,500, matumizi KSh 62,890, tofauti KSh 23,191.
@@ -70,7 +70,7 @@ Mambo yaliyojitokeza
 - Uliweka akiba 6% ya mapato yako
   Pesa KSh 5,000 zilienda kwenye akiba, kati ya KSh 86,500 zilizoingia.
 - Pesa zilizoingia: KSh 86,500
-  Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Salary.
+  Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Ltd Salary.
 - Ulituma KSh 3,000 kwa watu
   Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa Jane Wanjiru: KSh 3,000.
 
@@ -90,7 +90,7 @@ Jumla  |  KSh 62,890  |    |  KSh +38,755
 
 Ya kuangalia mwezi ujao
 -----------------------
-1. Naivas: takriban KSh 2,015 kila wiki
+1. Naivas Kilimani: takriban KSh 2,015 kila wiki
 2. Uber: takriban KSh 738 kila wiki
 3. Quickmart: takriban KSh 2,550 kila wiki
 
@@ -98,4 +98,4 @@ Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna
 Akaunti zilizojumuishwa: Demo Bank, M-Pesa
 Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
 
-Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWQ3MTVhZS01MGRjLTRmY2MtYmRjNi05NzdjYmM5MGFjMDAiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiZFNjaW9VMlQifQ.N6qbEpQZkhTFrBwAPyEX_Gluv9NmbwoHImU2ZkXOOO8
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiU0JVVkIxNFUifQ.g4f5iF4TE2qT-HLqTZHhu0hza7iW9r1cFCMxKDtI4dA

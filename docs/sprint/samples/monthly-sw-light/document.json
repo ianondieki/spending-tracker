@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "report_id": "5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+  "report_id": "5aecdb5b-8e00-4345-b2a7-7d4eaf6cd2ed",
   "kind": "monthly",
   "locale": "sw",
   "period_label": "Septemba 2026",
@@ -113,7 +113,7 @@
       "title": "Ulilipa Makao Properties zaidi: KSh 18,000",
       "takeaway": null,
       "data_ref": "/merchants",
-      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900."
+      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas Kilimani KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; KPLC Prepaid KSh 3,000; Netflix KSh 1,100; Safaricom KSh 900; Monthly Ledger Fee KSh 120."
     },
     {
       "type": "chart",
@@ -324,7 +324,7 @@
         {
           "insight_id": "income_received",
           "headline": "Pesa zilizoingia: KSh 86,500",
-          "body": "Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Salary.",
+          "body": "Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Ltd Salary.",
           "drilldown": {
             "kind": "transactions",
             "filter": {
@@ -434,7 +434,7 @@
       "type": "watch",
       "title": "Ya kuangalia mwezi ujao",
       "items": [
-        "Naivas: takriban KSh 2,015 kila wiki",
+        "Naivas Kilimani: takriban KSh 2,015 kila wiki",
         "Uber: takriban KSh 738 kila wiki",
         "Quickmart: takriban KSh 2,550 kila wiki"
       ]
@@ -450,7 +450,7 @@
     }
   ],
   "whatsapp": {
-    "caption": "*Mwezi wako wa pesa*\nSeptemba 2026\n\nMatumizi: *KSh 62,890*\nUmetumia 161% zaidi ya mwezi uliopita (KSh +38,755).\n\n• Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135\n• Ulitumia Fuliza ya KSh 1,599\n• Supamaketi imepanda hadi KSh 25,180\n\nRipoti kamili: https://hesabu.example/r/5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+    "caption": "*Mwezi wako wa pesa*\nSeptemba 2026\n\nMatumizi: *KSh 62,890*\nUmetumia 161% zaidi ya mwezi uliopita (KSh +38,755).\n\n• Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135\n• Ulitumia Fuliza ya KSh 1,599\n• Supamaketi imepanda hadi KSh 25,180\n\nRipoti kamili: https://hesabu.example/r/5aecdb5b-8e00-4345-b2a7-7d4eaf6cd2ed",
     "hero_chart_ids": [
       "donut"
     ]

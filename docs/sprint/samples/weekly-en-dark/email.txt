@@ -29,8 +29,8 @@ Bar chart of spending by day. Highest: Saturday 2026-10-10, KSh 2,820. Daily ave
 More went out than came in: net KSh -9,544
 Bars comparing money in and out. This period: in KSh 0, out KSh 9,515. Period before: in KSh 85,000, out KSh 32,890.
 
-You paid Naivas the most: KSh 4,100
-Bar chart of the places you paid most: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200.
+You paid Naivas Kilimani the most: KSh 4,100
+Bar chart of the places you paid most: Naivas Kilimani KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom KSh 200.
 
 food groceries has used 0% of its budget
 Budget bars: food groceries KSh 0 of KSh 6,000, heading for KSh 0.
@@ -68,11 +68,11 @@ Total  |  KSh 9,515  |    |  KSh -23,375
 To watch next week
 ------------------
 1. Uber: about KSh 773 every week
-2. Naivas: about KSh 1,460 every week
+2. Naivas Kilimani: about KSh 1,460 every week
 3. Quickmart: about KSh 2,610 every week
 
 Every number here is computed from your transaction messages on your phone. Nothing was guessed.
 Accounts covered: Demo Bank, M-Pesa
 Messages Hesabu could not read: Messages not yet understood: 0
 
-Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiIwMWRkMGZjOC0yY2ExLTRhNjQtYmIyMy0yYTc5MGRmZjY0ZGIiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiT1ZzaW9kcXIifQ.ZCY2k-2ObpVrKvo3wlcFKixMBL5yiyCOClH6SaAY_eU
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoibm1PLVNndlMifQ.FS6JwjWmR8LautRs556hfa5FSubImGvbR3Vpm2mZEGU

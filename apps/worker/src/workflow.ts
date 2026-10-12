@@ -12,7 +12,6 @@ import {
   type AiConfig, type CostLedger, type ModelClient, type ReportDocument,
 } from '@hesabu/agents';
 import { DbCostLedger, taxonomyCategoryRows, type CategoryRow, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
-import * as taxonomy from '@hesabu/taxonomy';
 
 import type { Renderer } from './adapters/renderer.js';
 import type { Storage } from './adapters/storage.js';
@@ -97,7 +96,6 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
       budgets: budgets.map((b) => ({ category_id: b.category_id, limit_cents: b.limit_cents, period: b.period })),
       unknown_message_count: 0,
       late_arrival_count: lateArrivals,
-      merchantName: merchantDisplayName,
       generated_at: now.toISOString(),
       previous_report_totals: previousTotals?.success
         ? { out_cents: previousTotals.data.totals.out.cents, in_cents: previousTotals.data.totals.in.cents, fees_cents: previousTotals.data.totals.fees.cents }
@@ -179,19 +177,6 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     await tenant.audit('worker', 'report.failed', { kind: report.kind, period_start: report.period_start, error: message.slice(0, 200) });
     throw err;
   }
-}
-
-/**
- * Display name for a counterparty: the taxonomy's canonical merchant name when a seed matches (by pay bill, till or
- * alias), else the taxonomy's `normaliseMerchantName` when that export exists, else null so the facts engine applies
- * its own normaliser. Used for every name the report shows.
- */
-export function merchantDisplayName(cp: { kind: string; name?: string | null; paybill?: string | null; till?: string | null }): string | null {
-  if (cp.kind === 'person' || cp.kind === 'self' || cp.kind === 'unknown') return null;
-  const match = taxonomy.matchMerchant({ name: cp.name ?? null, paybill: cp.paybill ?? null, till: cp.till ?? null });
-  if (match) return match.merchant.name;
-  const normalise = (taxonomy as { normaliseMerchantName?: (name: string) => string }).normaliseMerchantName;
-  return normalise && cp.name ? normalise(cp.name) : null;
 }
 
 export function mergeCategories(system: readonly CategoryRow[], user: readonly CategoryRow[]): CategoryRow[] {

@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "report_id": "01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+  "report_id": "73cbf7e4-9a97-4d0e-99f7-a50eafb5cd96",
   "kind": "weekly",
   "locale": "sw",
   "period_label": "5 hadi 11 Oktoba 2026",
@@ -110,10 +110,10 @@
       "type": "chart",
       "chart_id": "top_bars_merchants",
       "chart_type": "top_bars",
-      "title": "Ulilipa Naivas zaidi: KSh 4,100",
+      "title": "Ulilipa Naivas Kilimani zaidi: KSh 4,100",
       "takeaway": null,
       "data_ref": "/merchants",
-      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200."
+      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Naivas Kilimani KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom KSh 200."
     },
     {
       "type": "chart",
@@ -294,7 +294,7 @@
       "title": "Ya kuangalia wiki ijayo",
       "items": [
         "Uber: takriban KSh 773 kila wiki",
-        "Naivas: takriban KSh 1,460 kila wiki",
+        "Naivas Kilimani: takriban KSh 1,460 kila wiki",
         "Quickmart: takriban KSh 2,610 kila wiki"
       ]
     },
@@ -309,7 +309,7 @@
     }
   ],
   "whatsapp": {
-    "caption": "*Wiki yako ya pesa*\n5 hadi 11 Oktoba 2026\n\nMatumizi: *KSh 9,515*\nUmetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).\n\n• Matumizi yameshuka hadi KSh 9,515, kutoka KSh 32,890\n• Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 6,920\n• Malipo yako makubwa zaidi: KSh 2,820 kwa Quickmart\n\nRipoti kamili: https://hesabu.example/r/01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+    "caption": "*Wiki yako ya pesa*\n5 hadi 11 Oktoba 2026\n\nMatumizi: *KSh 9,515*\nUmetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).\n\n• Matumizi yameshuka hadi KSh 9,515, kutoka KSh 32,890\n• Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 6,920\n• Malipo yako makubwa zaidi: KSh 2,820 kwa Quickmart\n\nRipoti kamili: https://hesabu.example/r/73cbf7e4-9a97-4d0e-99f7-a50eafb5cd96",
     "hero_chart_ids": [
       "donut"
     ]
