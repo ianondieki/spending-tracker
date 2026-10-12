@@ -54,7 +54,7 @@ data class TransactionEntity(
     @ColumnInfo(name = "raw_hash") override val rawHash: String,
     @ColumnInfo(name = "pack_id") val packId: String,
     @ColumnInfo(name = "pack_version") val packVersion: String,
-    @ColumnInfo(name = "family_id") val familyId: String,
+    @ColumnInfo(name = "family_id") override val familyId: String,
     @ColumnInfo(name = "user_edited") val userEdited: Boolean,
     val note: String?,
     /** JSON array of strings. */

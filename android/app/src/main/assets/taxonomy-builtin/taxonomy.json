@@ -758,6 +758,27 @@
       "category_id": "transfers",
       "display_name": null,
       "confidence": 0.7
+    },
+    {
+      "match": "name",
+      "value": "safaricom data bundles",
+      "category_id": "airtime_data",
+      "display_name": "Safaricom data",
+      "confidence": 0.9
+    },
+    {
+      "match": "type",
+      "value": "POCHI",
+      "category_id": "shopping",
+      "display_name": null,
+      "confidence": 0.5
+    },
+    {
+      "match": "type",
+      "value": "REVERSAL",
+      "category_id": "other",
+      "display_name": null,
+      "confidence": 0.5
     }
   ]
 }

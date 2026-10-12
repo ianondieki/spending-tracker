@@ -12,6 +12,7 @@ object PostProcessor {
         val id: String
         val provider: String
         val externalRef: String?
+        val familyId: String
         val rawHash: String
         val accountRef: String
         val type: String
@@ -24,9 +25,15 @@ object PostProcessor {
         val occurredAtMillis: Long
     }
 
-    /** `(provider, external_ref)` when there is an external ref, otherwise the raw hash. */
+    /**
+     * `(provider, external_ref, family_id)` when there is an external ref, otherwise the raw hash. The family is part
+     * of the key because M-Pesa reuses one code across related messages (a Fuliza drawdown repeats the code of the
+     * payment it funded; a reversal cites the original).
+     */
     fun dedupeKey(t: LedgerLike): String =
-        if (!t.externalRef.isNullOrBlank()) "ref:${t.provider}:${t.externalRef}" else "hash:${t.rawHash}"
+        if (!t.externalRef.isNullOrBlank()) refKey(t.provider, t.externalRef!!, t.familyId) else "hash:${t.rawHash}"
+
+    fun refKey(provider: String, externalRef: String, familyId: String) = "ref:$provider:$externalRef:$familyId"
 
     data class Deduped<T : LedgerLike>(val kept: List<T>, val droppedCount: Int)
 

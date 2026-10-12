@@ -85,7 +85,7 @@ class IngestPipeline(
         parsed.map { it.second.rawHash }.distinct().chunked(500).forEach { c -> db.transactionDao().existingHashes(c).forEach { existing.add("hash:$it") } }
         parsed.groupBy { it.second.provider }.forEach { (provider, list) ->
             list.mapNotNull { it.second.externalRef }.distinct().chunked(500).forEach { c ->
-                db.transactionDao().existingExternalRefs(provider, c).forEach { existing.add("ref:$provider:$it") }
+                db.transactionDao().existingExternalRefs(provider, c).forEach { existing.add(PostProcessor.refKey(provider, it.externalRef, it.familyId)) }
             }
         }
         val categoriser = Categoriser(db.userRuleDao().all(), db.merchantSeedDao().all())

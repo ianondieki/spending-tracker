@@ -50,8 +50,8 @@ interface TransactionDao {
     @Query("SELECT raw_hash FROM transactions WHERE raw_hash IN (:hashes)")
     suspend fun existingHashes(hashes: List<String>): List<String>
 
-    @Query("SELECT external_ref FROM transactions WHERE provider = :provider AND external_ref IN (:refs)")
-    suspend fun existingExternalRefs(provider: String, refs: List<String>): List<String>
+    @Query("SELECT external_ref, family_id FROM transactions WHERE provider = :provider AND external_ref IN (:refs)")
+    suspend fun existingExternalRefs(provider: String, refs: List<String>): List<RefFamily>
 
     /** Ignore duplicates: the unique index on raw_hash makes re-ingesting the same message a no-op. */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -139,6 +139,8 @@ interface UnknownMessageDao {
 }
 
 data class SenderCount(val sender: String, val n: Int)
+
+data class RefFamily(@androidx.room.ColumnInfo(name = "external_ref") val externalRef: String, @androidx.room.ColumnInfo(name = "family_id") val familyId: String)
 
 @Dao
 interface CategoryDao {

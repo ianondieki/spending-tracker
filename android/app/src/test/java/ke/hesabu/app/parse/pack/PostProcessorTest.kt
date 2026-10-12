@@ -13,6 +13,7 @@ class PostProcessorTest {
         override val accountRef: String = "mpesa:a",
         override val provider: String = "mpesa",
         override val externalRef: String? = null,
+        override val familyId: String = "fam",
         override val rawHash: String = id,
         override val type: String = "SEND_MONEY",
         override val direction: String = "out",
@@ -32,9 +33,10 @@ class PostProcessorTest {
             Row("3", rawHash = "h1"),
             Row("4", rawHash = "h1"),
             Row("5", externalRef = "ABC", provider = "airtel_money"),
+            Row("6", externalRef = "ABC", familyId = "fuliza_drawdown"), // same code, different family: kept
         )
         val d = PostProcessor.dedupe(rows)
-        assertEquals(listOf("1", "3", "5"), d.kept.map { it.id })
+        assertEquals(listOf("1", "3", "5", "6"), d.kept.map { it.id })
         assertEquals(2, d.droppedCount)
         val again = PostProcessor.dedupe(listOf(Row("6", externalRef = "ABC")), existingKeys = d.kept.map(PostProcessor::dedupeKey).toSet())
         assertEquals(0, again.kept.size)
