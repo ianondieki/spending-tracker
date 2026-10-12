@@ -20,27 +20,9 @@ import ke.hesabu.app.ui.theme.HesabuTheme
  */
 
 @Composable
-fun HomeScreen() = PlaceholderScreen(
-    title = stringResource(R.string.nav_home),
-    body = stringResource(R.string.placeholder_home),
-)
-
-@Composable
-fun TransactionsScreen() = PlaceholderScreen(
-    title = stringResource(R.string.nav_transactions),
-    body = stringResource(R.string.placeholder_transactions),
-)
-
-@Composable
 fun ReportsScreen() = PlaceholderScreen(
     title = stringResource(R.string.nav_reports),
     body = stringResource(R.string.placeholder_reports),
-)
-
-@Composable
-fun SettingsScreen() = PlaceholderScreen(
-    title = stringResource(R.string.nav_settings),
-    body = stringResource(R.string.placeholder_settings),
 )
 
 @Composable
@@ -69,8 +51,3 @@ private fun PlaceholderScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun HomeScreenPreview() {
-    HesabuTheme { HomeScreen() }
-}

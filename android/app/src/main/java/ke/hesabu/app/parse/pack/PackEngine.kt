@@ -22,6 +22,13 @@ class PackEngine(
 
     fun isKnownSender(sender: String): Boolean = senderKey(sender) in bySender
 
+    /** The account key a message from [sender] would be filed under (first pack claiming the sender), or null. */
+    fun accountRefFor(sender: String): String? = bySender[senderKey(sender)]?.firstOrNull()?.let { cp ->
+        Regex("""\{([a-z0-9_]+)\}""").replace(cp.pack.accountRefTemplate) { m -> deviceVars[m.groupValues[1]] ?: "default" }
+    }
+
+    fun providerFor(sender: String): String? = bySender[senderKey(sender)]?.firstOrNull()?.pack?.provider
+
     fun parse(message: InboundMessage): ParseResult {
         val candidates = bySender[senderKey(message.sender)] ?: return ParseResult.NotMoneySender
         for (cp in candidates) {
