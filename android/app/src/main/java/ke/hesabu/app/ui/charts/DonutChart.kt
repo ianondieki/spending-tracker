@@ -1,5 +1,6 @@
 package ke.hesabu.app.ui.charts
 
+import ke.hesabu.app.ui.components.tabularDigits
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -92,8 +93,8 @@ fun DonutChart(data: DonutData, modifier: Modifier = Modifier) {
 
             // Centre: the total out, shrunk to the small numeral size when it would not clear the hole.
             val hole = diameter - 2 * ring
-            val bigLayout = measurer.measure(total, centreBig)
-            val valueLayout = if (bigLayout.size.width <= hole * 0.9f) bigLayout else measurer.measure(total, centreSmall)
+            val bigLayout = measurer.measure(tabularDigits(total), centreBig)
+            val valueLayout = if (bigLayout.size.width <= hole * 0.9f) bigLayout else measurer.measure(tabularDigits(total), centreSmall)
             val labelLayout = measurer.measure(centreLabel, centreLabelStyle)
             val blockHeight = labelLayout.size.height + valueLayout.size.height
             drawText(labelLayout, topLeft = Offset(centre.x - labelLayout.size.width / 2f, centre.y - blockHeight / 2f))
@@ -115,7 +116,7 @@ fun DonutChart(data: DonutData, modifier: Modifier = Modifier) {
                         constraints = Constraints(maxWidth = maxWidth),
                     )
                     val amountLayout = measurer.measure(
-                        "${Money.formatKsh(top.cents)}, ${top.sharePct}%", valueStyle, overflow = TextOverflow.Ellipsis, maxLines = 1,
+                        tabularDigits("${Money.formatKsh(top.cents)}, ${top.sharePct}%"), valueStyle, overflow = TextOverflow.Ellipsis, maxLines = 1,
                         constraints = Constraints(maxWidth = maxWidth),
                     )
                     val textHeight = nameLayout.size.height + amountLayout.size.height

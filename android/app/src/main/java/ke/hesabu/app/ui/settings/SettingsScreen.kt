@@ -54,6 +54,7 @@ fun SettingsScreen(
         onServerUrl = vm::setServerUrl,
         onEmail = { vm.set(SettingsKeys.Email, it.trim()) },
         onWhatsapp = { vm.set(SettingsKeys.WhatsappE164, it.trim()) },
+        onNumber = vm::setMsisdn,
         onLocale = { vm.set(SettingsKeys.Locale, it) },
         onWeeklyAt = { vm.set(SettingsKeys.WeeklyAt, it) },
         onMonthlyAt = { vm.set(SettingsKeys.MonthlyAt, it) },
@@ -75,6 +76,7 @@ fun SettingsContent(
     onServerUrl: (String) -> Unit = {},
     onEmail: (String) -> Unit = {},
     onWhatsapp: (String) -> Unit = {},
+    onNumber: (String) -> Unit = {},
     onLocale: (String) -> Unit = {},
     onWeeklyAt: (String) -> Unit = {},
     onMonthlyAt: (String) -> Unit = {},
@@ -105,6 +107,11 @@ fun SettingsContent(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SecondaryButton(stringResource(R.string.settings_sync_now), onSyncNow, enabled = s.syncConfigured && !state.busy)
             }
+        }
+
+        Sheet(title = stringResource(R.string.settings_number_title)) {
+            Text(stringResource(R.string.settings_number_body), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft)
+            SavedField(s.simMsisdnMasked, stringResource(R.string.settings_number_label), KeyboardType.Phone, onNumber)
         }
 
         Sheet(title = stringResource(R.string.settings_delivery_title)) {

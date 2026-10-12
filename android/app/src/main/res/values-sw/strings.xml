@@ -8,11 +8,6 @@
     <string name="nav_reports">Ripoti</string>
     <string name="nav_settings">Mipangilio</string>
 
-    <string name="placeholder_home">Pesa zako, mahali pamoja.</string>
-    <string name="placeholder_transactions">Kila ujumbe wa M-Pesa, Airtel Money na benki, unasomwa kwenye simu hii.</string>
-    <string name="placeholder_reports">Ripoti za wiki na mwezi zitaonekana hapa.</string>
-    <string name="placeholder_settings">Ruhusa, utumaji na faragha.</string>
-    <string name="placeholder_coming_soon">Inakuja hivi karibuni</string>
 
     <string name="money_a11y">shilingi %1$s</string>
 
@@ -273,4 +268,8 @@
         <item quantity="one">Ujumbe 1 wa kuweka lebo</item>
         <item quantity="other">Jumbe %d za kuweka lebo</item>
     </plurals>
+
+    <string name="settings_number_title">Nambari yako ya M-PESA</string>
+    <string name="settings_number_body">Hutumika tu kuweka lebo kwenye akaunti yako. Hesabu huhifadhi tarakimu mbili za kwanza na tatu za mwisho.</string>
+    <string name="settings_number_label">Nambari ya simu</string>
 </resources>

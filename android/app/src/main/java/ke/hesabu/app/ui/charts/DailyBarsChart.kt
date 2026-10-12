@@ -1,5 +1,6 @@
 package ke.hesabu.app.ui.charts
 
+import ke.hesabu.app.ui.components.tabularDigits
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,7 +56,7 @@ fun DailyBarsChart(data: DailyBarsData, modifier: Modifier = Modifier) {
 
     Column(modifier.fillMaxWidth()) {
         Canvas(Modifier.fillMaxWidth().height(200.dp)) {
-            val tickLayouts = ticks.map { measurer.measure(ChartScale.compact(it), tickStyle) }
+            val tickLayouts = ticks.map { measurer.measure(tabularDigits(ChartScale.compact(it)), tickStyle) }
             val axisWidth = tickLayouts.maxOf { it.size.width } + 8.dp.toPx()
             val xBand = 22.dp.toPx()
             val capBand = 22.dp.toPx()
@@ -111,7 +112,7 @@ fun DailyBarsChart(data: DailyBarsData, modifier: Modifier = Modifier) {
             // The spendiest day's amount on its cap, kept inside the plot.
             if (spendiest != null) {
                 val bar = data.bars[spendiest]
-                val l = measurer.measure(Money.formatKsh(bar.cents), capStyle)
+                val l = measurer.measure(tabularDigits(Money.formatKsh(bar.cents)), capStyle)
                 val cx = plotLeft + slot * (spendiest + 0.5f)
                 val x = (cx - l.size.width / 2f).coerceIn(plotLeft, plotRight - l.size.width)
                 drawText(l, topLeft = Offset(x, y(bar.cents) - l.size.height - 4.dp.toPx()))

@@ -19,8 +19,14 @@ ANDROID_HOME=/opt/android-sdk && ./gradlew assembleDebug testDebugUnitTest lint 
    transfer pairing (10 minutes, opposite directions, different accounts, hint or self/bank; never withdrawals),
    balance-chain breaks (advisory only). Packs load from `assets/provider-packs/` (copied from `contracts/` by Gradle)
    plus `assets/provider-packs-builtin/` whose packs yield per sender to any contract pack. The built-in M-Pesa pack
-   has 22 families and 38 examples and reads 31 of the 32 redacted public M-Pesa samples in `corpus/` (the Kiswahili
-   send is the gap); `PackExamplesTest` runs every example of every loaded pack, `CorpusCoverageTest` runs `corpus/`.
+   has 22 families and 38 examples; once Lane D's packs are present it is dropped and the contract packs (M-Pesa
+   0.2.0 with 28 families, Airtel Money, the demo bank) run instead, reading all 35 known-sender samples in `corpus/`.
+   `PackExamplesTest` runs every example of every loaded pack, `CorpusCoverageTest` runs `corpus/`, and `ParityTest`
+   asserts this engine's canonical dump of every corpus file and the demo inbox is byte-identical to the TypeScript
+   engine's `corpus/expected/` files (the nine clarifications in `packages/pack-engine/README.md` are mirrored:
+   no-break spaces, 4000-character cap, first pack decides, last non-null group wins, redacted and masked digits,
+   account-reference masking, the datetime mini-language, deterministic ids, closest-in-time transfer pairs, and the
+   Fuliza-before-payment balance chain).
 3. **Ingestion.** Welcome → prominent disclosure (lists the sender ids actually read, what leaves the phone, how to
    revoke) → `RECEIVE_SMS`, `READ_SMS`, `POST_NOTIFICATIONS` request → backfill progress (per-sender tally, double
    rule, total) → per-OEM background guidance (Transsion, Xiaomi, OPPO, vivo, Huawei, Samsung, other) with the battery
@@ -63,7 +69,8 @@ ingest pipeline (in-memory Room), text import, demo inbox, periods, screen smoke
 - Kiswahili copy is machine-drafted and tagged `[[COPY-REVIEW]]`; category names in Kiswahili likewise.
 - The built-in pack is English-only; Airtel Money, T-Kash and bank packs come from Lane D (`contracts/provider-packs/`).
   `CorpusCoverageTest` will show exactly what the merged packs miss.
-- `sim_msisdn_masked` is a Settings value (`SimMsisdnMasked`) not yet exposed in the UI; account refs use `default`.
+- The M-PESA number is a Settings field stored masked; messages read before it is set stay filed under
+  `mpesa:default` (dedupe keeps the first copy), so set it during onboarding in a later iteration.
 - Notifications (report ready) are not implemented; the permission is requested for later use.
 - SQLCipher runs only on a device; JVM tests use plain in-memory Room. Instrumented tests need an emulator.
 - Lighthouse/axe do not apply to Compose; TalkBack labels and 48 dp targets were checked by hand in the screenshots.

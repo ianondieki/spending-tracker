@@ -59,6 +59,12 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
         graph.secrets.deviceToken = null
     }
 
+    /** Stored masked (07XXXXX123); the full number never persists. Takes effect for messages read from now on. */
+    fun setMsisdn(raw: String) = viewModelScope.launch {
+        val masked = ke.hesabu.app.parse.pack.Normalisers.phone(raw) ?: ""
+        graph.settings.set(SettingsKeys.SimMsisdnMasked, masked)
+    }
+
     fun setDemoMode(context: Context, on: Boolean) = viewModelScope.launch {
         transient.value = transient.value.copy(busy = true, message = null)
         val demo = DemoMode(context, graph)

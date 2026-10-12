@@ -33,6 +33,8 @@ import ke.hesabu.app.ui.onboarding.OemGuidance
 import ke.hesabu.app.ui.onboarding.OemGuidanceScreen
 import ke.hesabu.app.ui.onboarding.OnboardingFlow
 import ke.hesabu.app.ui.onboarding.PermissionStep
+import ke.hesabu.app.ui.reports.ReportScreen
+import ke.hesabu.app.ui.reports.ReportsScreen
 import ke.hesabu.app.ui.settings.PasteImportScreen
 import ke.hesabu.app.ui.settings.SettingsScreen
 import ke.hesabu.app.ui.theme.HesabuTheme
@@ -141,7 +143,8 @@ fun HesabuNavHost(navController: NavHostController, modifier: Modifier = Modifie
                 onOpenImport = { navController.navigate(Routes.IMPORT) },
             )
         }
-        composable(Destination.Reports.route) { ReportsScreen() }
+        composable(Destination.Reports.route) { ReportsScreen(onOpenReport = { navController.navigate(Routes.report(it)) }) }
+        composable(Routes.REPORT) { entry -> ReportScreen(reportId = entry.arguments?.getString("id") ?: "", onBack = { navController.popBackStack() }) }
         composable(Destination.Settings.route) {
             SettingsScreen(
                 onOpenImport = { navController.navigate(Routes.IMPORT) },

@@ -1,5 +1,6 @@
 package ke.hesabu.app.ui.reports
 
+import ke.hesabu.app.ui.components.tabularDigits
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -115,7 +116,7 @@ private fun TableLine(
         widths.forEachIndexed { c, w ->
             val isNumber = c in numeric
             Text(
-                cells.getOrNull(c).orEmpty(),
+                if (isNumber) tabularDigits(cells.getOrNull(c).orEmpty()) else androidx.compose.ui.text.AnnotatedString(cells.getOrNull(c).orEmpty()),
                 style = if (isNumber) figureStyle else textStyle,
                 color = if (header) HesabuTheme.colors.inkSoft else HesabuTheme.colors.ink,
                 textAlign = if (isNumber) TextAlign.End else TextAlign.Start,

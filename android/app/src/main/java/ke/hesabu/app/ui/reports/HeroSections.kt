@@ -1,5 +1,6 @@
 package ke.hesabu.app.ui.reports
 
+import ke.hesabu.app.ui.components.tabularDigits
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,7 +79,7 @@ private fun DeltaLine(delta: String, direction: String, kind: String, modifier: 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        if (figure != null) Text(figure, style = HesabuTheme.money.small, color = HesabuTheme.colors.ink)
+        if (figure != null) Text(tabularDigits(figure), style = HesabuTheme.money.small, color = HesabuTheme.colors.ink)
         Text(phrase, style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft)
     }
 }
@@ -112,9 +113,9 @@ private fun KpiCell(item: KpiItem, modifier: Modifier = Modifier) {
             },
     ) {
         Text(item.label, style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft, maxLines = 2)
-        Text(item.value, style = HesabuTheme.money.emphasis, color = color, modifier = Modifier.padding(top = 4.dp))
+        Text(tabularDigits(item.value), style = HesabuTheme.money.emphasis, color = color, modifier = Modifier.padding(top = 4.dp))
         if (!item.delta.isNullOrBlank()) {
-            Text(item.delta, style = HesabuTheme.money.small, color = HesabuTheme.colors.inkSoft, modifier = Modifier.padding(top = 2.dp))
+            Text(tabularDigits(item.delta), style = HesabuTheme.money.small, color = HesabuTheme.colors.inkSoft, modifier = Modifier.padding(top = 2.dp))
         }
     }
 }

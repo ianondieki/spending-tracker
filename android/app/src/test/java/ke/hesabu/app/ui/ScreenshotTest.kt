@@ -18,6 +18,11 @@ import ke.hesabu.app.ui.onboarding.DisclosureScreen
 import ke.hesabu.app.ui.onboarding.OemGuidance
 import ke.hesabu.app.ui.onboarding.OemGuidanceScreen
 import ke.hesabu.app.ui.onboarding.WelcomeScreen
+import ke.hesabu.app.ui.reports.ReportScreenContent
+import ke.hesabu.app.ui.reports.ReportViewModel
+import ke.hesabu.app.ui.reports.ReportsScreenContent
+import ke.hesabu.app.ui.reports.ReportsViewModel
+import ke.hesabu.app.ui.reports.SampleReport
 import ke.hesabu.app.ui.settings.PasteImportContent
 import ke.hesabu.app.ui.settings.SettingsContent
 import ke.hesabu.app.ui.settings.SettingsViewModel
@@ -135,6 +140,20 @@ class ScreenshotTest(private val width: Int, private val height: Int, private va
 
     @Test
     fun pasteImport() = shoot("import") { PasteImportContent(false, IngestPipeline.Report(received = 3, parsed = 2, duplicates = 1), 0, {}, {}) }
+
+    @Test
+    fun reports() = shoot("reports") {
+        ReportsScreenContent(
+            state = ReportsViewModel.UiState.Ready(weekly = listOf(SampleReport.detail.summary), monthly = emptyList(), source = ke.hesabu.app.ui.reports.ReportsRepository.Source.Server, serverConfigured = false, demoMode = false),
+            generate = ReportsViewModel.GenerateState.Idle,
+            onOpenReport = {}, onRetry = {}, onGenerate = {},
+        )
+    }
+
+    @Test
+    fun report() = shoot("report") {
+        ReportScreenContent(state = ReportViewModel.UiState.Ready(SampleReport.detail), share = ReportViewModel.ShareState.Idle, onBack = {}, onRetry = {}, onShare = {})
+    }
 
     @Test
     fun welcome() = shoot("onboarding-welcome") { WelcomeScreen({}, {}) }
