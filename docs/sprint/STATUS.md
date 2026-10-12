@@ -8,8 +8,8 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
   backfill, live receiver, 6-hourly reconciliation, encrypted ledger (SQLCipher), categorisation from the bundled
   taxonomy, transfer matching, balance-chain checks, sync to the backend, Home, Transactions (search, filters,
   correction, "Teach Hesabu"), Accounts, Reports (native charts, share hero PNG and PDF), Settings, demo mode,
-  share-to-app and paste import with a confirm step, prominent SMS disclosure, per-OEM background guidance.
-  293 unit tests; screenshots at 360 and 412 px in both themes under `android/screenshots/`.
+  share-to-app and paste import with a confirm step, prominent SMS disclosure, per-OEM background guidance,
+  WhatsApp JOIN-code and email confirmation rows in Settings. 303 unit tests; screenshots at 360 and 412 px in both themes under `android/screenshots/`.
 - **Backend** (`apps/api`, `apps/worker`): device-token auth with expiry and revocation, tenant-scoped Postgres with
   row-level security, sync, preferences, report generation (facts engine, insight selection, writer, fact-checker,
   numbers-only fallback), renderer (hero PNG, chart PNGs, A4 PDF, email), email and WhatsApp delivery adapters with
@@ -45,6 +45,5 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
 
 ## Known gaps
 
-Join code and email verification are not yet shown in the app's Settings (the API has them; package in progress).
 Automated WhatsApp to numbers other than Meta's five test recipients needs business verification. No real bank
 message formats yet. Ask assistant, local-only mode and statement import are out of the day-one scope.
