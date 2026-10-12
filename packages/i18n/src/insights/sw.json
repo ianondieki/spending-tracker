@@ -1,0 +1,170 @@
+{
+  "spend_vs_last": {
+    "headline": "Umetumia {out}, ukilinganisha na {previous_out} kipindi kilichopita",
+    "body": "Mabadiliko ni {delta} ({delta_pct}).",
+    "variant_param": "direction",
+    "variants": {
+      "up": {
+        "headline": "Matumizi yamepanda hadi {out}, kutoka {previous_out}",
+        "body": "Hayo ni mabadiliko ya {delta} ({delta_pct}) ukilinganisha na kipindi kilichopita. Aina za matumizi zinaonyesha ziada ilikwenda wapi."
+      },
+      "down": {
+        "headline": "Matumizi yameshuka hadi {out}, kutoka {previous_out}",
+        "body": "Hayo ni mabadiliko ya {delta} ({delta_pct}) ukilinganisha na kipindi kilichopita."
+      },
+      "flat": {
+        "headline": "Matumizi yamebaki {out}",
+        "body": "Sawa kabisa na kipindi kilichopita, {previous_out}."
+      },
+      "na": {
+        "headline": "Umetumia {out}",
+        "body": "Bado hakuna kipindi cha awali chenye matumizi cha kulinganisha, kwa hivyo hapa ndipo mwanzo wako."
+      }
+    }
+  },
+  "top_category": {
+    "headline": "{category_sw} ndiyo ilichukua pesa nyingi zaidi: {out}",
+    "body": "Hiyo ni {share} ya matumizi yako yote katika kipindi hiki."
+  },
+  "biggest_transaction": {
+    "headline": "Malipo yako makubwa zaidi: {amount} kwa {counterparty}",
+    "body": "Yalitoka tarehe {date}. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako."
+  },
+  "new_merchant": {
+    "headline": "Ulilipa mahali papya: {merchant}",
+    "body": "Hii ni mara ya kwanza {merchant} kuonekana kwenye jumbe zako. Jumla hadi sasa: {out}. Idadi ya malipo: {count}."
+  },
+  "duplicate_payment": {
+    "headline": "Huenda ulilipa {merchant} mara mbili",
+    "body": "Tuliona malipo {count} ya {amount} kwa {merchant} kwa muda mfupi. Kama ulikusudia kulipa mara moja tu, huenda ikafaa kuwauliza."
+  },
+  "unusual_amount": {
+    "headline": "Kiasi kisicho cha kawaida kwa {merchant}: {amount}",
+    "body": "Kwa kawaida hulipa takriban {typical} hapo."
+  },
+  "fees_total": {
+    "headline": "Ulilipa {fees} kama ada",
+    "body": "Ada zilikuwa {fee_ratio} ya matumizi yako. Idadi ya makato: {count}. Ada za kutuma, kutoa pesa, Fuliza na benki zote zimejumuishwa."
+  },
+  "fee_ratio_change": {
+    "headline": "Ada zilikuwa {fee_ratio} ya matumizi yako, ukilinganisha na {previous_fee_ratio} awali",
+    "body": "Hii inahesabu kila ada kwenye jumbe zako: kutuma, kutoa pesa, Fuliza na benki.",
+    "variant_param": "direction",
+    "variants": {
+      "up": {
+        "headline": "Ada zimechukua sehemu kubwa zaidi: {fee_ratio} ya matumizi, kutoka {previous_fee_ratio}",
+        "body": "Ada za kutuma, kutoa pesa na Fuliza hujilimbikiza kimya kimya. Sehemu ya ada inaonyesha zipi ziliongezeka."
+      },
+      "down": {
+        "headline": "Ada zimechukua sehemu ndogo zaidi: {fee_ratio} ya matumizi, kutoka {previous_fee_ratio}",
+        "body": "Ada za kutuma, kutoa pesa na Fuliza zilikuwa chache au ndogo zaidi safari hii."
+      }
+    }
+  },
+  "fuliza_usage": {
+    "headline": "Ulitumia Fuliza ya {drawdown}",
+    "body": "Ulirejesha {repaid}. Gharama za Fuliza zilikuwa {cost}. Siku ulizokuwa kwenye Fuliza: {days}."
+  },
+  "cash_withdrawn": {
+    "headline": "Ulitoa pesa taslimu {amount}",
+    "body": "Idadi ya mara ulizotoa: {count}. Unachotumia kwa pesa taslimu hakionekani kwenye jumbe zako, kwa hivyo kinabaki kama jumla moja hapa."
+  },
+  "savings_rate": {
+    "headline": "Uliweka akiba {rate} ya mapato yako",
+    "body": "Pesa {savings} zilienda kwenye akiba, kati ya {income} zilizoingia."
+  },
+  "income_received": {
+    "headline": "Pesa zilizoingia: {income}",
+    "body": "Malipo uliyopokea: {count}. Chanzo kikubwa zaidi kilikuwa {top_source}."
+  },
+  "sent_to_people": {
+    "headline": "Ulituma {total} kwa watu",
+    "body": "Idadi ya miamala kwa watu: {count}. Kiasi kikubwa zaidi kilienda kwa {top_person}: {top_amount}."
+  },
+  "spendiest_day": {
+    "headline": "{weekday_sw} ndiyo siku uliyotumia zaidi",
+    "body": "Ulitumia {out} tarehe {date}."
+  },
+  "weekend_share": {
+    "headline": "Wikendi zilichukua {share} ya matumizi yako",
+    "body": "{weekend_out} Jumamosi na Jumapili, ukilinganisha na {weekday_out} kuanzia Jumatatu hadi Ijumaa."
+  },
+  "late_night_spend": {
+    "headline": "{out} zilitumika usiku wa manane",
+    "body": "Malipo ya usiku: {count}. Ni rahisi kuyasahau, kwa hivyo tumeyaweka pamoja hapa."
+  },
+  "budget_at_risk": {
+    "headline": "{category_sw} imefika {used} ya bajeti yake",
+    "body": "Umetumia {spent} kati ya {limit}. Kwa kasi hii mwezi utaisha karibu na {projected}."
+  },
+  "budget_over": {
+    "headline": "{category_sw} imepita bajeti yake",
+    "body": "Umetumia {spent} dhidi ya kikomo cha {limit}, yaani {used} ya bajeti."
+  },
+  "subscription_due": {
+    "headline": "Malipo ya {merchant} yanakaribia: {amount}",
+    "body": "Malipo yajayo yanatarajiwa karibu tarehe {next_expected}, kulingana na jinsi ulivyolipa awali."
+  },
+  "recurring_found": {
+    "headline": "{merchant} inaonekana kuwa malipo ya kawaida",
+    "body": "Unalipa takriban {amount} kila mara. Kujua malipo yako ya kawaida kunasaidia kuelewa mengine.",
+    "variant_param": "cadence",
+    "variants": {
+      "weekly": {
+        "headline": "{merchant} inaonekana kuwa malipo ya kila wiki",
+        "body": "Unalipa takriban {amount} kila wiki. Kujua malipo yako ya kawaida kunasaidia kuelewa mengine."
+      },
+      "monthly": {
+        "headline": "{merchant} inaonekana kuwa malipo ya kila mwezi",
+        "body": "Unalipa takriban {amount} kila mwezi. Kujua malipo yako ya kawaida kunasaidia kuelewa mengine."
+      }
+    }
+  },
+  "category_rising": {
+    "headline": "{category_sw} imepanda hadi {out}",
+    "body": "Mabadiliko kutoka kipindi kilichopita: {delta} ({delta_pct})."
+  },
+  "category_falling": {
+    "headline": "{category_sw} imeshuka hadi {out}",
+    "body": "Mabadiliko kutoka kipindi kilichopita: {delta} ({delta_pct})."
+  },
+  "personal_record": {
+    "headline": "Rekodi mpya: {value}",
+    "body": "Rekodi yako ya awali ilikuwa {previous_record}.",
+    "variant_param": "metric",
+    "variants": {
+      "out": {
+        "headline": "Rekodi mpya ya matumizi: {value}",
+        "body": "Rekodi yako ya awali ilikuwa {previous_record}."
+      },
+      "in": {
+        "headline": "Rekodi mpya ya pesa zilizoingia: {value}",
+        "body": "Rekodi yako ya awali ilikuwa {previous_record}."
+      },
+      "fees": {
+        "headline": "Rekodi mpya ya ada: {value}",
+        "body": "Rekodi yako ya awali ilikuwa {previous_record}."
+      }
+    }
+  },
+  "late_arrivals": {
+    "headline": "Jumbe zilizochelewa kufika: {count}",
+    "body": "Zinahusu kipindi cha awali, kwa hivyo zimehesabiwa hapa na ripoti ya awali imerekebishwa."
+  },
+  "unknown_messages": {
+    "headline": "Jumbe ambazo bado hatujaweza kusoma: {count}",
+    "body": "Hazimo kwenye jumla hizi. Ukizieleza kwenye Hesabu, ripoti zijazo zitakuwa kamili zaidi."
+  },
+  "month_projection": {
+    "headline": "Kwa kasi hii mwezi utaisha karibu na {projected}",
+    "body": "Umetumia {spent} katika siku {days_elapsed} za kwanza kati ya {days}."
+  },
+  "balance_low": {
+    "headline": "Salio lako la {account} liko chini: {balance}",
+    "body": "Hili ndilo salio la mwisho kwenye jumbe zako. Huenda malipo yajayo yakahitaji uongeze pesa kwanza."
+  },
+  "no_fees_week": {
+    "headline": "Hakuna ada katika kipindi hiki",
+    "body": "Ulitumia {out} bila kulipa ada yoyote."
+  }
+}

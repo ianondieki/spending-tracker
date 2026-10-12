@@ -20,5 +20,11 @@
     "test": "vitest run",
     "lint": "eslint .",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "fast-check": "^4.10.2"
   }
 }
