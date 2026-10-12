@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Platform-level colours only (window background, launcher icon). Compose colours live in ui/theme/Color.kt;
+         contracts/design-tokens.json is the source of truth for both. -->
+    <color name="window_background_light">#FFFBF7F2</color>
+    <color name="window_background_dark">#FF121311</color>
+    <color name="ic_launcher_background">#FF1F4D3A</color>
+</resources>

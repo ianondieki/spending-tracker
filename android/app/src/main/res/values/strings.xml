@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- [[NAME-REVIEW]] "Hesabu" is the working name. -->
+    <string name="app_name">Hesabu</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_reports">Reports</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Placeholder screen copy; real copy comes with the screens. [[COPY-REVIEW]] -->
+    <string name="placeholder_home">Your money, in one place.</string>
+    <string name="placeholder_transactions">Every M-Pesa, Airtel Money and bank message, parsed on this phone.</string>
+    <string name="placeholder_reports">Weekly and monthly reports will appear here.</string>
+    <string name="placeholder_settings">Permissions, delivery and privacy.</string>
+    <string name="placeholder_coming_soon">Coming soon</string>
+</resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Sync with the Hesabu API (derived ledger only; raw messages never leave the phone). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Live ingestion of money SMS as they arrive. -->
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <!-- One-off backfill of the existing inbox after the prominent-disclosure consent screen. -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- Report-ready and sync-problem notifications (runtime permission on Android 13+). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".HesabuApplication"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Hesabu"
+        tools:targetApi="35">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Hesabu"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Receives SMS_RECEIVED so new money messages are ingested while the app is not open.
+            The receiver itself only hands the message to the ingestion pipeline (stub for now);
+            parsing happens on-device against the provider packs in contracts/provider-packs/.
+        -->
+        <receiver
+            android:name=".ingest.SmsReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter android:priority="0">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

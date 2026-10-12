@@ -1,0 +1,14 @@
+# Gradle
+.gradle/
+build/
+.kotlin/
+# Local machine config (SDK path) — never commit
+local.properties
+# IDE
+*.iml
+.idea/
+.cxx/
+captures/
+# Signing material — never commit (see CLAUDE.md: secrets live outside the repo)
+*.jks
+*.keystore
