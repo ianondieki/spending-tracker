@@ -139,7 +139,7 @@ class ScreenshotTest(private val width: Int, private val height: Int, private va
     }
 
     @Test
-    fun pasteImport() = shoot("import") { PasteImportContent(false, IngestPipeline.Report(received = 3, parsed = 2, duplicates = 1), 0, {}, {}) }
+    fun pasteImport() = shoot("import") { PasteImportContent(false, null, 0, ke.hesabu.app.ingest.TextImport.Preview(linkedMapOf("buy_goods" to 2, "send_money" to 1), 1, 1, 5), {}, {}, {}) }
 
     @Test
     fun reports() = shoot("reports") {

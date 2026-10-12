@@ -34,6 +34,29 @@ class TextImport(private val engine: PackEngine, private val pipeline: IngestPip
         return Prepared(messages, skipped)
     }
 
+    /** What the text would become, without writing anything: counts per family, ignored and unrecognised blocks. */
+    data class Preview(val perFamily: Map<String, Int>, val ignored: Int, val unknown: Int, val blocks: Int) {
+        val parsed: Int get() = perFamily.values.sum()
+        val isEmpty: Boolean get() = blocks == 0
+    }
+
+    fun preview(text: String): Preview {
+        val blocks = split(text)
+        val perFamily = LinkedHashMap<String, Int>()
+        var ignored = 0
+        var unknown = 0
+        for (body in blocks) {
+            val sender = engine.senderFor(body)
+            if (sender == null) { unknown++; continue }
+            when (val r = engine.parse(InboundMessage(sender, body, 0))) {
+                is ParseResult.Parsed -> perFamily.merge(r.transaction.familyId, 1, Int::plus)
+                is ParseResult.Ignored -> ignored++
+                else -> unknown++
+            }
+        }
+        return Preview(perFamily, ignored, unknown, blocks.size)
+    }
+
     suspend fun import(text: String, receivedAtMillis: Long, source: MessageSource, tags: List<String> = emptyList()): Pair<IngestPipeline.Report, Int> {
         val prepared = prepare(text, receivedAtMillis, source)
         val report = pipeline.ingest(prepared.messages, tags)

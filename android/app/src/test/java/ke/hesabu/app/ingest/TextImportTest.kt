@@ -53,6 +53,18 @@ class TextImportTest {
     }
 
     @Test
+    fun previewCountsWithoutWritingAnything() = runTest {
+        val p = importer.preview("$send\n\nSome unrelated note\n\n$buy\n\nQJK3X8Y2N0 Confirmed. Your M-PESA balance was Ksh3,450.00 on 12/10/26 at 3:00 PM. Transaction cost, Ksh0.00.")
+        assertEquals(mapOf("send_money" to 1, "buy_goods" to 1), p.perFamily)
+        assertEquals(1, p.ignored)
+        assertEquals(1, p.unknown)
+        assertEquals(4, p.blocks)
+        assertEquals(2, p.parsed)
+        assertEquals(0, db.transactionDao().count())
+        assertEquals(0, db.unknownMessageDao().pendingCount())
+    }
+
+    @Test
     fun importsParsedBlocksAndKeepsTheRestAsUnknown() = runTest {
         val (report, skipped) = importer.import("$send\n\nSome unrelated note\n\n$buy", 0, MessageSource.Share)
         assertEquals(2, report.parsed)

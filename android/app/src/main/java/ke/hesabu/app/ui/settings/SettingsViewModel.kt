@@ -38,6 +38,8 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
         val message: String? = null,
         val importReport: IngestPipeline.Report? = null,
         val importSkipped: Int = 0,
+        /** What the pasted text would become; nothing is written until the user confirms. */
+        val importPreview: TextImport.Preview? = null,
     )
 
     private val transient = MutableStateFlow(State())
@@ -79,7 +81,7 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
 
     fun syncNow() = viewModelScope.launch {
         transient.value = transient.value.copy(busy = true, message = null)
-        val out = Syncer(graph) { url -> SyncClient(url, { graph.secrets.deviceToken }) }.syncOnce()
+        val out = Syncer(graph) { url -> graph.syncClient(url) }.syncOnce()
         transient.value = transient.value.copy(busy = false, message = "sync:${out.javaClass.simpleName.lowercase()}")
     }
 
@@ -89,14 +91,21 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
         transient.value = transient.value.copy(message = "rescan")
     }
 
+    /** Step one: parse only. Shared and pasted text is untrusted, so the user sees the counts before anything is kept. */
+    fun previewText(text: String) {
+        if (text.isBlank()) return
+        transient.value = transient.value.copy(importReport = null, importPreview = TextImport(graph.engine, graph.pipeline).preview(text))
+    }
+
+    /** Step two, after the confirm tap: write to the ledger and queue for sync. */
     fun importText(context: Context, text: String) = viewModelScope.launch {
         if (text.isBlank()) return@launch
-        transient.value = transient.value.copy(busy = true, importReport = null)
+        transient.value = transient.value.copy(busy = true, importReport = null, importPreview = null)
         graph.ensureTaxonomy()
         val (report, skipped) = TextImport(graph.engine, graph.pipeline).import(text, System.currentTimeMillis(), MessageSource.Import)
         if (report.parsed > 0) SyncScheduler.requestSoon(context)
         transient.value = transient.value.copy(busy = false, importReport = report, importSkipped = skipped)
     }
 
-    fun clearMessage() { transient.value = transient.value.copy(message = null, importReport = null) }
+    fun clearMessage() { transient.value = transient.value.copy(message = null, importReport = null, importPreview = null) }
 }

@@ -103,7 +103,7 @@ class ScreensSmokeTest {
 
     @Test
     fun importRenders() {
-        compose.setContent { HesabuTheme { PasteImportContent(false, null, 0, {}, {}) } }
+        compose.setContent { HesabuTheme { PasteImportContent(false, null, 0, null, {}, {}, {}) } }
         compose.onNodeWithText("Read messages").assertIsDisplayed()
     }
 }
