@@ -18,6 +18,7 @@ const env = {
 };
 
 const FIXED_NOW = new Date('2026-10-12T09:00:00+03:00'); // Monday
+const TS = String(Math.floor(FIXED_NOW.getTime() / 1000) - 30); // a Meta event stamped 30 s before "now"
 
 function sampleTransaction(id: string, extra: Record<string, unknown> = {}) {
   return {
@@ -247,8 +248,8 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
 
     const payload = JSON.stringify({
       entry: [{ changes: [{ value: {
-        statuses: [{ id: 'wamid.ABC', status: 'delivered' }, { id: 'wamid.unknown', status: 'read' }],
-        messages: [{ from: '254700000123', type: 'text', text: { body: 'STOP' } }],
+        statuses: [{ id: 'wamid.ABC', status: 'delivered', timestamp: TS }, { id: 'wamid.unknown', status: 'read', timestamp: TS }],
+        messages: [{ from: '254700000123', type: 'text', timestamp: TS, text: { body: 'STOP' } }],
       } }] }],
     });
     const unsigned = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload });
@@ -256,9 +257,33 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
     const signed = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload });
     expect(signed.status).toBe(200);
-    expect(await signed.json()).toEqual({ ok: true, statuses: 1, commands: 1 });
+    expect(await signed.json()).toEqual({ ok: true, statuses: 1, commands: 1, stale: 0 });
     expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')?.status).toBe('delivered');
     expect(await tenant.hasConsent('whatsapp_delivery')).toBe(false);
+  });
+
+  it('M1: webhooks fail closed in production without their secrets, and old Meta events are ignored', async () => {
+    const prod = createApp({ db, env: { ...env, WHATSAPP_APP_SECRET: '', RESEND_WEBHOOK_SECRET: '', NODE_ENV: 'production' }, now: () => FIXED_NOW });
+    expect((await prod.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(503);
+    expect((await prod.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(503);
+    const dev = createApp({ db, env: { ...env, WHATSAPP_APP_SECRET: '', RESEND_WEBHOOK_SECRET: '' }, now: () => FIXED_NOW });
+    expect((await dev.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status).toBe(200);
+    // Replay: a status event stamped ten minutes ago changes nothing.
+    const tenant = db.forUser(userId);
+    const report = (await tenant.listReports('weekly'))[0]!;
+    const delivery = await tenant.ensureDelivery(report.id, 'whatsapp');
+    await tenant.updateDelivery(delivery.id, { status: 'sent', provider_message_id: 'wamid.OLD' });
+    const old = String(Math.floor(FIXED_NOW.getTime() / 1000) - 600);
+    const payload = JSON.stringify({ entry: [{ changes: [{ value: { statuses: [{ id: 'wamid.OLD', status: 'failed', timestamp: old, errors: [{ code: 131026, title: 'free text <script>' }] }] } }] }] });
+    const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
+    const res = await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload });
+    expect(await res.json()).toEqual({ ok: true, statuses: 0, commands: 0, stale: 1 });
+    expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')?.status).toBe('sent');
+    // A fresh failure stores only an error code, never the provider's text.
+    const fresh = payload.replace(old, TS);
+    const sig2 = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(fresh).digest('hex');
+    await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig2 }, body: fresh });
+    expect((await tenant.listDeliveries(report.id)).find((d) => d.channel === 'whatsapp')).toMatchObject({ status: 'failed', last_error: 'whatsapp_error_131026' });
   });
 
   it('B1/M2: JOIN needs the user’s code, proves the sender’s number, and a changed number loses the consent', async () => {
@@ -267,7 +292,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(prefs.join_code).toMatch(/^[A-F0-9]{8}$/);
     expect(prefs.whatsapp_verified).toBe(false);
     const send = async (from: string, body: string) => {
-      const payload = JSON.stringify({ entry: [{ changes: [{ value: { messages: [{ from, type: 'text', text: { body } }] } }] }] });
+      const payload = JSON.stringify({ entry: [{ changes: [{ value: { messages: [{ from, type: 'text', timestamp: TS, text: { body } }] } }] }] });
       const sig = 'sha256=' + createHmac('sha256', env.WHATSAPP_APP_SECRET).update(payload).digest('hex');
       return (await (await app.request('/webhooks/whatsapp', { method: 'POST', headers: { 'content-type': 'application/json', 'x-hub-signature-256': sig }, body: payload })).json()) as { commands: number };
     };
@@ -332,7 +357,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(await res.json()).toEqual({ ok: true, handled: true });
     const d = (await tenant.listDeliveries(report.id)).find((x) => x.channel === 'email');
     expect(d?.status).toBe('failed');
-    expect(d?.last_error).toBe('mailbox full');
+    expect(d?.last_error).toBe('bounced');
     expect(await tenant.hasConsent('email_delivery')).toBe(false);
     const miss = await app.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'email.delivered', data: { email_id: 'nope' } }) });
     expect(await miss.json()).toEqual({ ok: true, handled: false });

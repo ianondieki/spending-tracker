@@ -5,8 +5,23 @@ import { Hono } from 'hono';
 
 import type { ApiConfig } from '../env.js';
 
-type WaStatus = { id?: string; status?: string; errors?: { title?: string; message?: string }[] };
-type WaMessage = { from?: string; type?: string; text?: { body?: string } };
+type WaStatus = { id?: string; status?: string; timestamp?: string; errors?: { code?: number; title?: string; message?: string }[] };
+type WaMessage = { from?: string; type?: string; timestamp?: string; text?: { body?: string } };
+
+/** Meta events older than this are ignored (replay window). */
+export const MAX_EVENT_AGE_SECONDS = 5 * 60;
+
+export function isFresh(timestamp: string | undefined, now: Date): boolean {
+  if (!timestamp || !/^\d{9,11}$/.test(timestamp)) return false;
+  const ageSeconds = now.getTime() / 1000 - Number(timestamp);
+  return ageSeconds <= MAX_EVENT_AGE_SECONDS && ageSeconds >= -60;
+}
+
+function safeEqual(a: string, b: string): boolean {
+  const ab = Buffer.from(a);
+  const bb = Buffer.from(b);
+  return ab.length === bb.length && timingSafeEqual(ab, bb);
+}
 interface WaPayload {
   entry?: { changes?: { value?: { statuses?: WaStatus[]; messages?: WaMessage[] } }[] }[];
 }
@@ -26,19 +41,21 @@ export function verifyMetaSignature(rawBody: string, header: string | undefined,
 }
 
 /** Meta WhatsApp Cloud API webhook: verification handshake, delivery statuses, inbound JOIN/STOP. */
-export function whatsappWebhook(db: Db, config: ApiConfig): Hono {
+export function whatsappWebhook(db: Db, config: ApiConfig, now: () => Date = () => new Date()): Hono {
   const r = new Hono();
 
   r.get('/webhooks/whatsapp', (c) => {
     if (!config.whatsappVerifyToken) return c.text('WHATSAPP_VERIFY_TOKEN is not set', 503);
     const mode = c.req.query('hub.mode');
-    const token = c.req.query('hub.verify_token');
+    const token = c.req.query('hub.verify_token') ?? '';
     const challenge = c.req.query('hub.challenge') ?? '';
-    if (mode === 'subscribe' && token === config.whatsappVerifyToken) return c.text(challenge, 200);
+    if (mode === 'subscribe' && safeEqual(token, config.whatsappVerifyToken)) return c.text(challenge, 200);
     return c.text('forbidden', 403);
   });
 
   r.post('/webhooks/whatsapp', async (c) => {
+    // Fail closed: in production an unsigned webhook is a disabled webhook (M1).
+    if (!config.whatsappAppSecret && config.isProduction) return c.text('WHATSAPP_APP_SECRET is not set; webhook disabled', 503);
     const raw = await c.req.text();
     if (config.whatsappAppSecret && !verifyMetaSignature(raw, c.req.header('x-hub-signature-256'), config.whatsappAppSecret)) {
       return c.text('bad signature', 401);
@@ -51,12 +68,19 @@ export function whatsappWebhook(db: Db, config: ApiConfig): Hono {
     }
     let statuses = 0;
     let commands = 0;
+    let stale = 0;
+    const clock = now();
     for (const entry of payload.entry ?? []) {
       for (const change of entry.changes ?? []) {
         for (const s of change.value?.statuses ?? []) {
           const mapped = s.status ? STATUS_MAP[s.status] : undefined;
           if (!s.id || !mapped) continue;
-          const err = s.errors?.[0] ? `${s.errors[0].title ?? ''} ${s.errors[0].message ?? ''}`.trim() : null;
+          if (!isFresh(s.timestamp, clock)) {
+            stale += 1;
+            continue;
+          }
+          // Only an enum-like code is stored, never provider free text (it is shown in the app).
+          const err = s.errors?.[0] ? `whatsapp_error_${s.errors[0].code ?? 'unknown'}` : null;
           const hit = await db.system.updateDeliveryByProviderMessageId(s.id, mapped, mapped === 'failed' ? err : null);
           if (hit) {
             statuses += 1;
@@ -65,6 +89,10 @@ export function whatsappWebhook(db: Db, config: ApiConfig): Hono {
         }
         for (const m of change.value?.messages ?? []) {
           if (m.type !== 'text' || !m.from || !/^\d{7,15}$/.test(m.from)) continue;
+          if (!isFresh(m.timestamp, clock)) {
+            stale += 1;
+            continue;
+          }
           const from = `+${m.from}`;
           const text = (m.text?.body ?? '').trim().toUpperCase();
           if (text === 'STOP') {
@@ -86,7 +114,7 @@ export function whatsappWebhook(db: Db, config: ApiConfig): Hono {
         }
       }
     }
-    return c.json({ ok: true, statuses, commands });
+    return c.json({ ok: true, statuses, commands, stale });
   });
 
   return r;

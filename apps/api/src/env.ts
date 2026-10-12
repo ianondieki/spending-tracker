@@ -7,6 +7,7 @@ export interface ApiConfig {
   readonly whatsappAppSecret: string | undefined;
   readonly resendWebhookSecret: string | undefined;
   readonly appBaseUrl: string;
+  readonly isProduction: boolean;
 }
 
 /** Secrets are read once and left undefined when missing; each route that needs one fails closed with 503. */
@@ -19,5 +20,6 @@ export function readApiConfig(env: Env): ApiConfig {
     whatsappAppSecret: nonEmpty(env['WHATSAPP_APP_SECRET']),
     resendWebhookSecret: nonEmpty(env['RESEND_WEBHOOK_SECRET']),
     appBaseUrl: (env['APP_BASE_URL'] ?? 'http://localhost:3000').replace(/\/$/, ''),
+    isProduction: env['NODE_ENV'] === 'production',
   };
 }

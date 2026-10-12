@@ -265,8 +265,8 @@ export function createApp(deps: AppDeps): ApiApp {
   });
 
   // ----- provider webhooks -----
-  app.route('/', whatsappWebhook(db, config));
-  app.route('/', emailWebhook(db, config));
+  app.route('/', whatsappWebhook(db, config, now));
+  app.route('/', emailWebhook(db, config, now));
 
   return app;
 }
