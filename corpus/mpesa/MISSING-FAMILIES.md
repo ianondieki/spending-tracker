@@ -5,7 +5,7 @@ means a body copied verbatim from a public page into `unverified-public-samples.
 `unverified: true`); none of them counts towards the ≥ 30-per-family target. Sources and format
 notes: `docs/research/sms-formats.md`.
 
-## Families with at least one public sample (32 lines)
+## Families with at least one public sample (34 lines)
 
 | Family (master prompt §5 type) | Public samples | Notes |
 |---|---|---|
@@ -32,8 +32,8 @@ notes: `docs/research/sms-formats.md`.
 | Jumbe (split notification) | 1 | Safaricom's own sample, second SMS for till payments since July 2026 |
 
 Pack status (lane D, 2026-10-12): every family in the table above has a draft family in
-`contracts/provider-packs/mpesa.json` (26 families; the Jumbe, balance and failed messages are ignore families; the
-"send without a number" sample is the inferred `pochi_send` family at confidence 0.7), all `verified: false`. All 32
+`contracts/provider-packs/mpesa.json` (28 families; the Jumbe, balance and failed messages are ignore families; the
+"send without a number" sample is the inferred `pochi_send` family at confidence 0.7), all `verified: false`. All 34
 public lines parse (`pnpm --filter @hesabu/pack-engine corpus`).
 
 ## Families with NO public sample (need the human's export or a real sample from someone)
@@ -53,4 +53,4 @@ public lines parse (`pnpm --filter @hesabu/pack-engine corpus`).
 | M-PESA Ratiba (standing orders), Bill Manager | nothing | recurring payments |
 | Reversal request declined / pending (`Reversal` sender) | nothing | reversal state |
 | Fuliza "daily charges" query, overdraft reminders | nothing | fees |
-| Kiswahili variants of every family except Send Money, balance and airtime | three Kiswahili bodies exist in one public parser (send, balance, airtime); only send was copied | i18n |
+| Kiswahili variants of every family except Send Money, balance and airtime | the three Kiswahili bodies in one public parser (send, balance, airtime) are all copied now (34 lines) and have families (`send_money_sw`, `balance_query_sw`, `airtime_self_sw`); receive, pay bill, buy goods, withdraw and the rest have no Kiswahili sample | i18n |

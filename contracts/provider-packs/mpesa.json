@@ -1,6 +1,6 @@
 {
   "pack_id": "mpesa",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "provider": "mpesa",
   "institution": "Safaricom",
   "sender_ids": [
@@ -1175,6 +1175,55 @@
       ]
     },
     {
+      "family_id": "airtime_self_sw",
+      "description": "Airtime for the user's own number, Kiswahili template (Umenunua Ksh… ya mjazo siku … saa …. Baki mpya ya M-PESA ni Ksh…). No transaction-cost line in the sample. Source: corpus/mpesa/unverified-public-samples.jsonl (public English/Kiswahili parser test messages, Jan 2025, redacted); verified: false until a real export passes.",
+      "type": "AIRTIME",
+      "direction": "out",
+      "counterparty_kind": "merchant",
+      "prefilter": {
+        "all_of": [
+          "ya mjazo"
+        ]
+      },
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Umenunua Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) ya mjazo (?:siku|tarehe) (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+saa\\s+\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*Baki (?:mpya|yako) ya M-PESA ni Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
+      "fields": {
+        "externalRef": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "occurredAt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balanceAfter": {
+          "to": "balance_after",
+          "normalise": "amount"
+        }
+      },
+      "defaults": {
+        "counterparty_name": "Safaricom"
+      },
+      "examples": [
+        {
+          "body": "QJV3SE3TER Umenunua Ksh5.00 ya mjazo siku 15/1/25 saa 8:44 PM.Baki mpya ya M-PESA ni Ksh38.47.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJV3SE3TER",
+            "amount_cents": 500,
+            "fee_cents": 0,
+            "balance_after_cents": 3847,
+            "occurred_at": "2025-01-15T20:44:00+03:00",
+            "counterparty_name": "Safaricom",
+            "type": "AIRTIME"
+          }
+        }
+      ]
+    },
+    {
       "family_id": "reversal_credit",
       "description": "Reversal credited back to the user. note = the code of the reversed transaction. Source: corpus/mpesa/unverified-public-samples.jsonl (public parser repos, redacted); verified: false until a real export passes.",
       "type": "REVERSAL",
@@ -1363,6 +1412,48 @@
             "amount_cents": 0,
             "balance_after_cents": 351,
             "occurred_at": "2026-06-13T08:07:00+03:00",
+            "ignore": true
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "balance_query_sw",
+      "description": "Balance enquiry, Kiswahili template (Baki yako ni: Akaunti ya M-PESA : Ksh…); no money moves. Source: corpus/mpesa/unverified-public-samples.jsonl (public English/Kiswahili parser test messages, Jan 2025, redacted); verified: false until a real export passes.",
+      "type": "BALANCE_QUERY",
+      "direction": "none",
+      "counterparty_kind": "self",
+      "ignore": true,
+      "prefilter": {
+        "all_of": [
+          "baki yako ni"
+        ]
+      },
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Imethibitishwa\\.\\s*Baki yako ni:\\s*Akaunti ya M-PESA\\s*:\\s*Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)(?:\\s*Tarehe\\s+(?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+saa\\s+\\d{1,2}:\\d{2}\\s*[AP]M))?",
+      "fields": {
+        "externalRef": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "balanceAfter": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "occurredAt": {
+          "to": "occurred_at",
+          "normalise": "datetime",
+          "optional": true
+        }
+      },
+      "examples": [
+        {
+          "body": "SNK11LL7S3 Imethibitishwa. Baki yako ni: Akaunti ya M-PESA : Ksh263.47 Tarehe 13/1/25 saa 5:36 PM. Gharama ya matumizi ni Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "SNK11LL7S3",
+            "amount_cents": 0,
+            "balance_after_cents": 26347,
+            "occurred_at": "2025-01-13T17:36:00+03:00",
             "ignore": true
           }
         }

@@ -8,11 +8,12 @@ shipped and green; item 6 (the user's real redacted export) has not arrived, so 
 | # | Deliverable | Where | State |
 |---|---|---|---|
 | 1 | Pack engine (TypeScript reference implementation of `contracts/PROVIDER-PACKS.md`) | `packages/pack-engine` | schema validation (Ajv 2020-12) + portable-regex subset rejection at load, sender filter, prefilter, ordered families, six normalisers, Transaction builder, dedupe `(provider, external_ref, family_id)` / `raw_hash`, transfer pairing, balance chain with the Fuliza same-code rule, CLI (`validate`, `examples`, `run`), 106 tests |
-| 2 | M-Pesa pack | `contracts/provider-packs/mpesa.json` v0.1.0 | 26 families, 32/32 public samples parse, every amount anchored to its label, all examples `verified: false` |
+| 2 | M-Pesa pack | `contracts/provider-packs/mpesa.json` v0.2.0 | 28 families (3 Kiswahili), 34/34 public samples parse, every amount anchored to its label, all examples `verified: false` |
 | 3 | Other packs | `contracts/provider-packs/airtel_money.json` (1 family, confidence 0.6), `demo_bank.json` (3 families, synthetic, demo only) | T-Kash and real banks: nothing to build from; `MISSING-FAMILIES.md` in every corpus folder says so |
 | 4 | Taxonomy | `packages/taxonomy` | 22 groups / 109 ids with en and sw names (`[[COPY-REVIEW]]`), 38 provider-default rules covering all 30 TxTypes, 77 merchant seeds (9 verified with URLs), `matchMerchant`, `resolveCategory`, JSON in `data/` for the app and backend, 76 tests |
 | 5 | Demo inbox | `corpus/demo/demo-inbox.jsonl` + `demo-inbox.expected.json` + generator | 82 messages, eight Monday weeks, 100 % parsed, 1 duplicate dropped, 3 transfer pairs, 0 balance breaks, one Fuliza episode |
 | 6 | Real export | — | not received; re-checked at every hourly merge |
+| + | Cross-engine parity dumps (orchestrator check-in 1) | `corpus/expected/`, `pack-engine dump`, `src/dump.test.ts` | canonical JSONL per corpus file and for the demo inbox; the Kotlin engine asserts byte identity |
 
 ## How to run
 
@@ -39,7 +40,7 @@ message's 12-char `sha256` prefix in that provider's `MISSING-FAMILIES.md`, and 
 
 | Package | Tests |
 |---|---|
-| `@hesabu/pack-engine` | 106 (regex subset 28, normalisers 45, post-processing 9, packs and corpus 20, demo 8, fuzz 4) |
+| `@hesabu/pack-engine` | 121 (regex subset 28, normalisers 45, post-processing 9, packs and corpus 24, demo 8, fuzz 4, dump 7, engine clarifications 8) |
 | `@hesabu/taxonomy` | 76 |
 
 Root `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` are green for the whole monorepo at the last push.
@@ -87,3 +88,4 @@ Not available: no real export in `corpus/` at the time of writing.
 ## Hourly log
 
 - 14:05 UTC: items 1–5 done and pushed (commits `da03aa2..07f43ff`); monorepo green; no real export.
+- 14:56 UTC: orchestrator check-in 1 package done: merged the camelCase group-name fix, `pack-engine dump` + `corpus/expected/` with a drift test, Kiswahili airtime and balance families from the one public source, a test per engine clarification (`41fbc00`). No real export.
