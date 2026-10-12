@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             HesabuTheme {
-                HesabuRoot()
+                HesabuRoot(startRoute = intent?.getStringExtra(EXTRA_OPEN))
             }
         }
     }

@@ -5,6 +5,7 @@ import ke.hesabu.app.data.BodyCipher
 import ke.hesabu.app.data.DatabaseKey
 import ke.hesabu.app.data.HesabuDatabase
 import ke.hesabu.app.data.KeystoreBodyCipher
+import ke.hesabu.app.data.KeystoreSecretStore
 import ke.hesabu.app.data.SecretStore
 import ke.hesabu.app.data.SettingsRepository
 import ke.hesabu.app.data.Taxonomy
@@ -29,10 +30,11 @@ open class AppGraph(
     private val context: Context,
     dbFactory: (Context) -> HesabuDatabase = { HesabuDatabase.open(it, DatabaseKey.getOrCreate(it)) },
     cipherFactory: () -> BodyCipher = { KeystoreBodyCipher() },
+    secretsFactory: (Context) -> SecretStore = { KeystoreSecretStore(it) },
 ) {
     val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     val settings: SettingsRepository by lazy { SettingsRepository(context.settingsDataStore) }
-    val secrets: SecretStore by lazy { SecretStore(context) }
+    val secrets: SecretStore by lazy { secretsFactory(context) }
     val db: HesabuDatabase by lazy { dbFactory(context) }
     val bodyCipher: BodyCipher by lazy { cipherFactory() }
 

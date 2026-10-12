@@ -44,10 +44,13 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
             var uploaded = 0
             var rejected = 0
             var batches = 0
+            val attempted = HashSet<String>()
             while (batches < MAX_BATCHES_PER_RUN) {
-                val queue = graph.db.syncQueueDao().nextBatch(BATCH)
+                // Rows rejected earlier in this run stay queued but are not re-sent until the next run.
+                val queue = graph.db.syncQueueDao().nextBatch(BATCH + attempted.size).filter { it.transactionId !in attempted }.take(BATCH)
                 if (queue.isEmpty()) break
                 val ids = queue.map { it.transactionId }
+                attempted.addAll(ids)
                 val rows = graph.db.transactionDao().byIds(ids)
                 val missing = ids - rows.map { it.id }.toSet()
                 if (missing.isNotEmpty()) graph.db.syncQueueDao().remove(missing)
@@ -71,6 +74,7 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
                     return Outcome.Retry("unauthorised")
                 } catch (e: SyncClient.ServerError) {
                     graph.db.syncQueueDao().recordFailure(ids, "${e.status}")
+                    graph.settings.set(SettingsKeys.LastSyncError, "server ${e.status}")
                     return if (e.retryable) Outcome.Retry("server ${e.status}") else Outcome.Failed("server ${e.status}")
                 }
                 val rejectedIds = response.rejected.map { it.id }.toSet()
@@ -79,7 +83,6 @@ class Syncer(private val graph: AppGraph, private val clientFactory: (String) ->
                 graph.db.syncQueueDao().remove(acceptedIds)
                 if (rejectedIds.isNotEmpty()) graph.db.syncQueueDao().recordFailure(rejectedIds.toList(), "rejected")
                 // Rejected rows stay queued for a human to look at; they do not block the rest.
-                if (rejectedIds.size == rows.size) { rejected += rejectedIds.size; break }
                 uploaded += acceptedIds.size
                 rejected += rejectedIds.size
                 graph.settings.set(SettingsKeys.NextReportAt, response.nextReportAt)

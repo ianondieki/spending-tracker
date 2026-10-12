@@ -22,7 +22,7 @@ class CorpusCoverageTest {
 
     private fun samples(): List<Sample> {
         val dir = repo?.resolve("corpus") ?: return emptyList()
-        return dir.walkTopDown().filter { it.isFile && it.name.endsWith(".jsonl") }.flatMap { f ->
+        return dir.walkTopDown().filter { it.isFile && it.name.endsWith(".jsonl") && !it.path.contains("/expected/") && !it.path.contains("/demo/") }.flatMap { f ->
             f.readLines().filter { it.isNotBlank() }.map { line ->
                 val o = json.parseToJsonElement(line).jsonObject
                 Sample(

@@ -73,7 +73,10 @@ class PackEngineTest {
 
     @Test
     fun ignoreFamiliesConsumeWithoutTransaction() {
-        assertEquals(ParseResult.Ignored("test_pack", "1.2.3", "balance"), engine.parse(msg("X Confirmed. Your balance was Ksh10.00 on today")))
+        val r = engine.parse(msg("X Confirmed. Your balance was Ksh10.00 on today")) as ParseResult.Ignored
+        assertEquals("balance", r.familyId)
+        assertEquals(1_000L, r.balanceAfterCents)
+        assertNull(r.amountCents)
     }
 
     @Test

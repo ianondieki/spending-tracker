@@ -56,9 +56,33 @@ class PostProcessorTest {
             Row("w", accountRef = "mpesa:a", direction = "out", type = "WITHDRAW", amountCents = 2_000_00, counterpartyKind = "agent", occurredAtMillis = 0),
             Row("cash", accountRef = "cash", direction = "in", amountCents = 2_000_00, counterpartyKind = "self", occurredAtMillis = 0),
         )
-        val pairs = PostProcessor.matchTransfers(rows)
+        val pairs = PostProcessor.pairIds(rows)
         assertEquals(setOf("out", "in"), pairs.keys)
         assertEquals(pairs["out"], pairs["in"])
+        assertEquals(Ids.transferPairId("out", "in"), pairs["out"])
+    }
+
+    @Test
+    fun closestCandidateWinsEvenWhenItArrivedEarlier() {
+        val rows = listOf(
+            Row("in-early", accountRef = "bank:x", direction = "in", amountCents = 100, counterpartyKind = "bank", occurredAtMillis = 0),
+            Row("out", accountRef = "mpesa:a", direction = "out", amountCents = 100, occurredAtMillis = 60_000),
+            Row("in-late", accountRef = "bank:y", direction = "in", amountCents = 100, counterpartyKind = "bank", occurredAtMillis = 300_000),
+        )
+        val pairs = PostProcessor.matchTransfers(rows)
+        assertEquals(1, pairs.size)
+        assertEquals("in-early", pairs[0].inId)
+    }
+
+    @Test
+    fun fulizaDrawdownIsAppliedBeforeThePaymentItFunded() {
+        // 1,000 balance; a 1,500 payment funded by a 500 Fuliza drawdown (no balance, same code, fee on the loan).
+        val rows = listOf(
+            Row("start", direction = "in", amountCents = 1_000_00, balanceAfterCents = 1_000_00, occurredAtMillis = 1),
+            Row("pay", externalRef = "ABC", direction = "out", amountCents = 1_500_00, feeCents = 0, balanceAfterCents = 0, occurredAtMillis = 2),
+            Row("fuliza", externalRef = "ABC", familyId = "fuliza_drawdown", type = "FULIZA_DRAWDOWN", direction = "in", amountCents = 500_00, feeCents = 5_00, balanceAfterCents = null, occurredAtMillis = 3),
+        )
+        assertEquals(emptyList<PostProcessor.BalanceBreak>(), PostProcessor.checkBalanceChain(rows))
     }
 
     @Test
@@ -68,7 +92,7 @@ class PostProcessorTest {
             Row("b", accountRef = "bank:x", direction = "in", amountCents = 100, occurredAtMillis = 1000),
             Row("c", accountRef = "bank:y", direction = "in", amountCents = 100, occurredAtMillis = 2000),
         )
-        val pairs = PostProcessor.matchTransfers(rows)
+        val pairs = PostProcessor.pairIds(rows)
         assertEquals(setOf("a", "b"), pairs.keys)
         assertNotEquals(null, pairs["a"])
     }

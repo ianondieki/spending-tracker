@@ -44,7 +44,8 @@ class PackExamplesTest(
         val ex = family.examples[exampleIndex]
         val result = engine.parse(InboundMessage(pack.senderIds.first(), ex.body, received))
         if (family.ignore) {
-            assertEquals(ParseResult.Ignored(pack.packId, pack.version, family.familyId), result)
+            assertTrue("expected Ignored but got $result", result is ParseResult.Ignored)
+            assertEquals(family.familyId, (result as ParseResult.Ignored).familyId)
             return
         }
         assertTrue("expected Parsed but got $result", result is ParseResult.Parsed)

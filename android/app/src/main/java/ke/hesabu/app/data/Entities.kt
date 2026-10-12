@@ -34,7 +34,7 @@ data class TransactionEntity(
     @ColumnInfo(name = "fee_cents") override val feeCents: Long,
     @ColumnInfo(name = "balance_after_cents") override val balanceAfterCents: Long?,
     @ColumnInfo(name = "occurred_at") override val occurredAtMillis: Long,
-    @ColumnInfo(name = "received_at") val receivedAtMillis: Long,
+    @ColumnInfo(name = "received_at") override val receivedAtMillis: Long,
     @ColumnInfo(name = "counterparty_name") val counterpartyName: String?,
     @ColumnInfo(name = "counterparty_kind") override val counterpartyKind: String,
     @ColumnInfo(name = "counterparty_ref_masked") val counterpartyRefMasked: String?,

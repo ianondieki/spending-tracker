@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
@@ -50,6 +51,9 @@ android {
             test.systemProperty("hesabu.contractsDir", contractsDir.absolutePath)
             test.systemProperty("hesabu.repoDir", contractsDir.parentFile.absolutePath)
             test.maxHeapSize = "2g"
+            // Screenshot tests always record, so a plain unit-test run refreshes android/screenshots/.
+            test.systemProperty("roborazzi.test.record", "true")
+            test.systemProperty("hesabu.screenshotsDir", rootProject.file("screenshots").absolutePath)
         }
     }
 
@@ -105,6 +109,10 @@ dependencies {
     // Unit tests (JVM)
     testImplementation(libs.junit)
     testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.roborazzi)
+    testImplementation(libs.ktor.client.mock)
+    testImplementation(libs.roborazzi.compose)
+    testImplementation(libs.roborazzi.junit.rule)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.test.ext.junit)
@@ -141,3 +149,8 @@ tasks.matching { it.name.startsWith("generate") && it.name.endsWith("Assets") }.
 tasks.matching { it.name.startsWith("package") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
 tasks.matching { it.name.startsWith("lintVital") || it.name.startsWith("lintAnalyze") || it.name == "lint" }.configureEach { dependsOn(copyContractAssets) }
 tasks.withType<Test>().configureEach { dependsOn(copyContractAssets) }
+
+roborazzi {
+    // Screenshots are committed under android/screenshots/ so the orchestrator can review the design.
+    outputDir.set(rootProject.file("screenshots"))
+}

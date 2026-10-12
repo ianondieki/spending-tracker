@@ -85,21 +85,25 @@ val HesabuTypography = Typography(
     labelSmall = style(12, FontWeight.Normal, PROSE),
 )
 
-/** Numeral styles: tabular figures, line-height 1.1. Used by MoneyText and the charts. */
+/**
+ * Numeral styles, line-height 1.1, used by MoneyText and the charts. Tabular figures are not set here: in this font
+ * `tnum` on a whole string also widens the thousands comma to a digit slot, so callers wrap amounts in
+ * `tabularDigits()` (MoneyText does), which applies `tnum` to digit runs only.
+ */
 @Immutable
 data class MoneyTypography(
     /** 14/500: amounts inside dense rows and chart labels. */
-    val small: TextStyle = style(14, FontWeight.Medium, NUMERAL, numerals = true),
+    val small: TextStyle = style(14, FontWeight.Medium, NUMERAL),
     /** 16/500: the amount column of a ledger row. */
-    val row: TextStyle = style(16, FontWeight.Medium, NUMERAL, numerals = true),
+    val row: TextStyle = style(16, FontWeight.Medium, NUMERAL),
     /** 20/700: a sheet total or KPI value. */
-    val emphasis: TextStyle = style(20, FontWeight.Bold, NUMERAL, numerals = true),
+    val emphasis: TextStyle = style(20, FontWeight.Bold, NUMERAL),
     /** 28/700: an account balance. */
-    val large: TextStyle = style(28, FontWeight.Bold, NUMERAL, numerals = true),
+    val large: TextStyle = style(28, FontWeight.Bold, NUMERAL),
     /** 40/700: the total under a tally's double rule. */
-    val total: TextStyle = style(40, FontWeight.Bold, NUMERAL, numerals = true),
+    val total: TextStyle = style(40, FontWeight.Bold, NUMERAL),
     /** 56/700: the hero total that opens a report. */
-    val hero: TextStyle = style(56, FontWeight.Bold, NUMERAL, numerals = true),
+    val hero: TextStyle = style(56, FontWeight.Bold, NUMERAL),
 )
 
 val LocalMoneyTypography = staticCompositionLocalOf { MoneyTypography() }
