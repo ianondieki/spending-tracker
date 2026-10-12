@@ -49,13 +49,13 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
   const min = Math.min(0, ...allValues);
   const yTicks = ticks(min, max, 4);
   const left = Math.ceil(textWidth(compactKsh(max), FONT.xs)) + 10;
-  const endLabelW = Math.max(...pts.slice(-1).flatMap((p) => [p.in.display, p.out.display, p.net.display]).map((s) => textWidth(s, FONT.xs))) + 16;
-  const top = 32;
+  const endLabelW = Math.max(...pts.slice(-1).flatMap((p) => [`${l.in} ${p.in.display}`, `${l.out} ${p.out.display}`, `${l.net} ${p.net.display}`]).map((s) => textWidth(s, FONT.xs))) + 16;
+  const top = 16;
   const plotH = 200;
   const bottom = 26;
   const height = top + plotH + bottom;
   const plotX = left;
-  const plotW = width - left - endLabelW - 8;
+  const plotW = width - left - endLabelW - 16;
   const x = linear([0, Math.max(1, n - 1)], [plotX, plotX + plotW]);
   const y = linear([yTicks[0] ?? 0, yTicks[yTicks.length - 1] ?? max], [top + plotH, top]);
   const current = pts.findIndex((p) => p.isCurrent);
@@ -68,7 +68,7 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
   const alt = altText ?? trendLinesAltText(data, locale);
   // Keep the three end labels from overlapping: sort by y and push apart by 14 px.
   const last = pts[n - 1]!;
-  const ends = series.map((s) => ({ s, y: y(s.get(last).cents / 100), text: s.get(last).display }));
+  const ends = series.map((s) => ({ s, y: y(s.get(last).cents / 100), text: `${s.name} ${s.get(last).display}` }));
   ends.sort((a, b) => a.y - b.y);
   for (let i = 1; i < ends.length; i++) {
     if (ends[i]!.y - ends[i - 1]!.y < 14) ends[i]!.y = ends[i - 1]!.y + 14;
@@ -77,19 +77,6 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
   return (
     <Figure id={id} title={title} takeaway={takeaway} altText={alt} locale={locale} theme={theme} table={trendLinesTable(data, locale)} showTable={showTable} width={width}>
       <Svg width={width} height={height} altText={alt} chartType="trend_lines">
-        <g aria-hidden="true">
-          {series.map((s, i) => {
-            const lx = plotX + i * 92;
-            return (
-              <g key={s.key}>
-                <line x1={px(lx)} x2={px(lx + 14)} y1={11} y2={11} stroke={s.color} strokeWidth={LINE} strokeLinecap="round" />
-                <Label x={lx + 20} y={15} size={FONT.xs} soft>
-                  {s.name}
-                </Label>
-              </g>
-            );
-          })}
-        </g>
         {current >= 0 ? <rect x={px(Math.max(plotX, x(current) - band / 2))} y={px(top)} width={px(Math.min(x(current) + band / 2, plotX + plotW) - Math.max(plotX, x(current) - band / 2))} height={px(plotH)} fill={v(VAR.ink)} opacity={0.06} /> : null}
         {yTicks.map((t) => (
           <g key={t}>
@@ -110,9 +97,12 @@ export function TrendLines({ id, title, takeaway, locale, theme, width = DEFAULT
           )),
         )}
         {ends.map((e) => (
-          <Label key={e.s.key} x={plotX + plotW + 8} y={e.y + 4} size={FONT.xs} anchor="start" numeric>
-            {e.text}
-          </Label>
+          <g key={e.s.key}>
+            <line x1={px(plotX + plotW + 4)} x2={px(plotX + plotW + 12)} y1={px(e.y)} y2={px(e.y)} stroke={e.s.color} strokeWidth={LINE} strokeLinecap="round" />
+            <Label x={plotX + plotW + 16} y={e.y + 4} size={FONT.xs} anchor="start" numeric>
+              {e.text}
+            </Label>
+          </g>
         ))}
         {pts.map((p, i) => (
           <Label key={i} x={x(i)} y={top + plotH + 18} size={FONT.xs} anchor={i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'} weight={p.isCurrent ? 700 : 400} soft={!p.isCurrent}>

@@ -44,7 +44,8 @@ describe.each(FIXTURE_NAMES)('HTML outputs for %s', (name) => {
     expect(html).not.toContain('var(--');
     expect(html).not.toMatch(/<link|<script|<style/);
     expect(html).toContain(doc.email.preheader);
-    expect(text).toContain(doc.title.toUpperCase());
+    expect(text).toContain(`${doc.title}\n${'-'.repeat(doc.title.length)}`);
+    expect(text).not.toMatch(/[A-Z]{6,}/);
     expect(text).toContain('https://hesabu.test/r/token-fixture');
     const hero = doc.sections.find((s) => s.type === 'hero');
     if (hero?.type === 'hero') expect(text).toContain(hero.total_out);

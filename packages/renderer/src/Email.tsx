@@ -244,7 +244,8 @@ export function Email({ document: doc, reportUrl, chartIds }: EmailProps): React
 /** Plain-text alternative: every section, nothing lost, 72-column friendly. */
 export function emailText(doc: ReportDocument, reportUrl: string): string {
   const s = reportStrings(doc.locale);
-  const out: string[] = [`${s.brand}, ${doc.kind === 'weekly' ? s.weekly : s.monthly}, ${doc.period_label}`, '', doc.title.toUpperCase(), ''];
+  const heading = (t: string) => [t, '-'.repeat(Math.min(72, t.length))];
+  const out: string[] = [`${s.brand}, ${doc.kind === 'weekly' ? s.weekly : s.monthly}, ${doc.period_label}`, '', ...heading(doc.title), ''];
   for (const section of doc.sections) {
     switch (section.type) {
       case 'hero':
@@ -259,19 +260,19 @@ export function emailText(doc: ReportDocument, reportUrl: string): string {
         out.push(section.title, section.alt_text, '');
         break;
       case 'insights':
-        if (section.title) out.push(section.title.toUpperCase());
+        if (section.title) out.push(...heading(section.title));
         for (const it of section.items) out.push(`- ${it.headline}`, `  ${it.body}`);
         out.push('');
         break;
       case 'table':
-        out.push(section.title.toUpperCase());
+        out.push(...heading(section.title));
         for (const r of section.rows) out.push(r.join('  |  '));
         if (section.total_row) out.push(section.total_row.join('  |  '));
         out.push('');
         break;
       case 'list':
       case 'watch':
-        out.push(section.title.toUpperCase());
+        out.push(...heading(section.title));
         section.items.forEach((it, i) => out.push(`${i + 1}. ${it}`));
         out.push('');
         break;

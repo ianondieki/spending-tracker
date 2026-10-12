@@ -170,7 +170,7 @@ export function DonutRing({ data, size, label, altText }: { readonly data: Donut
       <Label x={cx} y={cy + totalSize * 0.1} size={totalSize} weight={700} anchor="middle" numeric>
         {data.total.display}
       </Label>
-      <Label x={cx} y={cy + totalSize * 0.1 + Math.round(totalSize * 0.75)} size={Math.round(totalSize * 0.55)} anchor="middle" soft>
+      <Label x={cx} y={cy + totalSize * 0.1 + Math.round(totalSize * 0.8)} size={Math.round(totalSize * 0.72)} anchor="middle" soft>
         {label}
       </Label>
     </Svg>

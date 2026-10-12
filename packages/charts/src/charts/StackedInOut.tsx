@@ -6,7 +6,7 @@ import { type BaseChartProps, DEFAULT_WIDTH } from '../common.js';
 import { type DataTableSpec, Figure, Svg } from '../Figure.js';
 import { chartLabels } from '../labels.js';
 import { GAP, HRule, Label, Tip, vBarPath } from '../primitives.js';
-import { linear, niceMax, px, ticks } from '../scale.js';
+import { linear, niceMax, ticks } from '../scale.js';
 import { v, VAR } from '../theme.js';
 import { textWidth } from '../text.js';
 import { FONT } from '../tokens.js';
@@ -48,9 +48,9 @@ export function StackedInOut({ id, title, takeaway, locale, theme, width = DEFAU
   const max = niceMax(Math.max(...periods.flatMap((p) => [p.in.cents, p.out.cents])) / 100);
   const yTicks = ticks(0, max, 4);
   const left = Math.ceil(textWidth(compactKsh(max), FONT.xs)) + 10;
-  const top = 36;
+  const top = 28;
   const plotH = 160;
-  const bottom = 26;
+  const bottom = 44;
   const height = top + plotH + bottom;
   const plotX = left;
   const plotW = width - left - 8;
@@ -62,16 +62,6 @@ export function StackedInOut({ id, title, takeaway, locale, theme, width = DEFAU
   return (
     <Figure id={id} title={title} takeaway={takeaway} altText={alt} locale={locale} theme={theme} table={stackedInOutTable(data, locale)} showTable={showTable} width={width}>
       <Svg width={width} height={height} altText={alt} chartType="stacked_in_out">
-        <g aria-hidden="true">
-          <rect x={px(plotX)} y={6} width={10} height={10} rx={2} fill={v(VAR.in)} />
-          <Label x={plotX + 16} y={15} size={FONT.xs} soft>
-            {l.in}
-          </Label>
-          <rect x={px(plotX + 16 + textWidth(l.in, FONT.xs) + 14)} y={6} width={10} height={10} rx={2} fill={v(VAR.out)} />
-          <Label x={plotX + 16 + textWidth(l.in, FONT.xs) + 30} y={15} size={FONT.xs} soft>
-            {l.out}
-          </Label>
-        </g>
         {yTicks.map((t) => (
           <g key={t}>
             <HRule x1={plotX} x2={plotX + plotW} y={y(t)} strong={t === 0} />
@@ -96,7 +86,13 @@ export function StackedInOut({ id, title, takeaway, locale, theme, width = DEFAU
               <Label x={gx} y={topY - 8} size={FONT.sm} weight={700} anchor="middle" numeric>
                 {`${l.net} ${p.net.display}`}
               </Label>
-              <Label x={gx} y={top + plotH + 18} size={FONT.sm} anchor="middle" soft>
+              <Label x={xIn + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="middle" soft>
+                {l.in}
+              </Label>
+              <Label x={xOut + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="middle" soft>
+                {l.out}
+              </Label>
+              <Label x={gx} y={top + plotH + 36} size={FONT.sm} anchor="middle">
                 {p.label}
               </Label>
             </g>
