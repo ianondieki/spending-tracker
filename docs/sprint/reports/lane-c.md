@@ -62,6 +62,13 @@ it); never run `playwright install` there.
 - Golden heroes reviewed at 25 %: title, period, tally and total read; the insight lines are at the 28 px floor and
   still legible. No change needed.
 - Lighthouse after the fixes: accessibility 100, performance 98 on both fixtures (mobile profile).
+- Design review of Lane B's real artefacts (`docs/sprint/samples/`), fixed in lane C: hero donut now labels the
+  largest slice outside the ring with the next two as swatch rows; the six-plus-Other cap is enforced inside the
+  Donut component; the daily-bars average label lives in a reserved margin, never over a bar; the delta reads as
+  prose ("KSh 23,375 less than last week") in hero, web and email; names that arrive in capitals render in title
+  case (`humanName()`, keeps KPLC and Ltd); dark-theme PDFs print on light paper; Kiswahili in/out labels no
+  longer collide. Findings left with Lane B in `docs/sprint/LOG.md`: raw category ids and ISO dates in two chart
+  titles, a signed delta repeated in the verdict, zero months before data in the trend.
 
 ## Known gaps
 
