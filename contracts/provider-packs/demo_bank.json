@@ -1,0 +1,204 @@
+{
+  "pack_id": "demo_bank",
+  "version": "0.1.0",
+  "provider": "bank",
+  "institution": "Hesabu Demo Bank (synthetic)",
+  "sender_ids": [
+    "HESABUDEMO"
+  ],
+  "account_ref_template": "bank:demo:{acct_mask}",
+  "currency": "KES",
+  "datetime_formats": [
+    "dd/MM/yy 'at' HH:mm"
+  ],
+  "amount_prefixes": [
+    "KES",
+    "Ksh",
+    "KSh"
+  ],
+  "families": [
+    {
+      "family_id": "demo_credit",
+      "description": "Credit to the demo bank account (salary, refunds). SYNTHETIC FORMAT, DEMO ONLY. No real Kenyan bank alert exists in corpus/ (corpus/banks/MISSING-FAMILIES.md), so this pack invents nothing about any real bank: it describes the fictional 'Hesabu Demo Bank' whose sender id HESABUDEMO no real institution uses. It exists so that the demo inbox (corpus/demo) can show a salary credit and a bank-to-M-PESA transfer pair. Load it only in demo mode; replace it with real bank packs when real alerts arrive. Decision recorded in docs/DECISIONS-NEEDED.md.",
+      "type": "CREDIT",
+      "direction": "in",
+      "counterparty_kind": "unknown",
+      "prefilter": {
+        "all_of": [
+          "hesabu demo bank",
+          "credited"
+        ]
+      },
+      "pattern": "^HESABU DEMO BANK: Your account (?<accountRef>[\\dX*]{3,12}) has been credited with KES\\s?(?<amount>[\\d,]+(?:\\.\\d{1,2})?) from (?<counterpartyName>.+?) on (?<occurredAt>\\d{2}/\\d{2}/\\d{2}\\s+at\\s+\\d{2}:\\d{2})\\. Available balance KES\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{1,2})?)\\. Ref (?<externalRef>[A-Z0-9]{6,14})\\.",
+      "fields": {
+        "accountRef": {
+          "to": "account_ref",
+          "normalise": "text"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "counterpartyName": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "occurredAt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balanceAfter": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "externalRef": {
+          "to": "external_ref",
+          "normalise": "code"
+        }
+      },
+      "confidence": 0.5,
+      "examples": [
+        {
+          "body": "HESABU DEMO BANK: Your account XXX456 has been credited with KES 85,000.00 from ACME LOGISTICS LTD SALARY on 30/01/26 at 09:12. Available balance KES 91,234.50. Ref DB00001234.",
+          "verified": false,
+          "expect": {
+            "external_ref": "DB00001234",
+            "amount_cents": 8500000,
+            "fee_cents": 0,
+            "balance_after_cents": 9123450,
+            "occurred_at": "2026-01-30T09:12:00+03:00",
+            "counterparty_name": "ACME LOGISTICS LTD SALARY",
+            "account_ref": "XXX456",
+            "type": "CREDIT"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "demo_debit_to_mpesa",
+      "description": "Transfer from the demo bank account to the user's own M-PESA; the M-PESA side arrives as the bank_to_mpesa family and the two pair as a transfer. SYNTHETIC FORMAT, DEMO ONLY. No real Kenyan bank alert exists in corpus/ (corpus/banks/MISSING-FAMILIES.md), so this pack invents nothing about any real bank: it describes the fictional 'Hesabu Demo Bank' whose sender id HESABUDEMO no real institution uses. It exists so that the demo inbox (corpus/demo) can show a salary credit and a bank-to-M-PESA transfer pair. Load it only in demo mode; replace it with real bank packs when real alerts arrive. Decision recorded in docs/DECISIONS-NEEDED.md.",
+      "type": "BANK_TO_MPESA",
+      "direction": "out",
+      "counterparty_kind": "self",
+      "is_transfer_hint": true,
+      "prefilter": {
+        "all_of": [
+          "hesabu demo bank",
+          "debited",
+          "m-pesa"
+        ]
+      },
+      "pattern": "^HESABU DEMO BANK: Your account (?<accountRef>[\\dX*]{3,12}) has been debited with KES\\s?(?<amount>[\\d,]+(?:\\.\\d{1,2})?) to M-PESA (?<counterpartyRef>(?:\\+?254|0)[\\dX*]{9}) on (?<occurredAt>\\d{2}/\\d{2}/\\d{2}\\s+at\\s+\\d{2}:\\d{2})\\. Fee KES\\s?(?<fee>[\\d,]+(?:\\.\\d{1,2})?)\\. Available balance KES\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{1,2})?)\\. Ref (?<externalRef>[A-Z0-9]{6,14})\\.",
+      "fields": {
+        "accountRef": {
+          "to": "account_ref",
+          "normalise": "text"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "counterpartyRef": {
+          "to": "counterparty_ref",
+          "normalise": "phone"
+        },
+        "occurredAt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount"
+        },
+        "balanceAfter": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "externalRef": {
+          "to": "external_ref",
+          "normalise": "code"
+        }
+      },
+      "defaults": {
+        "counterparty_name": "My M-PESA"
+      },
+      "confidence": 0.5,
+      "examples": [
+        {
+          "body": "HESABU DEMO BANK: Your account XXX456 has been debited with KES 30,000.00 to M-PESA 0722000123 on 30/01/26 at 09:20. Fee KES 50.00. Available balance KES 61,184.50. Ref DB00001235.",
+          "verified": false,
+          "expect": {
+            "external_ref": "DB00001235",
+            "amount_cents": 3000000,
+            "fee_cents": 5000,
+            "balance_after_cents": 6118450,
+            "occurred_at": "2026-01-30T09:20:00+03:00",
+            "counterparty_ref": "07XXXXX123",
+            "counterparty_name": "My M-PESA",
+            "is_transfer_hint": true,
+            "type": "BANK_TO_MPESA"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "demo_debit",
+      "description": "Other debit from the demo bank account (standing order, fee). SYNTHETIC FORMAT, DEMO ONLY. No real Kenyan bank alert exists in corpus/ (corpus/banks/MISSING-FAMILIES.md), so this pack invents nothing about any real bank: it describes the fictional 'Hesabu Demo Bank' whose sender id HESABUDEMO no real institution uses. It exists so that the demo inbox (corpus/demo) can show a salary credit and a bank-to-M-PESA transfer pair. Load it only in demo mode; replace it with real bank packs when real alerts arrive. Decision recorded in docs/DECISIONS-NEEDED.md.",
+      "type": "DEBIT",
+      "direction": "out",
+      "counterparty_kind": "unknown",
+      "prefilter": {
+        "all_of": [
+          "hesabu demo bank",
+          "debited"
+        ],
+        "none_of": [
+          "to m-pesa"
+        ]
+      },
+      "pattern": "^HESABU DEMO BANK: Your account (?<accountRef>[\\dX*]{3,12}) has been debited with KES\\s?(?<amount>[\\d,]+(?:\\.\\d{1,2})?) for (?<counterpartyName>.+?) on (?<occurredAt>\\d{2}/\\d{2}/\\d{2}\\s+at\\s+\\d{2}:\\d{2})\\. Available balance KES\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{1,2})?)\\. Ref (?<externalRef>[A-Z0-9]{6,14})\\.",
+      "fields": {
+        "accountRef": {
+          "to": "account_ref",
+          "normalise": "text"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "counterpartyName": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "occurredAt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balanceAfter": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "externalRef": {
+          "to": "external_ref",
+          "normalise": "code"
+        }
+      },
+      "confidence": 0.5,
+      "examples": [
+        {
+          "body": "HESABU DEMO BANK: Your account XXX456 has been debited with KES 120.00 for MONTHLY LEDGER FEE on 31/01/26 at 23:50. Available balance KES 61,064.50. Ref DB00001236.",
+          "verified": false,
+          "expect": {
+            "external_ref": "DB00001236",
+            "amount_cents": 12000,
+            "fee_cents": 0,
+            "balance_after_cents": 6106450,
+            "occurred_at": "2026-01-31T23:50:00+03:00",
+            "counterparty_name": "MONTHLY LEDGER FEE",
+            "type": "DEBIT"
+          }
+        }
+      ]
+    }
+  ]
+}

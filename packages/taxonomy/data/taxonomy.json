@@ -1,0 +1,1227 @@
+{
+  "$comment": "Hesabu category taxonomy (master prompt §7). Two levels: top-level groups (parent_id null) and sub-categories whose id is prefixed by the parent id. ids are stable and never renamed; add new ones at the end of a group. kind: spending | income | transfer | cash | fee | system. is_spending is false for transfers, cash withdrawals and income (transfers are not spending; cash is untracked; income is inflow) and true for everything else including fees (first-class, reported separately by kind) and uncategorised. name_sw is ordinary copy awaiting human review [[COPY-REVIEW]].",
+  "version": 1,
+  "copy_review": true,
+  "categories": [
+    {
+      "id": "food_groceries",
+      "parent_id": null,
+      "name_en": "Food & groceries",
+      "name_sw": "Chakula na mboga",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 10,
+      "icon": "basket"
+    },
+    {
+      "id": "food_groceries.supermarket",
+      "parent_id": "food_groceries",
+      "name_en": "Supermarket",
+      "name_sw": "Supamaketi",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 11,
+      "icon": "cart"
+    },
+    {
+      "id": "food_groceries.market_kiosk",
+      "parent_id": "food_groceries",
+      "name_en": "Market & kiosk",
+      "name_sw": "Soko na kiosk",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 12,
+      "icon": "store"
+    },
+    {
+      "id": "food_groceries.butchery",
+      "parent_id": "food_groceries",
+      "name_en": "Butchery & fish",
+      "name_sw": "Nyama na samaki",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 13,
+      "icon": "meat"
+    },
+    {
+      "id": "food_groceries.bakery",
+      "parent_id": "food_groceries",
+      "name_en": "Bakery & milk",
+      "name_sw": "Mikate na maziwa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 14,
+      "icon": "bread"
+    },
+
+    {
+      "id": "eating_out",
+      "parent_id": null,
+      "name_en": "Eating out & drinks",
+      "name_sw": "Kula nje na vinywaji",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 20,
+      "icon": "utensils"
+    },
+    {
+      "id": "eating_out.restaurants",
+      "parent_id": "eating_out",
+      "name_en": "Restaurants",
+      "name_sw": "Mikahawa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 21,
+      "icon": "plate"
+    },
+    {
+      "id": "eating_out.fast_food",
+      "parent_id": "eating_out",
+      "name_en": "Fast food",
+      "name_sw": "Chakula cha haraka",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 22,
+      "icon": "burger"
+    },
+    {
+      "id": "eating_out.cafes",
+      "parent_id": "eating_out",
+      "name_en": "Cafés & coffee",
+      "name_sw": "Kafe na kahawa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 23,
+      "icon": "coffee"
+    },
+    {
+      "id": "eating_out.bars_drinks",
+      "parent_id": "eating_out",
+      "name_en": "Bars & drinks",
+      "name_sw": "Baa na vinywaji",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 24,
+      "icon": "glass"
+    },
+    {
+      "id": "eating_out.delivery",
+      "parent_id": "eating_out",
+      "name_en": "Food delivery",
+      "name_sw": "Chakula kuletewa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 25,
+      "icon": "scooter"
+    },
+
+    {
+      "id": "transport",
+      "parent_id": null,
+      "name_en": "Transport",
+      "name_sw": "Usafiri",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 30,
+      "icon": "bus"
+    },
+    {
+      "id": "transport.matatu_boda",
+      "parent_id": "transport",
+      "name_en": "Matatu & boda",
+      "name_sw": "Matatu na boda",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 31,
+      "icon": "bus"
+    },
+    {
+      "id": "transport.ride_hailing",
+      "parent_id": "transport",
+      "name_en": "Ride-hailing",
+      "name_sw": "Teksi ya app",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 32,
+      "icon": "car"
+    },
+    {
+      "id": "transport.fuel",
+      "parent_id": "transport",
+      "name_en": "Fuel",
+      "name_sw": "Mafuta",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 33,
+      "icon": "fuel"
+    },
+    {
+      "id": "transport.parking",
+      "parent_id": "transport",
+      "name_en": "Parking & tolls",
+      "name_sw": "Maegesho na ushuru wa barabara",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 34,
+      "icon": "parking"
+    },
+    {
+      "id": "transport.long_distance",
+      "parent_id": "transport",
+      "name_en": "Long-distance travel",
+      "name_sw": "Safari ndefu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 35,
+      "icon": "train"
+    },
+    {
+      "id": "transport.vehicle",
+      "parent_id": "transport",
+      "name_en": "Vehicle & service",
+      "name_sw": "Gari na huduma",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 36,
+      "icon": "wrench"
+    },
+
+    {
+      "id": "housing_rent",
+      "parent_id": null,
+      "name_en": "Housing & rent",
+      "name_sw": "Makazi na kodi",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 40,
+      "icon": "home"
+    },
+    {
+      "id": "housing_rent.rent",
+      "parent_id": "housing_rent",
+      "name_en": "Rent",
+      "name_sw": "Kodi ya nyumba",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 41,
+      "icon": "key"
+    },
+    {
+      "id": "housing_rent.service_charge",
+      "parent_id": "housing_rent",
+      "name_en": "Service charge & security",
+      "name_sw": "Ada ya huduma na ulinzi",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 42,
+      "icon": "shield"
+    },
+    {
+      "id": "housing_rent.household_help",
+      "parent_id": "housing_rent",
+      "name_en": "Household help",
+      "name_sw": "Msaidizi wa nyumbani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 43,
+      "icon": "people"
+    },
+    {
+      "id": "housing_rent.repairs",
+      "parent_id": "housing_rent",
+      "name_en": "Repairs & furnishing",
+      "name_sw": "Ukarabati na samani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 44,
+      "icon": "hammer"
+    },
+
+    {
+      "id": "utilities",
+      "parent_id": null,
+      "name_en": "Utilities",
+      "name_sw": "Stima, maji na huduma",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 50,
+      "icon": "plug"
+    },
+    {
+      "id": "utilities.electricity",
+      "parent_id": "utilities",
+      "name_en": "Electricity (KPLC tokens & bills)",
+      "name_sw": "Stima (tokeni na bili za KPLC)",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 51,
+      "icon": "bolt"
+    },
+    {
+      "id": "utilities.water",
+      "parent_id": "utilities",
+      "name_en": "Water",
+      "name_sw": "Maji",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 52,
+      "icon": "drop"
+    },
+    {
+      "id": "utilities.gas",
+      "parent_id": "utilities",
+      "name_en": "Cooking gas",
+      "name_sw": "Gesi ya kupikia",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 53,
+      "icon": "flame"
+    },
+    {
+      "id": "utilities.internet",
+      "parent_id": "utilities",
+      "name_en": "Home internet",
+      "name_sw": "Intaneti ya nyumbani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 54,
+      "icon": "wifi"
+    },
+    {
+      "id": "utilities.tv",
+      "parent_id": "utilities",
+      "name_en": "TV & satellite",
+      "name_sw": "Televisheni",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 55,
+      "icon": "tv"
+    },
+
+    {
+      "id": "airtime_bundles",
+      "parent_id": null,
+      "name_en": "Airtime & bundles",
+      "name_sw": "Airtime na bando",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 60,
+      "icon": "phone"
+    },
+    {
+      "id": "airtime_bundles.airtime",
+      "parent_id": "airtime_bundles",
+      "name_en": "Airtime",
+      "name_sw": "Airtime",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 61,
+      "icon": "phone"
+    },
+    {
+      "id": "airtime_bundles.data_bundles",
+      "parent_id": "airtime_bundles",
+      "name_en": "Data bundles",
+      "name_sw": "Bando za data",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 62,
+      "icon": "signal"
+    },
+
+    {
+      "id": "subscriptions_entertainment",
+      "parent_id": null,
+      "name_en": "Subscriptions & entertainment",
+      "name_sw": "Usajili na burudani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 70,
+      "icon": "play"
+    },
+    {
+      "id": "subscriptions_entertainment.streaming",
+      "parent_id": "subscriptions_entertainment",
+      "name_en": "Streaming",
+      "name_sw": "Kutazama mtandaoni",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 71,
+      "icon": "film"
+    },
+    {
+      "id": "subscriptions_entertainment.pay_tv",
+      "parent_id": "subscriptions_entertainment",
+      "name_en": "Pay TV (DStv, GOtv)",
+      "name_sw": "TV ya kulipia (DStv, GOtv)",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 72,
+      "icon": "tv"
+    },
+    {
+      "id": "subscriptions_entertainment.music",
+      "parent_id": "subscriptions_entertainment",
+      "name_en": "Music & podcasts",
+      "name_sw": "Muziki na podikasti",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 73,
+      "icon": "music"
+    },
+    {
+      "id": "subscriptions_entertainment.software_apps",
+      "parent_id": "subscriptions_entertainment",
+      "name_en": "Apps & software",
+      "name_sw": "Programu na apu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 74,
+      "icon": "app"
+    },
+    {
+      "id": "subscriptions_entertainment.events_outings",
+      "parent_id": "subscriptions_entertainment",
+      "name_en": "Events & outings",
+      "name_sw": "Matukio na matembezi",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 75,
+      "icon": "ticket"
+    },
+
+    {
+      "id": "shopping",
+      "parent_id": null,
+      "name_en": "Shopping",
+      "name_sw": "Manunuzi",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 80,
+      "icon": "bag"
+    },
+    {
+      "id": "shopping.clothing",
+      "parent_id": "shopping",
+      "name_en": "Clothing & shoes",
+      "name_sw": "Nguo na viatu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 81,
+      "icon": "shirt"
+    },
+    {
+      "id": "shopping.electronics",
+      "parent_id": "shopping",
+      "name_en": "Electronics & phones",
+      "name_sw": "Vifaa vya umeme na simu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 82,
+      "icon": "device"
+    },
+    {
+      "id": "shopping.online",
+      "parent_id": "shopping",
+      "name_en": "Online shopping",
+      "name_sw": "Manunuzi mtandaoni",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 83,
+      "icon": "globe"
+    },
+    {
+      "id": "shopping.household",
+      "parent_id": "shopping",
+      "name_en": "Household goods",
+      "name_sw": "Bidhaa za nyumbani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 84,
+      "icon": "box"
+    },
+    {
+      "id": "shopping.personal_care",
+      "parent_id": "shopping",
+      "name_en": "Personal care & beauty",
+      "name_sw": "Urembo na usafi wa mwili",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 85,
+      "icon": "sparkle"
+    },
+
+    {
+      "id": "health",
+      "parent_id": null,
+      "name_en": "Health",
+      "name_sw": "Afya",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 90,
+      "icon": "heart"
+    },
+    {
+      "id": "health.insurance",
+      "parent_id": "health",
+      "name_en": "Health insurance (SHA)",
+      "name_sw": "Bima ya afya (SHA)",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 91,
+      "icon": "shield"
+    },
+    {
+      "id": "health.hospital",
+      "parent_id": "health",
+      "name_en": "Hospital & clinic",
+      "name_sw": "Hospitali na kliniki",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 92,
+      "icon": "hospital"
+    },
+    {
+      "id": "health.pharmacy",
+      "parent_id": "health",
+      "name_en": "Pharmacy",
+      "name_sw": "Duka la dawa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 93,
+      "icon": "pill"
+    },
+
+    {
+      "id": "education",
+      "parent_id": null,
+      "name_en": "Education",
+      "name_sw": "Elimu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 100,
+      "icon": "book"
+    },
+    {
+      "id": "education.school_fees",
+      "parent_id": "education",
+      "name_en": "School & college fees",
+      "name_sw": "Karo ya shule na chuo",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 101,
+      "icon": "school"
+    },
+    {
+      "id": "education.books_supplies",
+      "parent_id": "education",
+      "name_en": "Books & supplies",
+      "name_sw": "Vitabu na vifaa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 102,
+      "icon": "book"
+    },
+    {
+      "id": "education.courses",
+      "parent_id": "education",
+      "name_en": "Courses & training",
+      "name_sw": "Kozi na mafunzo",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 103,
+      "icon": "certificate"
+    },
+
+    {
+      "id": "family_friends",
+      "parent_id": null,
+      "name_en": "Family & friends",
+      "name_sw": "Familia na marafiki",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 110,
+      "icon": "people"
+    },
+    {
+      "id": "family_friends.sent_to_people",
+      "parent_id": "family_friends",
+      "name_en": "Sent to people",
+      "name_sw": "Pesa ulizotuma kwa watu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 111,
+      "icon": "send"
+    },
+    {
+      "id": "family_friends.support",
+      "parent_id": "family_friends",
+      "name_en": "Family support",
+      "name_sw": "Msaada wa familia",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 112,
+      "icon": "heart"
+    },
+    {
+      "id": "family_friends.gifts",
+      "parent_id": "family_friends",
+      "name_en": "Gifts & celebrations",
+      "name_sw": "Zawadi na sherehe",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 113,
+      "icon": "gift"
+    },
+
+    {
+      "id": "chama_savings",
+      "parent_id": null,
+      "name_en": "Chama, savings & investments",
+      "name_sw": "Chama, akiba na uwekezaji",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 120,
+      "icon": "piggy"
+    },
+    {
+      "id": "chama_savings.mshwari",
+      "parent_id": "chama_savings",
+      "name_en": "M-Shwari savings",
+      "name_sw": "Akiba ya M-Shwari",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 121,
+      "icon": "piggy"
+    },
+    {
+      "id": "chama_savings.lock_savings",
+      "parent_id": "chama_savings",
+      "name_en": "Lock savings",
+      "name_sw": "Akiba iliyofungwa",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 122,
+      "icon": "lock"
+    },
+    {
+      "id": "chama_savings.sacco",
+      "parent_id": "chama_savings",
+      "name_en": "Sacco",
+      "name_sw": "Sacco",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 123,
+      "icon": "building"
+    },
+    {
+      "id": "chama_savings.chama",
+      "parent_id": "chama_savings",
+      "name_en": "Chama",
+      "name_sw": "Chama",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 124,
+      "icon": "people"
+    },
+    {
+      "id": "chama_savings.mmf",
+      "parent_id": "chama_savings",
+      "name_en": "Money market fund",
+      "name_sw": "Mfuko wa soko la fedha (MMF)",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 125,
+      "icon": "chart"
+    },
+    {
+      "id": "chama_savings.investments",
+      "parent_id": "chama_savings",
+      "name_en": "Shares, bonds & other investments",
+      "name_sw": "Hisa, hati na uwekezaji mwingine",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 126,
+      "icon": "trend"
+    },
+    {
+      "id": "chama_savings.pension",
+      "parent_id": "chama_savings",
+      "name_en": "Pension (NSSF)",
+      "name_sw": "Pensheni (NSSF)",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 127,
+      "icon": "clock"
+    },
+
+    {
+      "id": "loans_credit",
+      "parent_id": null,
+      "name_en": "Loans & credit",
+      "name_sw": "Mikopo",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 130,
+      "icon": "credit"
+    },
+    {
+      "id": "loans_credit.fuliza",
+      "parent_id": "loans_credit",
+      "name_en": "Fuliza",
+      "name_sw": "Fuliza",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 131,
+      "icon": "credit"
+    },
+    {
+      "id": "loans_credit.mshwari_loan",
+      "parent_id": "loans_credit",
+      "name_en": "M-Shwari loan",
+      "name_sw": "Mkopo wa M-Shwari",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 132,
+      "icon": "credit"
+    },
+    {
+      "id": "loans_credit.kcb_mpesa",
+      "parent_id": "loans_credit",
+      "name_en": "KCB M-Pesa",
+      "name_sw": "KCB M-Pesa",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 133,
+      "icon": "credit"
+    },
+    {
+      "id": "loans_credit.digital_lender",
+      "parent_id": "loans_credit",
+      "name_en": "Digital lenders (Tala, Branch…)",
+      "name_sw": "Mikopo ya app (Tala, Branch…)",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 134,
+      "icon": "phone"
+    },
+    {
+      "id": "loans_credit.hustler_fund",
+      "parent_id": "loans_credit",
+      "name_en": "Hustler Fund",
+      "name_sw": "Hustler Fund",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 135,
+      "icon": "credit"
+    },
+    {
+      "id": "loans_credit.bank_loan",
+      "parent_id": "loans_credit",
+      "name_en": "Bank & Sacco loans",
+      "name_sw": "Mikopo ya benki na Sacco",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 136,
+      "icon": "building"
+    },
+    {
+      "id": "loans_credit.helb",
+      "parent_id": "loans_credit",
+      "name_en": "HELB",
+      "name_sw": "HELB",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 137,
+      "icon": "school"
+    },
+
+    {
+      "id": "betting_gaming",
+      "parent_id": null,
+      "name_en": "Betting & gaming",
+      "name_sw": "Kamari na michezo ya bahati",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": true,
+      "sort": 140,
+      "icon": "dice"
+    },
+    {
+      "id": "betting_gaming.sports_betting",
+      "parent_id": "betting_gaming",
+      "name_en": "Sports betting",
+      "name_sw": "Kamari ya michezo",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": true,
+      "sort": 141,
+      "icon": "ball"
+    },
+    {
+      "id": "betting_gaming.casino_games",
+      "parent_id": "betting_gaming",
+      "name_en": "Casino & games",
+      "name_sw": "Kasino na michezo",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": true,
+      "sort": 142,
+      "icon": "dice"
+    },
+    {
+      "id": "betting_gaming.lottery",
+      "parent_id": "betting_gaming",
+      "name_en": "Lottery & raffles",
+      "name_sw": "Bahati nasibu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": true,
+      "sort": 143,
+      "icon": "ticket"
+    },
+
+    {
+      "id": "giving",
+      "parent_id": null,
+      "name_en": "Giving",
+      "name_sw": "Sadaka na misaada",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 150,
+      "icon": "hands"
+    },
+    {
+      "id": "giving.church_tithe",
+      "parent_id": "giving",
+      "name_en": "Church & tithe",
+      "name_sw": "Kanisa na zaka",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 151,
+      "icon": "church"
+    },
+    {
+      "id": "giving.harambee",
+      "parent_id": "giving",
+      "name_en": "Harambee & fundraisers",
+      "name_sw": "Harambee na michango",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 152,
+      "icon": "hands"
+    },
+    {
+      "id": "giving.charity",
+      "parent_id": "giving",
+      "name_en": "Charity & donations",
+      "name_sw": "Misaada na michango ya hisani",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 153,
+      "icon": "heart"
+    },
+
+    {
+      "id": "government_fees",
+      "parent_id": null,
+      "name_en": "Government & fees",
+      "name_sw": "Serikali na ada",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 160,
+      "icon": "landmark"
+    },
+    {
+      "id": "government_fees.taxes",
+      "parent_id": "government_fees",
+      "name_en": "Taxes (KRA)",
+      "name_sw": "Kodi (KRA)",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 161,
+      "icon": "receipt"
+    },
+    {
+      "id": "government_fees.licences_permits",
+      "parent_id": "government_fees",
+      "name_en": "Licences, permits & eCitizen",
+      "name_sw": "Leseni, vibali na eCitizen",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 162,
+      "icon": "id"
+    },
+    {
+      "id": "government_fees.fines",
+      "parent_id": "government_fees",
+      "name_en": "Fines & penalties",
+      "name_sw": "Faini na adhabu",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 163,
+      "icon": "alert"
+    },
+    {
+      "id": "government_fees.county",
+      "parent_id": "government_fees",
+      "name_en": "County rates & services",
+      "name_sw": "Ada na huduma za kaunti",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 164,
+      "icon": "landmark"
+    },
+
+    {
+      "id": "business",
+      "parent_id": null,
+      "name_en": "Business",
+      "name_sw": "Biashara",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 170,
+      "icon": "briefcase"
+    },
+    {
+      "id": "business.stock_supplies",
+      "parent_id": "business",
+      "name_en": "Stock & supplies",
+      "name_sw": "Bidhaa na vifaa vya biashara",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 171,
+      "icon": "box"
+    },
+    {
+      "id": "business.payments",
+      "parent_id": "business",
+      "name_en": "Business payments",
+      "name_sw": "Malipo ya biashara",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 172,
+      "icon": "briefcase"
+    },
+    {
+      "id": "business.wages",
+      "parent_id": "business",
+      "name_en": "Staff & wages",
+      "name_sw": "Wafanyakazi na mishahara",
+      "kind": "spending",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 173,
+      "icon": "people"
+    },
+
+    {
+      "id": "cash_withdrawals",
+      "parent_id": null,
+      "name_en": "Cash withdrawals",
+      "name_sw": "Kutoa pesa taslimu",
+      "kind": "cash",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 180,
+      "icon": "cash"
+    },
+    {
+      "id": "cash_withdrawals.agent",
+      "parent_id": "cash_withdrawals",
+      "name_en": "Agent withdrawal",
+      "name_sw": "Kutoa kwa wakala",
+      "kind": "cash",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 181,
+      "icon": "cash"
+    },
+    {
+      "id": "cash_withdrawals.atm",
+      "parent_id": "cash_withdrawals",
+      "name_en": "ATM withdrawal",
+      "name_sw": "Kutoa kwa ATM",
+      "kind": "cash",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 182,
+      "icon": "atm"
+    },
+
+    {
+      "id": "fees_charges",
+      "parent_id": null,
+      "name_en": "Fees & charges",
+      "name_sw": "Ada na makato",
+      "kind": "fee",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 190,
+      "icon": "receipt"
+    },
+    {
+      "id": "fees_charges.transaction",
+      "parent_id": "fees_charges",
+      "name_en": "Transaction fees",
+      "name_sw": "Ada za miamala",
+      "kind": "fee",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 191,
+      "icon": "receipt"
+    },
+    {
+      "id": "fees_charges.bank_charges",
+      "parent_id": "fees_charges",
+      "name_en": "Bank & card charges",
+      "name_sw": "Makato ya benki na kadi",
+      "kind": "fee",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 192,
+      "icon": "building"
+    },
+    {
+      "id": "fees_charges.loan_interest",
+      "parent_id": "fees_charges",
+      "name_en": "Loan interest & overdraft fees",
+      "name_sw": "Riba na ada za mikopo",
+      "kind": "fee",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 193,
+      "icon": "percent"
+    },
+
+    {
+      "id": "income",
+      "parent_id": null,
+      "name_en": "Income",
+      "name_sw": "Mapato",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 200,
+      "icon": "income"
+    },
+    {
+      "id": "income.salary",
+      "parent_id": "income",
+      "name_en": "Salary",
+      "name_sw": "Mshahara",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 201,
+      "icon": "briefcase"
+    },
+    {
+      "id": "income.business",
+      "parent_id": "income",
+      "name_en": "Business receipts",
+      "name_sw": "Mapato ya biashara",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 202,
+      "icon": "store"
+    },
+    {
+      "id": "income.from_people",
+      "parent_id": "income",
+      "name_en": "Sent by people",
+      "name_sw": "Pesa ulizotumiwa na watu",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 203,
+      "icon": "people"
+    },
+    {
+      "id": "income.refunds_reversals",
+      "parent_id": "income",
+      "name_en": "Refunds & reversals",
+      "name_sw": "Marejesho na kubatilishwa",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 204,
+      "icon": "undo"
+    },
+    {
+      "id": "income.interest_dividends",
+      "parent_id": "income",
+      "name_en": "Interest & dividends",
+      "name_sw": "Riba na gawio",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 205,
+      "icon": "trend"
+    },
+    {
+      "id": "income.other",
+      "parent_id": "income",
+      "name_en": "Other income",
+      "name_sw": "Mapato mengine",
+      "kind": "income",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 206,
+      "icon": "income"
+    },
+
+    {
+      "id": "transfers",
+      "parent_id": null,
+      "name_en": "Transfers",
+      "name_sw": "Uhamisho wa pesa",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 210,
+      "icon": "swap"
+    },
+    {
+      "id": "transfers.own_accounts",
+      "parent_id": "transfers",
+      "name_en": "Between own accounts",
+      "name_sw": "Kati ya akaunti zako",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 211,
+      "icon": "swap"
+    },
+    {
+      "id": "transfers.bank_mpesa",
+      "parent_id": "transfers",
+      "name_en": "Bank ↔ M-Pesa",
+      "name_sw": "Benki ↔ M-Pesa",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 212,
+      "icon": "building"
+    },
+    {
+      "id": "transfers.cash_deposit",
+      "parent_id": "transfers",
+      "name_en": "Cash deposit",
+      "name_sw": "Kuweka pesa taslimu",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 213,
+      "icon": "cash"
+    },
+    {
+      "id": "transfers.wallet_topup",
+      "parent_id": "transfers",
+      "name_en": "Wallet & card top-up",
+      "name_sw": "Kujaza pochi au kadi",
+      "kind": "transfer",
+      "is_spending": false,
+      "hideable": false,
+      "sort": 214,
+      "icon": "wallet"
+    },
+
+    {
+      "id": "uncategorised",
+      "parent_id": null,
+      "name_en": "Uncategorised",
+      "name_sw": "Bila kategoria",
+      "kind": "system",
+      "is_spending": true,
+      "hideable": false,
+      "sort": 999,
+      "icon": "question"
+    }
+  ]
+}

@@ -21,3 +21,7 @@ Missing for every bank (Equity, KCB, Co-op, NCBA, Absa, Stanbic, StanChart, I&M,
 debit alert, credit alert, card purchase, ATM withdrawal, fee/charge, loan repayment, standing order,
 internal transfer, PesaLink, M-PESA ↔ bank alert, balance, OTP (to ignore). Sender IDs are unverified
 too (`tools/redact-sms/senders.default.json`).
+
+Pack status (lane D, 2026-10-12): no real bank pack. `contracts/provider-packs/demo_bank.json` is a **synthetic**,
+demo-only pack for a fictional bank (sender `HESABUDEMO`) so that `corpus/demo/` can show a salary credit and a
+bank-to-M-PESA transfer pair; it says nothing about any real bank's wording. See `docs/DECISIONS-NEEDED.md`.

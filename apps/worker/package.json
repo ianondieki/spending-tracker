@@ -14,9 +14,16 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@hesabu/analytics": "workspace:*"
+    "@aws-sdk/client-s3": "^3.1149.0",
+    "@hesabu/agents": "workspace:*",
+    "@hesabu/analytics": "workspace:*",
+    "@hesabu/db": "workspace:*",
+    "@hesabu/i18n": "workspace:*",
+    "@hesabu/renderer": "workspace:*",
+    "pg-boss": "^12.37.1"
   },
   "devDependencies": {
+    "@hesabu/api": "workspace:*",
     "tsx": "^4.23.15"
   }
 }

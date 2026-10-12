@@ -2,23 +2,37 @@
   "name": "@hesabu/db",
   "version": "0.0.0",
   "private": true,
-  "description": "Postgres schema, migrations and query layer.",
+  "description": "Postgres schema, migrations and tenant-scoped query layer.",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
       "types": "./src/index.ts",
       "default": "./dist/index.js"
+    },
+    "./test-db": {
+      "types": "./src/test-db.ts",
+      "default": "./src/test-db.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "migrations"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "migrate": "tsx scripts/migrate.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts"
+  },
+  "dependencies": {
+    "@hesabu/analytics": "workspace:*",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
   }
 }

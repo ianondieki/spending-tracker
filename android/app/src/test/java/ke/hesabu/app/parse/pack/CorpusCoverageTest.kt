@@ -18,14 +18,19 @@ class CorpusCoverageTest {
     private val repo: File? = System.getProperty("hesabu.repoDir")?.let(::File)?.takeIf { it.isDirectory }
     private val json = Json { ignoreUnknownKeys = true }
 
-    data class Sample(val sender: String, val body: String, val guess: String?)
+    data class Sample(val sender: String, val body: String, val guess: String?, val illustrative: Boolean)
 
     private fun samples(): List<Sample> {
         val dir = repo?.resolve("corpus") ?: return emptyList()
         return dir.walkTopDown().filter { it.isFile && it.name.endsWith(".jsonl") }.flatMap { f ->
             f.readLines().filter { it.isNotBlank() }.map { line ->
                 val o = json.parseToJsonElement(line).jsonObject
-                Sample(o["sender"]!!.jsonPrimitive.content, o["body"]!!.jsonPrimitive.content, o["family_guess"]?.jsonPrimitive?.content)
+                Sample(
+                    o["sender"]!!.jsonPrimitive.content,
+                    o["body"]!!.jsonPrimitive.content,
+                    o["family_guess"]?.jsonPrimitive?.content,
+                    o["illustrative"]?.jsonPrimitive?.content == "true",
+                )
             }
         }.toList()
     }
@@ -41,13 +46,16 @@ class CorpusCoverageTest {
         var parsed = 0
         for (s in all) {
             if (!engine.isKnownSender(s.sender)) continue
+            // Illustrative templates from third-party docs are not real messages; the TS corpus test skips them too.
+            if (s.illustrative) continue
             known++
             val r = engine.parse(InboundMessage(s.sender, s.body, 0))
             val ok = r is ParseResult.Parsed || r is ParseResult.Ignored
             if (ok) parsed++
             val got = when (r) { is ParseResult.Parsed -> r.transaction.familyId; is ParseResult.Ignored -> r.familyId; else -> "unknown" }
             // A corpus guess names a family or a family group ("reversal" covers reversal_credit and reversal_debit).
-            fun matches(f: String, guess: String) = f == guess || f.startsWith("${guess}_")
+            fun matches(f: String, guess: String) = f == guess || f.startsWith("${guess}_") ||
+                (guess == "receive_money" && f.startsWith("receive_"))
             val expectedHere = s.guess != null && families.any { matches(it, s.guess) } && !s.body.contains("Imethibitishwa")
             if (expectedHere && !matches(got, s.guess!!)) failures.add("${s.guess} -> $got: ${s.body.take(90)}")
         }

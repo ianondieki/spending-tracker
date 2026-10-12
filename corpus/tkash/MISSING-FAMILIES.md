@@ -8,3 +8,5 @@ as expected sender IDs (`docs/research/sms-formats.md`).
 Every T-Kash family is missing: Send Money, Receive Money, Pay Bill, Buy Goods, Withdraw, Deposit,
 Airtime, bank transfers, cross-network, reversal, balance, failed. A provider pack for T-Kash must
 wait for a real export.
+
+Pack status (lane D, 2026-10-12): no T-Kash pack exists (nothing to build it from).

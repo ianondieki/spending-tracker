@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hesabu.app/contracts/facts-sheet.schema.json",
+  "title": "FactsSheet",
+  "description": "Everything a report may say, computed by packages/analytics from the ledger. Every money and percentage value carries a pre-formatted display string; narrative text may only contain numbers that appear verbatim as a display string somewhere in this sheet (the fact-checker enforces it).",
+  "$defs": {
+    "Money": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "cents": { "type": "integer" }, "display": { "type": "string", "description": "e.g. KSh 12,450 (whole shillings, rounded half up)" } },
+      "required": ["cents", "display"]
+    },
+    "Pct": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "value": { "type": "integer", "description": "whole percent, may be negative" }, "display": { "type": "string", "description": "e.g. 12% or -8%" } },
+      "required": ["value", "display"]
+    },
+    "Count": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "value": { "type": "integer" }, "display": { "type": "string" } },
+      "required": ["value", "display"]
+    },
+    "Delta": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "cents": { "type": "integer" }, "display": { "type": "string", "description": "signed, e.g. KSh +1,200 or KSh -3,400" },
+        "pct": { "$ref": "#/$defs/Pct" },
+        "direction": { "type": "string", "enum": ["up", "down", "flat", "na"] }
+      },
+      "required": ["cents", "display", "pct", "direction"]
+    },
+    "Drilldown": {
+      "type": "object", "additionalProperties": false,
+      "description": "How the app or web viewer shows the transactions behind a number",
+      "properties": {
+        "kind": { "type": "string", "enum": ["transactions"] },
+        "filter": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "from": { "type": "string", "format": "date-time" }, "to": { "type": "string", "format": "date-time" },
+            "category_id": { "type": ["string", "null"] }, "merchant": { "type": ["string", "null"] }, "counterparty_ref": { "type": ["string", "null"] },
+            "account_ref": { "type": ["string", "null"] }, "direction": { "type": ["string", "null"] }, "types": { "type": "array", "items": { "type": "string" } },
+            "transaction_ids": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "required": ["kind", "filter"]
+    },
+    "Period": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "enum": ["week", "month"] },
+        "start": { "type": "string", "format": "date-time" }, "end": { "type": "string", "format": "date-time" },
+        "label_en": { "type": "string", "description": "e.g. 6 to 12 October 2026" }, "label_sw": { "type": "string" },
+        "days": { "type": "integer" }, "days_elapsed": { "type": "integer", "description": "for in-progress periods" },
+        "timezone": { "type": "string", "const": "Africa/Nairobi" }
+      },
+      "required": ["kind", "start", "end", "label_en", "label_sw", "days", "days_elapsed", "timezone"]
+    },
+    "Totals": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "in": { "$ref": "#/$defs/Money" }, "out": { "$ref": "#/$defs/Money" }, "fees": { "$ref": "#/$defs/Money" },
+        "net": { "$ref": "#/$defs/Money" }, "transfers": { "$ref": "#/$defs/Money" }, "cash_withdrawn": { "$ref": "#/$defs/Money" },
+        "savings_out": { "$ref": "#/$defs/Money" }, "loan_repayments": { "$ref": "#/$defs/Money" },
+        "transaction_count": { "$ref": "#/$defs/Count" }, "fee_ratio": { "$ref": "#/$defs/Pct", "description": "fees / out" },
+        "savings_rate": { "$ref": "#/$defs/Pct", "description": "savings_out / in, 0 when no income" }
+      },
+      "required": ["in", "out", "fees", "net", "transfers", "cash_withdrawn", "savings_out", "loan_repayments", "transaction_count", "fee_ratio", "savings_rate"]
+    },
+    "CategoryFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "category_id": { "type": "string" }, "name_en": { "type": "string" }, "name_sw": { "type": "string" },
+        "out": { "$ref": "#/$defs/Money" }, "share": { "$ref": "#/$defs/Pct" }, "delta": { "$ref": "#/$defs/Delta" },
+        "count": { "$ref": "#/$defs/Count" }, "top_merchant": { "type": ["string", "null"] }, "drilldown": { "$ref": "#/$defs/Drilldown" }
+      },
+      "required": ["category_id", "name_en", "name_sw", "out", "share", "delta", "count", "drilldown"]
+    },
+    "MerchantFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" }, "category_id": { "type": ["string", "null"] }, "out": { "$ref": "#/$defs/Money" },
+        "count": { "$ref": "#/$defs/Count" }, "is_new": { "type": "boolean" }, "drilldown": { "$ref": "#/$defs/Drilldown" }
+      },
+      "required": ["name", "out", "count", "is_new", "drilldown"]
+    },
+    "PersonFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "as parsed, may be masked" }, "ref_masked": { "type": ["string", "null"] },
+        "sent": { "$ref": "#/$defs/Money" }, "received": { "$ref": "#/$defs/Money" }, "count": { "$ref": "#/$defs/Count" }, "drilldown": { "$ref": "#/$defs/Drilldown" }
+      },
+      "required": ["name", "sent", "received", "count", "drilldown"]
+    },
+    "AccountFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "account_ref": { "type": "string" }, "label": { "type": "string" }, "provider": { "type": "string" },
+        "balance": { "anyOf": [ { "$ref": "#/$defs/Money" }, { "type": "null" } ] }, "balance_at": { "type": ["string", "null"] },
+        "in": { "$ref": "#/$defs/Money" }, "out": { "$ref": "#/$defs/Money" }, "fees": { "$ref": "#/$defs/Money" },
+        "balance_series": { "type": "array", "items": { "type": "object", "properties": { "at": { "type": "string" }, "cents": { "type": "integer" } }, "required": ["at", "cents"] } }
+      },
+      "required": ["account_ref", "label", "provider", "balance", "balance_at", "in", "out", "fees", "balance_series"]
+    },
+    "DayFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "date": { "type": "string", "format": "date" }, "weekday_en": { "type": "string" }, "weekday_sw": { "type": "string" },
+        "out": { "$ref": "#/$defs/Money" }, "in": { "$ref": "#/$defs/Money" }, "count": { "$ref": "#/$defs/Count" }
+      },
+      "required": ["date", "weekday_en", "weekday_sw", "out", "in", "count"]
+    },
+    "TxFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" }, "occurred_at": { "type": "string" }, "amount": { "$ref": "#/$defs/Money" }, "direction": { "type": "string" },
+        "counterparty": { "type": ["string", "null"] }, "category_id": { "type": ["string", "null"] }, "type": { "type": "string" }
+      },
+      "required": ["id", "occurred_at", "amount", "direction", "type"]
+    },
+    "RecurringFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "merchant": { "type": "string" }, "category_id": { "type": ["string", "null"] }, "cadence": { "type": "string", "enum": ["weekly", "monthly", "irregular"] },
+        "typical_amount": { "$ref": "#/$defs/Money" }, "last_paid": { "type": "string" }, "next_expected": { "type": ["string", "null"] },
+        "confidence": { "type": "number" }, "is_subscription": { "type": "boolean" }, "drilldown": { "$ref": "#/$defs/Drilldown" }
+      },
+      "required": ["merchant", "cadence", "typical_amount", "last_paid", "next_expected", "confidence", "is_subscription", "drilldown"]
+    },
+    "BudgetFact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "category_id": { "type": "string" }, "limit": { "$ref": "#/$defs/Money" }, "spent": { "$ref": "#/$defs/Money" },
+        "projected": { "$ref": "#/$defs/Money" }, "used": { "$ref": "#/$defs/Pct" }, "status": { "type": "string", "enum": ["ok", "watch", "over"] }
+      },
+      "required": ["category_id", "limit", "spent", "projected", "used", "status"]
+    },
+    "CandidateInsight": {
+      "type": "object", "additionalProperties": false,
+      "description": "A fact pattern the engine found. The insight-select step ranks these; the writer may only use these and the sheet. The numbers-only fallback renders them from i18n templates keyed by kind.",
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": [
+          "spend_vs_last", "top_category", "biggest_transaction", "new_merchant", "duplicate_payment", "unusual_amount",
+          "fees_total", "fee_ratio_change", "fuliza_usage", "cash_withdrawn", "savings_rate", "income_received",
+          "sent_to_people", "spendiest_day", "weekend_share", "late_night_spend", "budget_at_risk", "budget_over",
+          "subscription_due", "recurring_found", "category_rising", "category_falling", "personal_record",
+          "late_arrivals", "unknown_messages", "month_projection", "balance_low", "no_fees_week"
+        ] },
+        "severity": { "type": "string", "enum": ["info", "notable", "important"] },
+        "params": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "null"] }, "description": "Only display strings and names; numbers never raw here" },
+        "drilldown": { "$ref": "#/$defs/Drilldown" }
+      },
+      "required": ["id", "kind", "severity", "params", "drilldown"]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "user": { "type": "object", "additionalProperties": false, "properties": { "locale": { "type": "string", "enum": ["en", "sw"] }, "week_start": { "type": "string" }, "display_name": { "type": ["string", "null"] } }, "required": ["locale", "week_start"] },
+    "period": { "$ref": "#/$defs/Period" },
+    "previous_period": { "$ref": "#/$defs/Period" },
+    "totals": { "$ref": "#/$defs/Totals" },
+    "previous_totals": { "$ref": "#/$defs/Totals" },
+    "deltas": { "type": "object", "additionalProperties": false, "properties": { "out": { "$ref": "#/$defs/Delta" }, "in": { "$ref": "#/$defs/Delta" }, "fees": { "$ref": "#/$defs/Delta" }, "net": { "$ref": "#/$defs/Delta" } }, "required": ["out", "in", "fees", "net"] },
+    "categories": { "type": "array", "items": { "$ref": "#/$defs/CategoryFact" }, "description": "sorted by out desc; includes every category with spend" },
+    "merchants": { "type": "array", "items": { "$ref": "#/$defs/MerchantFact" }, "maxItems": 15 },
+    "people": { "type": "array", "items": { "$ref": "#/$defs/PersonFact" }, "maxItems": 10 },
+    "accounts": { "type": "array", "items": { "$ref": "#/$defs/AccountFact" } },
+    "daily": { "type": "array", "items": { "$ref": "#/$defs/DayFact" } },
+    "average_daily_out": { "$ref": "#/$defs/Money" },
+    "spendiest_day": { "anyOf": [ { "$ref": "#/$defs/DayFact" }, { "type": "null" } ] },
+    "weekday_weekend": { "type": "object", "additionalProperties": false, "properties": { "weekday_out": { "$ref": "#/$defs/Money" }, "weekend_out": { "$ref": "#/$defs/Money" }, "weekend_share": { "$ref": "#/$defs/Pct" } }, "required": ["weekday_out", "weekend_out", "weekend_share"] },
+    "time_of_day": { "type": "array", "items": { "type": "object", "additionalProperties": false, "properties": { "bucket": { "type": "string", "enum": ["morning", "afternoon", "evening", "night"] }, "out": { "$ref": "#/$defs/Money" }, "count": { "$ref": "#/$defs/Count" } }, "required": ["bucket", "out", "count"] } },
+    "largest": { "type": "array", "items": { "$ref": "#/$defs/TxFact" }, "maxItems": 5 },
+    "new_merchants": { "type": "array", "items": { "type": "string" } },
+    "recurring": { "type": "array", "items": { "$ref": "#/$defs/RecurringFact" } },
+    "budgets": { "type": "array", "items": { "$ref": "#/$defs/BudgetFact" } },
+    "overdraft": { "type": "object", "additionalProperties": false, "properties": { "fuliza_drawdown": { "$ref": "#/$defs/Money" }, "fuliza_repaid": { "$ref": "#/$defs/Money" }, "fuliza_cost": { "$ref": "#/$defs/Money" }, "days_in_overdraft": { "$ref": "#/$defs/Count" } }, "required": ["fuliza_drawdown", "fuliza_repaid", "fuliza_cost", "days_in_overdraft"] },
+    "income": { "type": "array", "items": { "type": "object", "additionalProperties": false, "properties": { "source": { "type": "string" }, "kind": { "type": "string", "enum": ["salary", "business", "person", "refund", "other"] }, "in": { "$ref": "#/$defs/Money" }, "count": { "$ref": "#/$defs/Count" } }, "required": ["source", "kind", "in", "count"] } },
+    "trend_months": { "type": "array", "items": { "type": "object", "additionalProperties": false, "properties": { "month": { "type": "string", "description": "YYYY-MM" }, "label_en": { "type": "string" }, "label_sw": { "type": "string" }, "in": { "$ref": "#/$defs/Money" }, "out": { "$ref": "#/$defs/Money" }, "fees": { "$ref": "#/$defs/Money" }, "net": { "$ref": "#/$defs/Money" }, "is_current": { "type": "boolean" } }, "required": ["month", "label_en", "label_sw", "in", "out", "fees", "net", "is_current"] }, "description": "last 6 months, monthly reports only (empty for weekly)" },
+    "ytd": { "anyOf": [ { "$ref": "#/$defs/Totals" }, { "type": "null" } ] },
+    "anomalies": { "type": "array", "items": { "type": "object", "additionalProperties": false, "properties": { "kind": { "type": "string", "enum": ["duplicate", "unusual_amount", "reversal", "fee_spike", "balance_break"] }, "transaction_ids": { "type": "array", "items": { "type": "string" } }, "params": { "type": "object", "additionalProperties": { "type": ["string", "number", "boolean", "null"] } } }, "required": ["kind", "transaction_ids", "params"] } },
+    "late_arrivals": { "$ref": "#/$defs/Count" },
+    "unknown_messages": { "$ref": "#/$defs/Count" },
+    "candidate_insights": { "type": "array", "items": { "$ref": "#/$defs/CandidateInsight" } },
+    "display_strings": { "type": "array", "items": { "type": "string" }, "description": "Flat list of every display string in this sheet, built by the engine; the fact-checker's allow-list" }
+  },
+  "required": ["version", "generated_at", "user", "period", "previous_period", "totals", "previous_totals", "deltas", "categories", "merchants", "people", "accounts", "daily", "average_daily_out", "spendiest_day", "weekday_weekend", "time_of_day", "largest", "new_merchants", "recurring", "budgets", "overdraft", "income", "trend_months", "ytd", "anomalies", "late_arrivals", "unknown_messages", "candidate_insights", "display_strings"]
+}

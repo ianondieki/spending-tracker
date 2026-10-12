@@ -14,5 +14,9 @@ reversal, balance, failed. The sender ID (`AirtelMoney`? `AIRTELMONEY`? `Airtel 
 transaction-ID format are also unverified; secondary sources only say a confirmation SMS with a
 transaction ID is sent to both parties (`docs/research/sms-formats.md`).
 
+Pack status (lane D, 2026-10-12): `contracts/provider-packs/airtel_money.json` has one family, `bundle_purchase`,
+at confidence 0.6, built from the bundle line above. The three `illustrative: true` lines are reported as unknown by
+the corpus test and allowed (they are templates, not messages); no family is built from them.
+
 Next step: the human (or an Airtel Money user they know) runs `tools/redact-sms` on an export; until
 then every Airtel Money format in a provider pack is unverified.

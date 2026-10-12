@@ -1,13 +1,56 @@
-export type Env = Readonly<Record<string, string | undefined>>;
+import { connect, getDatabaseUrl, migrate, type ConnectOptions, type Env, type Sql } from './client.js';
+import { SystemDb } from './system.js';
+import { TenantDb } from './tenant.js';
 
-/** Reads DATABASE_URL and refuses to start without a Postgres URL (fail closed). */
-export function getDatabaseUrl(env: Env): string {
-  const url = env['DATABASE_URL'];
-  if (!url) {
-    throw new Error('DATABASE_URL is not set; refusing to start (fail closed)');
+export { connect, dropAll, getDatabaseUrl, migrate } from './client.js';
+export type { ConnectOptions, Env, MigrationResult, Sql } from './client.js';
+export { TenantDb } from './tenant.js';
+export type { DeliveryPatch, ReportPatch, TransactionWindow } from './tenant.js';
+export { SystemDb } from './system.js';
+export type { RegisterDeviceInput, RegisteredDevice, ScheduleUser } from './system.js';
+export * from './types.js';
+
+/**
+ * The database handle the API and worker hold. User data is reachable only through `forUser(id)`;
+ * the handful of cross-tenant operations live on `system`.
+ */
+export class Db {
+  readonly system: SystemDb;
+
+  private constructor(private readonly sql: Sql) {
+    this.system = new SystemDb(sql);
   }
-  if (!/^postgres(ql)?:\/\//.test(url)) {
-    throw new Error('DATABASE_URL must be a postgres:// or postgresql:// URL');
+
+  static async open(env: Env, opts: ConnectOptions & { migrate?: boolean } = {}): Promise<Db> {
+    const sql = connect(getDatabaseUrl(env), opts);
+    if (opts.migrate !== false) await migrate(sql);
+    return new Db(sql);
   }
-  return url;
+
+  /** For tests and tooling that already hold a connection. */
+  static fromSql(sql: Sql): Db {
+    return new Db(sql);
+  }
+
+  forUser(userId: string): TenantDb {
+    return new TenantDb(this.sql, userId);
+  }
+
+  async ping(): Promise<boolean> {
+    const rows = await this.sql`SELECT 1 AS ok`;
+    return rows.length === 1;
+  }
+
+  /** Raw access for the worker's queue (pg-boss owns its own schema) and for tests. Never for user data. */
+  get rawSql(): Sql {
+    return this.sql;
+  }
+
+  async close(): Promise<void> {
+    await this.sql.end({ timeout: 5 });
+  }
 }
+export * from './tokens.js';
+export * from './jobs.js';
+export { demoAccounts, demoTransactions, DEMO_CATEGORIES } from './demo-data.js';
+export { DbCostLedger, startOfNairobiDay, type LedgerEntry } from './cost-ledger.js';

@@ -1,0 +1,170 @@
+{
+  "spend_vs_last": {
+    "headline": "You spent {out}, against {previous_out} the time before",
+    "body": "The change is {delta} ({delta_pct}).",
+    "variant_param": "direction",
+    "variants": {
+      "up": {
+        "headline": "Spending rose to {out}, from {previous_out}",
+        "body": "That is a change of {delta} ({delta_pct}) on the period before. The categories show where the extra went."
+      },
+      "down": {
+        "headline": "Spending fell to {out}, from {previous_out}",
+        "body": "That is a change of {delta} ({delta_pct}) on the period before."
+      },
+      "flat": {
+        "headline": "Spending held steady at {out}",
+        "body": "Exactly the same as the period before, {previous_out}."
+      },
+      "na": {
+        "headline": "You spent {out}",
+        "body": "There is no earlier period with spending to compare with yet, so this is your starting point."
+      }
+    }
+  },
+  "top_category": {
+    "headline": "{category_en} was your biggest spend at {out}",
+    "body": "That is {share} of everything you spent in this period."
+  },
+  "biggest_transaction": {
+    "headline": "Your largest payment was {amount} to {counterparty}",
+    "body": "It went out on {date}. One large payment can explain much of the movement in your totals."
+  },
+  "new_merchant": {
+    "headline": "You paid somewhere new: {merchant}",
+    "body": "This is the first time {merchant} shows up in your messages. Total so far: {out}. Payments: {count}."
+  },
+  "duplicate_payment": {
+    "headline": "Possible double payment to {merchant}",
+    "body": "We found {count} payments of {amount} to {merchant} close together. If only one was meant, it may be worth checking with them."
+  },
+  "unusual_amount": {
+    "headline": "An unusual amount at {merchant}: {amount}",
+    "body": "You usually pay about {typical} there."
+  },
+  "fees_total": {
+    "headline": "You paid {fees} in fees",
+    "body": "Fees were {fee_ratio} of your spending. Charges counted: {count}. Sending, withdrawal, Fuliza and bank charges are all included."
+  },
+  "fee_ratio_change": {
+    "headline": "Fees were {fee_ratio} of your spending, against {previous_fee_ratio} before",
+    "body": "This counts every charge in your messages: sending, withdrawing, Fuliza and bank fees.",
+    "variant_param": "direction",
+    "variants": {
+      "up": {
+        "headline": "Fees took a bigger share: {fee_ratio} of spending, up from {previous_fee_ratio}",
+        "body": "Charges for sending, withdrawing and Fuliza add up quietly. The fees section shows which ones grew."
+      },
+      "down": {
+        "headline": "Fees took a smaller share: {fee_ratio} of spending, down from {previous_fee_ratio}",
+        "body": "Fewer or smaller charges for sending, withdrawing and Fuliza this time."
+      }
+    }
+  },
+  "fuliza_usage": {
+    "headline": "You used {drawdown} of Fuliza",
+    "body": "You repaid {repaid}. Fuliza charges came to {cost}. Days in overdraft: {days}."
+  },
+  "cash_withdrawn": {
+    "headline": "You withdrew {amount} in cash",
+    "body": "Withdrawals: {count}. What you spend in cash does not appear in your messages, so it stays as one line here."
+  },
+  "savings_rate": {
+    "headline": "You set aside {rate} of your income",
+    "body": "{savings} went to savings out of {income} that came in."
+  },
+  "income_received": {
+    "headline": "{income} came in",
+    "body": "Payments received: {count}. The largest source was {top_source}."
+  },
+  "sent_to_people": {
+    "headline": "You sent {total} to people",
+    "body": "Transfers to people: {count}. The most went to {top_person}: {top_amount}."
+  },
+  "spendiest_day": {
+    "headline": "{weekday_en} was your biggest spending day",
+    "body": "You spent {out} on {date}."
+  },
+  "weekend_share": {
+    "headline": "Weekends took {share} of your spending",
+    "body": "{weekend_out} on Saturday and Sunday, against {weekday_out} from Monday to Friday."
+  },
+  "late_night_spend": {
+    "headline": "{out} went out late at night",
+    "body": "Late-night payments: {count}. They are easy to forget, so here they are in one place."
+  },
+  "budget_at_risk": {
+    "headline": "{category_en} is at {used} of its budget",
+    "body": "You have spent {spent} of {limit}. At this pace the month ends near {projected}."
+  },
+  "budget_over": {
+    "headline": "{category_en} has gone past its budget",
+    "body": "You have spent {spent} against a limit of {limit}, which is {used} of the budget."
+  },
+  "subscription_due": {
+    "headline": "{merchant} is due soon: {amount}",
+    "body": "The next payment is expected around {next_expected}, going by how often you have paid before."
+  },
+  "recurring_found": {
+    "headline": "{merchant} looks like a regular payment",
+    "body": "You pay about {amount} each time. Knowing your regular payments makes the rest easier to read.",
+    "variant_param": "cadence",
+    "variants": {
+      "weekly": {
+        "headline": "{merchant} looks like a weekly payment",
+        "body": "You pay about {amount} each week. Knowing your regular payments makes the rest easier to read."
+      },
+      "monthly": {
+        "headline": "{merchant} looks like a monthly payment",
+        "body": "You pay about {amount} each month. Knowing your regular payments makes the rest easier to read."
+      }
+    }
+  },
+  "category_rising": {
+    "headline": "{category_en} went up to {out}",
+    "body": "Change from the period before: {delta} ({delta_pct})."
+  },
+  "category_falling": {
+    "headline": "{category_en} came down to {out}",
+    "body": "Change from the period before: {delta} ({delta_pct})."
+  },
+  "personal_record": {
+    "headline": "A personal record: {value}",
+    "body": "Your previous record was {previous_record}.",
+    "variant_param": "metric",
+    "variants": {
+      "out": {
+        "headline": "A personal record for spending: {value}",
+        "body": "Your previous record was {previous_record}."
+      },
+      "in": {
+        "headline": "A personal record for money in: {value}",
+        "body": "Your previous record was {previous_record}."
+      },
+      "fees": {
+        "headline": "A personal record for fees: {value}",
+        "body": "Your previous record was {previous_record}."
+      }
+    }
+  },
+  "late_arrivals": {
+    "headline": "Messages that arrived late: {count}",
+    "body": "They belong to an earlier period, so they are counted here and the earlier report has been corrected."
+  },
+  "unknown_messages": {
+    "headline": "Messages we could not read yet: {count}",
+    "body": "They are not in these totals. Telling Hesabu what they are makes future reports more complete."
+  },
+  "month_projection": {
+    "headline": "At this pace the month ends near {projected}",
+    "body": "You have spent {spent} in the first {days_elapsed} of {days} days."
+  },
+  "balance_low": {
+    "headline": "Your {account} balance is low: {balance}",
+    "body": "This is the last balance in your messages. Payments coming up may need a top-up first."
+  },
+  "no_fees_week": {
+    "headline": "No fees this period",
+    "body": "You spent {out} without paying a single charge."
+  }
+}

@@ -14,4 +14,4 @@ push; note merged heads here; re-arm the next check-in; stop re-arming when `doc
 
 ## Merges
 
-(none yet)
+- 14:55 check-in 1: merged A d14cecb, B 7d54cbf, C 1cbf9e7, D 636d576 into c242785; integration fixes: camelCase regex group names (Java), renderer DOM reference, Android corpus test.
