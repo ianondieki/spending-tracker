@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- SMS needs a radio, but Hesabu also works from shared or pasted text, so telephony is not required. -->
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+
     <!-- Sync with the Hesabu API (derived ledger only; raw messages never leave the phone). -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Live ingestion of money SMS as they arrive. -->
@@ -29,6 +32,20 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Share-to-app import: any text shared to Hesabu runs through the same parser as live SMS. -->
+        <activity
+            android:name=".ingest.ShareReceiverActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="@string/share_target_label"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
 
