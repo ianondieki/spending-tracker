@@ -45,7 +45,7 @@ fun MoneyText(
     Text(
         text = tabularDigits(Money.formatKsh(cents, decimals)),
         modifier = modifier.semantics { contentDescription = label },
-        style = style.copy(fontFeatureSettings = null),
+        style = style,
         color = if (color == Color.Unspecified) HesabuTheme.colors.forTone(tone) else color,
         textAlign = textAlign,
         maxLines = maxLines,
