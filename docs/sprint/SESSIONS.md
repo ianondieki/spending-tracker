@@ -15,3 +15,4 @@ push; note merged heads here; re-arm the next check-in; stop re-arming when `doc
 ## Merges
 
 - 14:55 check-in 1: merged A d14cecb, B 7d54cbf, C 1cbf9e7, D 636d576 into c242785; integration fixes: camelCase regex group names (Java), renderer DOM reference, Android corpus test.
+- 15:50 check-in 2: merged A f8f96f8, B 2a9f3c1, C 2bf175b into a8af315; node 691 tests, Android 276 test cases green; lane A finished its kickoff; app screenshots reviewed.
