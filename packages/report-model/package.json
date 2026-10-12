@@ -12,13 +12,23 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "fixtures"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "gen": "node --experimental-strip-types scripts/generate-types.ts",
+    "fixtures": "vitest run --config vitest.fixtures.config.ts"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "^15.0.4"
   }
 }

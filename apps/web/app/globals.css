@@ -1,15 +1,17 @@
-/* Minimal base styles. Design tokens (type, palette, semantic money colours) come from contracts/ (Lane C). */
-:root {
-  color-scheme: light dark;
-  --hesabu-ink: #1b1b1f;
-  --hesabu-paper: #fbfaf7;
+/* Base page styles. Colours and chart/report styles come from @hesabu/charts (injected inline in layout.tsx). */
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/SchibstedGrotesk-latin.woff2') format('woff2');
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --hesabu-ink: #ecebe6;
-    --hesabu-paper: #141416;
-  }
+@font-face {
+  font-family: 'Schibsted Grotesk';
+  font-style: italic;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url('/fonts/SchibstedGrotesk-Italic-latin.woff2') format('woff2');
 }
 
 html,
@@ -19,19 +21,62 @@ body {
 }
 
 body {
-  font-family:
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
-  line-height: 1.5;
-  background: var(--hesabu-paper);
-  color: var(--hesabu-ink);
+  font-family: var(--h-font);
+  font-size: 16px;
+  line-height: 1.45;
+  background: var(--h-paper);
+  color: var(--h-ink);
+  -webkit-text-size-adjust: 100%;
 }
 
-main {
-  max-width: 40rem;
+.h-page {
+  min-height: 100vh;
+  background: var(--h-paper);
+  color: var(--h-ink);
+}
+
+.h-page--report {
+  padding: 0;
+}
+
+@media (min-width: 720px) {
+  .h-page--report {
+    padding: 32px 16px;
+  }
+}
+
+.h-skip {
+  position: absolute;
+  left: -999px;
+  top: 8px;
+  padding: 12px 16px;
+  background: var(--h-biro);
+  color: var(--h-on-biro);
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.h-skip:focus {
+  left: 8px;
+}
+
+.h-plain {
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 32px 16px;
+}
+
+.h-plain h1 {
+  font-size: 28px;
+  line-height: 1.1;
+  margin: 0 0 12px;
+}
+
+.h-plain p {
+  max-width: 40em;
+  margin: 0 0 12px;
+}
+
+.h-plain a {
+  color: var(--h-biro);
 }
