@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Debug builds only: the platform permits cleartext so a laptop tunnel over http can be used for the showcase. The
+  app itself still blocks any non-loopback http server address until the user turns on "Allow http for local
+  testing" in Settings (SyncClient.CleartextBlocked). Release builds use the main config, where cleartext is off.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

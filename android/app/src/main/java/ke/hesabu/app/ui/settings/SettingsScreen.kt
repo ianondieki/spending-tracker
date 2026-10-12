@@ -55,6 +55,7 @@ fun SettingsScreen(
         onEmail = { vm.set(SettingsKeys.Email, it.trim()) },
         onWhatsapp = { vm.set(SettingsKeys.WhatsappE164, it.trim()) },
         onNumber = vm::setMsisdn,
+        onAllowCleartext = { vm.set(SettingsKeys.AllowCleartext, it) },
         onLocale = { vm.set(SettingsKeys.Locale, it) },
         onWeeklyAt = { vm.set(SettingsKeys.WeeklyAt, it) },
         onMonthlyAt = { vm.set(SettingsKeys.MonthlyAt, it) },
@@ -77,6 +78,7 @@ fun SettingsContent(
     onEmail: (String) -> Unit = {},
     onWhatsapp: (String) -> Unit = {},
     onNumber: (String) -> Unit = {},
+    onAllowCleartext: (Boolean) -> Unit = {},
     onLocale: (String) -> Unit = {},
     onWeeklyAt: (String) -> Unit = {},
     onMonthlyAt: (String) -> Unit = {},
@@ -104,6 +106,8 @@ fun SettingsContent(
             SavedField(s.serverUrl, stringResource(R.string.settings_server_label), KeyboardType.Uri, onServerUrl)
             KeyValue(stringResource(R.string.settings_sync_queue), state.queued.toString())
             s.lastSyncError?.let { Text(stringResource(R.string.settings_sync_error, it), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.warn) }
+            ToggleRow(stringResource(R.string.settings_allow_http), s.allowCleartext, onAllowCleartext)
+            Text(stringResource(R.string.settings_allow_http_body), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft)
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 SecondaryButton(stringResource(R.string.settings_sync_now), onSyncNow, enabled = s.syncConfigured && !state.busy)
             }
@@ -166,6 +170,7 @@ private fun messageText(m: String): String = when {
     m.startsWith("sync:done") -> stringResource(R.string.settings_sync_done)
     m.startsWith("sync:nothingtodo") -> stringResource(R.string.settings_sync_nothing)
     m.startsWith("sync:notconfigured") -> stringResource(R.string.settings_sync_not_configured)
+    m.startsWith("sync:cleartextblocked") -> stringResource(R.string.settings_sync_cleartext_blocked)
     m.startsWith("sync:") -> stringResource(R.string.settings_sync_failed)
     m == "rescan" -> stringResource(R.string.settings_rescan_started)
     else -> m

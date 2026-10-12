@@ -116,7 +116,7 @@ class ReportsRepository(
                 val graph = HesabuApplication.graph(app)
                 ReportsRepository(
                     settings = { graph.currentSettings() },
-                    clientFactory = { url -> SyncClient(url, { graph.secrets.deviceToken }) },
+                    clientFactory = { url -> graph.syncClient(url) },
                     sampleJson = { readAsset(app, SAMPLE_ASSET) },
                 ).also { instance = it }
             }

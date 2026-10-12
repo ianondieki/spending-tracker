@@ -46,6 +46,11 @@ open class AppGraph(
 
     val pipeline: IngestPipeline by lazy { IngestPipeline(db, engine, bodyCipher) }
 
+    /** The one way to build an API client: the cleartext policy comes from Settings, the token from the secret store. */
+    fun syncClient(url: String, engine: io.ktor.client.engine.HttpClientEngine? = null) = ke.hesabu.app.sync.SyncClient(
+        url, { secrets.deviceToken }, engine, cleartextAllowed = { runBlocking { settings.current().allowCleartext } },
+    )
+
     private val taxonomyMutex = Mutex()
     private var taxonomySeeded = false
 

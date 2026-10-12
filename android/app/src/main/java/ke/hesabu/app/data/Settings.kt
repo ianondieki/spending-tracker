@@ -53,6 +53,8 @@ object SettingsKeys {
     /** The user dismissed the OEM background-restriction guidance. */
     val OemGuidanceDismissed = booleanPreferencesKey("oem_guidance_dismissed")
     val OnboardingDone = booleanPreferencesKey("onboarding_done")
+    /** Developer toggle: allow an http:// server address (a laptop tunnel). Off by default; loopback never needs it. */
+    val AllowCleartext = booleanPreferencesKey("allow_cleartext")
 }
 
 /** Typed view of the preferences with Kenyan defaults. */
@@ -78,6 +80,7 @@ data class AppSettings(
     val lastSyncError: String? = null,
     val oemGuidanceDismissed: Boolean = false,
     val onboardingDone: Boolean = false,
+    val allowCleartext: Boolean = false,
 ) {
     /** Sync is possible only when a server URL is configured; otherwise the client fails closed. */
     val syncConfigured: Boolean get() = serverUrl.startsWith("http://") || serverUrl.startsWith("https://")
@@ -108,6 +111,7 @@ class SettingsRepository(private val store: DataStore<Preferences>) {
             lastSyncError = p[SettingsKeys.LastSyncError],
             oemGuidanceDismissed = p[SettingsKeys.OemGuidanceDismissed] ?: false,
             onboardingDone = p[SettingsKeys.OnboardingDone] ?: false,
+            allowCleartext = p[SettingsKeys.AllowCleartext] ?: false,
         )
     }
 
