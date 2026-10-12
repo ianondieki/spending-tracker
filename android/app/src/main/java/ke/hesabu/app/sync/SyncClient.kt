@@ -30,8 +30,13 @@ class SyncClient(
     private val baseUrl: String,
     private val tokenProvider: () -> String?,
     engine: HttpClientEngine? = null,
+    /** Whether the user has turned on "allow http for local testing". Loopback hosts never need it. */
+    private val cleartextAllowed: () -> Boolean = { false },
 ) {
-    class NotConfigured : IllegalStateException("sync is not configured")
+    open class NotConfigured(message: String = "sync is not configured") : IllegalStateException(message)
+
+    /** An `http://` server address while the cleartext toggle is off: nothing is sent. */
+    class CleartextBlocked : NotConfigured("http server address needs the local-testing toggle")
     class Unauthorised : IllegalStateException("device token rejected")
     class ServerError(val status: Int, val code: String, override val message: String) : RuntimeException("$status $code: $message") {
         /** 5xx and 429 are worth a retry; 4xx (except 401/429) are not. */
@@ -42,6 +47,8 @@ class SyncClient(
 
     private fun io.ktor.client.HttpClientConfig<*>.configure() {
         expectSuccess = false
+        // A redirect could carry the bearer token to another host.
+        followRedirects = false
         install(ContentNegotiation) { json(WireJson) }
         install(HttpTimeout) {
             connectTimeoutMillis = 15_000
@@ -52,6 +59,7 @@ class SyncClient(
 
     private fun base(): String {
         if (!(baseUrl.startsWith("http://") || baseUrl.startsWith("https://"))) throw NotConfigured()
+        if (baseUrl.startsWith("http://") && !isLoopback(baseUrl) && !cleartextAllowed()) throw CleartextBlocked()
         return baseUrl.trimEnd('/')
     }
 
@@ -104,7 +112,7 @@ class SyncClient(
         client.post("${base()}/v1/reports/generate") {
             header(HttpHeaders.Authorization, "Bearer ${auth()}")
             contentType(ContentType.Application.Json)
-            setBody(mapOf("kind" to kind, "period" to period, "deliver" to deliver.toString()))
+            setBody(GenerateRequest(kind = kind, period = period, deliver = deliver))
         }.bodyOrThrow()
 
     suspend fun rawGet(path: String): JsonElement =
@@ -113,4 +121,12 @@ class SyncClient(
     fun close() = client.close()
 
     private fun HttpStatusCode.isSuccess() = value in 200..299
+
+    companion object {
+        /** The emulator's host alias and the device itself: cleartext here never leaves the machine. */
+        fun isLoopback(url: String): Boolean {
+            val host = runCatching { java.net.URI(url).host }.getOrNull()?.lowercase() ?: return false
+            return host == "localhost" || host == "127.0.0.1" || host == "10.0.2.2" || host == "::1"
+        }
+    }
 }

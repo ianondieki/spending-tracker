@@ -100,6 +100,10 @@ data class RegisterRequest(
     @SerialName("display_name") val displayName: String? = null,
 )
 
+/** POST /v1/reports/generate body (openapi.yaml): `deliver` and `force` are booleans, never strings. */
+@Serializable
+data class GenerateRequest(val kind: String, val period: String, val deliver: Boolean = false, val force: Boolean = false)
+
 @Serializable
 data class RegisterResponse(@SerialName("device_token") val deviceToken: String, @SerialName("user_id") val userId: String)
 
@@ -123,6 +127,8 @@ val WireJson: Json = Json {
     ignoreUnknownKeys = true
     explicitNulls = false
     coerceInputValues = true
+    // Booleans such as `deliver = false` must reach the wire; the API's schema requires them.
+    encodeDefaults = true
 }
 
 /** Maps ledger rows to the wire. The body never existed on the entity, so it cannot leak here. */
