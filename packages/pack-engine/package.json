@@ -21,7 +21,8 @@
     "lint": "eslint .",
     "clean": "rm -rf dist",
     "cli": "node dist/cli.js",
-    "corpus": "node dist/cli.js run --corpus ../../corpus/mpesa/unverified-public-samples.jsonl"
+    "corpus": "node dist/cli.js run --corpus ../../corpus/mpesa/unverified-public-samples.jsonl",
+    "demo:write": "tsc -p tsconfig.build.json && node dist/demo/write.js"
   },
   "dependencies": {
     "ajv": "^8.20.0"

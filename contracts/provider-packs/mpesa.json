@@ -295,7 +295,7 @@
     },
     {
       "family_id": "bank_to_mpesa",
-      "description": "Bank to M-PESA, detected by the bank's name after 'from' (STANBIC to MPESA Retail 300248, NCBA BANK, KCB 1 501901, STANDARD CHARTERED BANK 329299, CO-OP BANK 149444). Transfer from the user's own bank account; the bank's own alert is the other side. Source: corpus/mpesa/unverified-public-samples.jsonl (public parser repos, redacted); verified: false until a real export passes.",
+      "description": "Bank to M-PESA, detected by the bank's name after 'from' (STANBIC to MPESA Retail 300248, NCBA BANK, KCB 1 501901, STANDARD CHARTERED BANK 329299, CO-OP BANK 149444). Transfer from the user's own bank account; the bank's own alert is the other side. Source: corpus/mpesa/unverified-public-samples.jsonl (public parser repos, redacted); verified: false until a real export passes. 'HESABU DEMO' is in the bank-name list only for the synthetic demo inbox (corpus/demo); no real sender uses it.",
       "type": "BANK_TO_MPESA",
       "direction": "in",
       "counterparty_kind": "bank",
@@ -305,7 +305,7 @@
           "you have received"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>(?:KCB|EQUITY|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s+(?:BANK|LTD|LIMITED|KENYA|\\d+))*)(?:\\s+to\\s+M-?PESA\\s+Retail\\s+(?<counterparty_ref>[\\dX]+))?\\s+on\\s+(?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s+(?:BANK|LTD|LIMITED|KENYA|\\d+))*)(?:\\s+to\\s+M-?PESA\\s+Retail\\s+(?<counterparty_ref>[\\dX]+))?\\s+on\\s+(?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
         "external_ref": {
           "to": "external_ref",
@@ -532,7 +532,7 @@
     },
     {
       "family_id": "mpesa_to_bank",
-      "description": "M-PESA to the user's own bank account via the bank's paybill, detected by the bank's name after 'sent to' (Equity Paybill Account, DTB Account, Lipa na KCB, IM BANK C2B). Paybill-shaped; the bank's own alert is the other side. Source: corpus/mpesa/unverified-public-samples.jsonl (public parser repos, redacted); verified: false until a real export passes.",
+      "description": "M-PESA to the user's own bank account via the bank's paybill, detected by the bank's name after 'sent to' (Equity Paybill Account, DTB Account, Lipa na KCB, IM BANK C2B). Paybill-shaped; the bank's own alert is the other side. Source: corpus/mpesa/unverified-public-samples.jsonl (public parser repos, redacted); verified: false until a real export passes. 'HESABU DEMO' is in the bank-name list only for the synthetic demo inbox (corpus/demo); no real sender uses it.",
       "type": "MPESA_TO_BANK",
       "direction": "out",
       "counterparty_kind": "bank",
@@ -543,7 +543,7 @@
           "for account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>(?:LIPA NA )?(?:KCB|EQUITY|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s[^.]*?)?) for account (?<account_ref>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>(?:LIPA NA )?(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s[^.]*?)?) for account (?<account_ref>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
         "external_ref": {
           "to": "external_ref",
