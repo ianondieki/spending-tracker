@@ -19,11 +19,15 @@
     "@hesabu/analytics": "workspace:*",
     "@hesabu/db": "workspace:*",
     "@hesabu/i18n": "workspace:*",
+    "@hesabu/pack-engine": "workspace:*",
     "@hesabu/renderer": "workspace:*",
+    "@hesabu/taxonomy": "workspace:*",
     "pg-boss": "^12.37.1"
   },
   "devDependencies": {
     "@hesabu/api": "workspace:*",
+    "@types/pngjs": "^6.0.5",
+    "pngjs": "^7.0.0",
     "tsx": "^4.23.15"
   }
 }
