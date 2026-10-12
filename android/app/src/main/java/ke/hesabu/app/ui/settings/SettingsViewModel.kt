@@ -77,8 +77,9 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
         transient.value = transient.value.copy(busy = false, message = "sync:${out.javaClass.simpleName.lowercase()}")
     }
 
-    fun rescanInbox(context: Context) {
-        BackfillWorker.start(context, graph.settings.let { 12 })
+    fun rescanInbox(context: Context) = viewModelScope.launch {
+        BackfillWorker.start(context, graph.currentSettings().backfillMonths)
+        BackfillWorker.schedulePeriodicReconcile(context)
         transient.value = transient.value.copy(message = "rescan")
     }
 

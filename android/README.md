@@ -81,6 +81,21 @@ On Tecno, Infinix and Xiaomi phones turn battery optimisation off for the app so
 
 Instrumented tests need a connected device or emulator: `./gradlew connectedDebugAndroidTest`.
 
+## How the pieces fit
+
+- **Packs.** `contracts/provider-packs/*.json` and `packages/taxonomy/dist/*.json` are copied into the APK's assets
+  by the `copyContractAssets` Gradle task on every build. The built-in fallbacks under `src/main/assets/*-builtin/`
+  are dropped per sender as soon as a contract pack claims that sender. Every example in every pack is a test
+  (`PackExamplesTest`), and `CorpusCoverageTest` runs `corpus/` through the loaded packs.
+- **Pipeline.** Every entry point (live SMS, inbox backfill, six-hourly reconciliation, share-to-app, paste import,
+  demo mode) calls `IngestPipeline.ingest`: parse, dedupe, categorise, store, pair transfers, check the balance
+  chain, queue for sync. Message bodies are never logged; unknown ones are stored encrypted for "Teach Hesabu".
+- **Sync.** `Syncer` registers the device and uploads queued rows in batches of 500 through `SyncClient`; without
+  a server address in Settings nothing is sent. The wire models have no field for a message body.
+- **Demo mode.** Settings toggle; feeds the demo inbox through the real pipeline with the tag `demo`, and removes
+  exactly those rows when turned off.
+- **Screenshots.** `./gradlew testDebugUnitTest` re-records `screenshots/` (Roborazzi always records here).
+
 ## Permissions
 
 `RECEIVE_SMS` and `READ_SMS` are declared for live ingestion and the one-off inbox backfill, requested at runtime
