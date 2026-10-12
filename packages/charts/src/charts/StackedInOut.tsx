@@ -86,10 +86,11 @@ export function StackedInOut({ id, title, takeaway, locale, theme, width = DEFAU
               <Label x={gx} y={topY - 8} size={FONT.sm} weight={700} anchor="middle" numeric>
                 {`${l.net} ${p.net.display}`}
               </Label>
-              <Label x={xIn + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="middle" soft>
+              {/* Anchored away from each other so long words (Zilizoingia, Zilizotoka) never collide. */}
+              <Label x={xIn + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="end" soft>
                 {l.in}
               </Label>
-              <Label x={xOut + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="middle" soft>
+              <Label x={xOut + barW / 2} y={top + plotH + 16} size={FONT.xs} anchor="start" soft>
                 {l.out}
               </Label>
               <Label x={gx} y={top + plotH + 36} size={FONT.sm} anchor="middle">

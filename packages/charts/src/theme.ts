@@ -69,6 +69,8 @@ export function themeStylesheet(): string {
     `:root, [data-theme="light"] {\n${block(themeVars('light'))}\n  color-scheme: light;\n}`,
     `[data-theme="dark"] {\n${block(themeVars('dark'))}\n  color-scheme: dark;\n}`,
     `@media (prefers-color-scheme: dark) {\n  :root:not([data-theme="light"]) {\n${block(themeVars('dark'))}\n    color-scheme: dark;\n  }\n}`,
+    // Paper is always light: the PDF and a printed page use the light palette whatever the screen theme.
+    `@media print {\n  :root, [data-theme="dark"], [data-theme="light"] {\n${block(themeVars('light'))}\n    color-scheme: light;\n  }\n}`,
   ].join('\n');
 }
 
