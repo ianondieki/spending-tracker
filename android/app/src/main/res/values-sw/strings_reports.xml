@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- [[COPY-REVIEW]] Kiswahili copy for the Reports screens and charts; the English file is the source. -->
+
+    <!-- Orodha ya ripoti -->
+    <string name="reports_title">Ripoti</string>
+    <string name="reports_group_weekly">Za wiki</string>
+    <string name="reports_group_monthly">Za mwezi</string>
+    <string name="reports_loading">Inapakia ripoti zako</string>
+    <string name="reports_empty_title">Bado hakuna ripoti</string>
+    <string name="reports_empty_body">Ripoti yako ya kwanza ya wiki hutengenezwa mwishoni mwa wiki hii. Unaweza pia kuiomba sasa.</string>
+    <string name="reports_generate">Tengeneza ripoti ya wiki hii</string>
+    <string name="reports_generate_working">Inaomba seva yako ripoti ya wiki hii</string>
+    <string name="reports_generate_queued">Ripoti imeombwa. Itaonekana hapa ikiwa tayari.</string>
+    <string name="reports_generate_offline">Ripoti hutengenezwa kwenye seva yako. Kwanza weka anwani ya seva yako kwenye Mipangilio.</string>
+    <string name="reports_generate_failed">Ripoti haikuweza kuombwa</string>
+    <string name="reports_not_configured">Weka anwani ya seva yako kwenye Mipangilio ili kupata ripoti</string>
+    <string name="reports_sample_note">Hapa chini kuna ripoti ya mfano, ili uone jinsi inavyosomeka.</string>
+    <string name="reports_demo_note">Hali ya maonyesho imewashwa, kwa hivyo hii ni ripoti ya mfano.</string>
+    <string name="reports_error_title">Ripoti hazikuweza kupakiwa</string>
+    <string name="reports_error_network">Hesabu haikuweza kufikia seva yako. Angalia muunganisho wako, kisha ujaribu tena.</string>
+    <string name="reports_error_unauthorised">Seva yako haikukubali simu hii. Angalia anwani ya seva kwenye Mipangilio, kisha ujaribu tena.</string>
+    <string name="reports_error_server">Seva yako ilipata tatizo. Jaribu tena baada ya dakika moja.</string>
+    <string name="reports_period_range">%1$s hadi %2$s</string>
+
+    <!-- Hali ya ripoti -->
+    <string name="reports_status_queued">Kwenye foleni</string>
+    <string name="reports_status_collecting">Inahesabu</string>
+    <string name="reports_status_writing">Inaandika</string>
+    <string name="reports_status_checking">Inakagua nambari</string>
+    <string name="reports_status_rendering">Inasanifu</string>
+    <string name="reports_status_delivering">Inatuma</string>
+    <string name="reports_status_done">Tayari</string>
+    <string name="reports_status_failed">Haikuweza kutengenezwa</string>
+    <string name="reports_status_working">Inatengenezwa</string>
+
+    <!-- Utumaji -->
+    <string name="reports_channel_whatsapp">WhatsApp</string>
+    <string name="reports_channel_email">barua pepe</string>
+    <string name="reports_channel_share">kushiriki</string>
+    <string name="reports_delivery_pending">%1$s inasubiri</string>
+    <string name="reports_delivery_sent">%1$s imetumwa</string>
+    <string name="reports_delivery_delivered">%1$s imefika</string>
+    <string name="reports_delivery_read">%1$s imesomwa</string>
+    <string name="reports_delivery_failed">%1$s imeshindikana</string>
+    <string name="reports_delivery_skipped">%1$s imerukwa</string>
+    <string name="reports_delivery_shared">imeshirikiwa kutoka simu hii</string>
+
+    <!-- Ripoti moja -->
+    <string name="report_title_fallback">Ripoti</string>
+    <string name="report_loading">Inafungua ripoti</string>
+    <string name="report_error_title">Ripoti hii haikuweza kufunguliwa</string>
+    <string name="report_error_not_found">Seva yako haina ripoti hii tena. Rudi kwenye Ripoti uone orodha ya sasa.</string>
+    <string name="report_not_ready_title">Ripoti hii bado inatengenezwa</string>
+    <string name="report_not_ready_body">Hatua ya sasa: %1$s. Rudi baada ya dakika chache.</string>
+    <string name="report_check_again">Angalia tena</string>
+    <string name="report_failed_title">Ripoti hii haikuweza kutengenezwa</string>
+    <string name="report_failed_body">Seva yako ilisimama kabla ripoti haijakamilika. Iombe tena kutoka Ripoti.</string>
+    <string name="report_hero_total_week">Wiki hii</string>
+    <string name="report_hero_total_month">Mwezi huu</string>
+    <string name="report_hero_rest">Mengineyo yote</string>
+    <string name="report_delta_up_week">zaidi ya wiki iliyopita</string>
+    <string name="report_delta_down_week">chini ya wiki iliyopita</string>
+    <string name="report_delta_flat_week">sawa na wiki iliyopita</string>
+    <string name="report_delta_na_week">Hakuna wiki ya awali ya kulinganisha</string>
+    <string name="report_delta_up_month">zaidi ya mwezi uliopita</string>
+    <string name="report_delta_down_month">chini ya mwezi uliopita</string>
+    <string name="report_delta_flat_month">sawa na mwezi uliopita</string>
+    <string name="report_delta_na_month">Hakuna mwezi wa awali wa kulinganisha</string>
+    <string name="report_insights_title">Yaliyojitokeza</string>
+    <string name="report_footer_heading">Kuhusu ripoti hii</string>
+    <string name="report_footer_accounts">Akaunti zilizohesabiwa: %1$s</string>
+    <string name="report_footer_unknown">Jumbe ambazo Hesabu haikuweza kusoma: %1$s</string>
+    <string name="report_footer_unknown_none">Hesabu ilisoma kila ujumbe wa pesa katika kipindi hiki.</string>
+
+    <!-- Kushiriki -->
+    <string name="report_share">Shiriki ripoti hii</string>
+    <string name="report_share_image">Shiriki picha</string>
+    <string name="report_share_pdf">Shiriki PDF</string>
+    <string name="report_share_image_missing">Picha bado haiko tayari</string>
+    <string name="report_share_pdf_missing">PDF bado haiko tayari</string>
+    <string name="report_share_preparing_image">Inaandaa picha</string>
+    <string name="report_share_preparing_pdf">Inaandaa PDF</string>
+    <string name="report_share_failed_title">Faili haikuweza kupakuliwa</string>
+    <string name="report_share_failed_body">Angalia muunganisho wako, kisha ujaribu tena.</string>
+    <string name="report_share_chooser">Shiriki ripoti</string>
+
+    <!-- Chati -->
+    <string name="chart_show_table">Onyesha kama jedwali</string>
+    <string name="chart_show_chart">Onyesha kama chati</string>
+    <string name="chart_empty_body">Hakuna cha kuchora kwa kipindi hiki.</string>
+    <string name="chart_other">Nyingine</string>
+    <string name="chart_centre_spent">Ulitumia</string>
+    <string name="chart_total">Jumla</string>
+    <string name="chart_daily_average">Wastani wa siku %1$s</string>
+    <string name="chart_daily_average_row">Wastani wa siku</string>
+    <string name="chart_spendiest">Siku ya matumizi makubwa zaidi</string>
+    <string name="chart_new">Mpya</string>
+    <string name="chart_fees">Ada</string>
+    <string name="chart_fee_ratio">%1$s ya ulichotumia</string>
+    <string name="chart_fee_share">Sehemu ya ulichotumia</string>
+
+    <!-- Maelezo ya chati kwa TalkBack -->
+    <string name="chart_a11y_total">Jumla %1$s.</string>
+    <string name="chart_a11y_slice">%1$s %2$s, %3$s.</string>
+    <string name="chart_a11y_highest">Juu zaidi %1$s, %2$s.</string>
+    <string name="chart_a11y_average">Wastani wa siku %1$s.</string>
+    <string name="chart_a11y_item">%1$s %2$s.</string>
+    <string name="chart_a11y_fees">Ada %1$s.</string>
+    <string name="chart_a11y_fees_ratio">Ada %1$s, %2$s ya matumizi.</string>
+    <string name="chart_a11y_balance">Inaishia %1$s. Chini kabisa %2$s, juu kabisa %3$s.</string>
+</resources>
