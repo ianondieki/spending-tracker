@@ -128,10 +128,12 @@ class BackfillWorker(appContext: Context, params: WorkerParameters) : CoroutineW
     }
 }
 
-/** The periodic re-scan: the last 14 days through the same pipeline. */
+/** The periodic re-scan: the last 14 days through the same pipeline, then the unknown-message retention purge. */
 class ReconcileWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         val ctx = applicationContext
+        // Retention runs even without SMS access: shared and pasted unknowns age out the same way.
+        HesabuApplication.graph(ctx).db.unknownMessageDao().purgeOlderThan(System.currentTimeMillis() - UNKNOWN_RETENTION_MS)
         if (!InboxScan.hasReadSms(ctx)) return Result.failure()
         val since = System.currentTimeMillis() - 14L * 24 * 3600 * 1000
         val out = InboxScan.run(ctx, since, { isStopped }) { setProgress(it) }
@@ -140,5 +142,10 @@ class ReconcileWorker(appContext: Context, params: WorkerParameters) : Coroutine
         graph.settings.set(SettingsKeys.LastReconcileAt, System.currentTimeMillis())
         if (out.report.parsed > 0) SyncScheduler.requestSoon(ctx)
         return Result.success(InboxScan.progress(out.total, out.done, out.report))
+    }
+
+    companion object {
+        /** Spec §13 retention default for stored unknown-message bodies. */
+        const val UNKNOWN_RETENTION_MS: Long = 30L * 24 * 3600 * 1000
     }
 }

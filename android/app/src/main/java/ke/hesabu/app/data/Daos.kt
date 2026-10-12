@@ -136,6 +136,10 @@ interface UnknownMessageDao {
 
     @Query("DELETE FROM unknown_messages WHERE source = :source")
     suspend fun deleteBySource(source: String): Int
+
+    /** Retention: encrypted bodies are kept 30 days for "Teach Hesabu", then purged whatever their status. */
+    @Query("DELETE FROM unknown_messages WHERE received_at < :cutoffMillis")
+    suspend fun purgeOlderThan(cutoffMillis: Long): Int
 }
 
 data class SenderCount(val sender: String, val n: Int)

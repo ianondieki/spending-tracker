@@ -159,6 +159,15 @@ class IngestPipelineTest {
     }
 
     @Test
+    fun unknownBodiesArePurgedAfterThirtyDays() = runTest {
+        val old = clock - 31L * 24 * 3600 * 1000
+        pipeline.ingest(listOf(sms("Old mystery from M-PESA", at = old), sms("New mystery from M-PESA", at = clock)))
+        assertEquals(2, db.unknownMessageDao().pendingCount())
+        assertEquals(1, db.unknownMessageDao().purgeOlderThan(clock - ReconcileWorker.UNKNOWN_RETENTION_MS))
+        assertEquals(1, db.unknownMessageDao().pendingCount())
+    }
+
+    @Test
     fun unknownBodiesAreStoredEncryptedAndDeduped() = runTest {
         val body = "Something new from M-PESA that no family knows about yet"
         pipeline.ingest(listOf(sms(body), sms(body)))
