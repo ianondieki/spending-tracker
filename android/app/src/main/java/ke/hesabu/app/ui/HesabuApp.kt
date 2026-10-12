@@ -8,6 +8,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ke.hesabu.app.HesabuApplication
+import ke.hesabu.app.ui.onboarding.OnboardingFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -17,6 +22,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+
+/** Root: onboarding until it is done, then the app shell. */
+@Composable
+fun HesabuRoot() {
+    val context = LocalContext.current
+    val graph = remember { HesabuApplication.graph(context) }
+    val settings by graph.settings.settings.collectAsStateWithLifecycle(initialValue = null)
+    val s = settings ?: return
+    if (!s.onboardingDone) {
+        OnboardingFlow(onFinished = {})
+    } else {
+        HesabuApp()
+    }
+}
 
 /** App shell: bottom navigation plus the NavHost of the four top-level screens. */
 @Composable

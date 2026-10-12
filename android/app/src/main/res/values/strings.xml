@@ -14,4 +14,85 @@
     <string name="placeholder_reports">Weekly and monthly reports will appear here.</string>
     <string name="placeholder_settings">Permissions, delivery and privacy.</string>
     <string name="placeholder_coming_soon">Coming soon</string>
+
+    <!-- Money -->
+    <string name="money_a11y">%1$s shillings</string>
+
+    <!-- Common actions -->
+    <string name="action_continue">Continue</string>
+    <string name="action_done">Done</string>
+    <string name="action_back">Back</string>
+    <string name="action_retry">Try again</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
+
+    <!-- Onboarding [[COPY-REVIEW]] -->
+    <string name="welcome_title">Hesabu reads your money messages so you don\'t have to</string>
+    <string name="welcome_subtitle">A weekly and monthly account of where your money went, counted from the messages already on this phone.</string>
+    <string name="welcome_point_1">Hesabu parses M-Pesa, Airtel Money, T-Kash and bank messages on this phone and keeps a ledger.</string>
+    <string name="welcome_point_2">The messages never leave the phone. Only the counted figures do, if you turn reports on.</string>
+    <string name="welcome_point_3">Every number can be opened to see the messages it was counted from.</string>
+    <string name="welcome_skip_import">Skip SMS access and import messages by sharing or pasting</string>
+
+    <string name="disclosure_title">Before Hesabu reads your messages</string>
+    <string name="disclosure_subtitle">Hesabu asks for SMS access to read money messages. Here is exactly what that means.</string>
+    <string name="disclosure_reads_title">What Hesabu reads</string>
+    <string name="disclosure_reads_body">Only messages from these financial senders. Messages from anyone else are not read, and not read into memory beyond checking the sender.</string>
+    <string name="disclosure_leaves_title">What leaves the phone</string>
+    <string name="disclosure_leaves_body">Structured transactions: amount, fee, date, type and a masked counterparty. Never the message itself, and only if you turn sync on with your own server address.</string>
+    <string name="disclosure_revoke_title">How to stop it</string>
+    <string name="disclosure_revoke_body">Turn SMS access off any time in Android Settings, Apps, Hesabu, Permissions. Hesabu keeps working from messages you share or paste.</string>
+    <string name="disclosure_allow">Allow SMS access</string>
+    <string name="disclosure_not_now">Not now</string>
+    <string name="disclosure_not_now_consequence">Without SMS access Hesabu cannot read messages as they arrive. You can share or paste messages into Hesabu instead.</string>
+
+    <string name="backfill_title">Reading your inbox</string>
+    <string name="backfill_done_title">Inbox read</string>
+    <plurals name="backfill_subtitle">
+        <item quantity="one">Money messages from the last month, counted by sender.</item>
+        <item quantity="other">Money messages from the last %d months, counted by sender.</item>
+    </plurals>
+    <string name="backfill_progress">%1$d of %2$d messages</string>
+    <string name="backfill_reading">Looking for money messages</string>
+    <string name="backfill_total_label">Transactions found</string>
+    <plurals name="backfill_unknown">
+        <item quantity="one">%d message was not understood. You can teach Hesabu what it means later.</item>
+        <item quantity="other">%d messages were not understood. You can teach Hesabu what they mean later.</item>
+    </plurals>
+    <string name="backfill_failed">Hesabu could not read the inbox. Check that SMS access is allowed, then try again from Settings.</string>
+    <string name="backfill_skip">Continue in the background</string>
+
+    <string name="oem_title">Keep Hesabu running in the background</string>
+    <string name="oem_subtitle">%1$s phones stop apps from reading messages in the background unless you allow it.</string>
+    <string name="oem_steps_title">Steps</string>
+    <string name="oem_why_label">Why</string>
+    <string name="oem_why_value">So new messages are counted as they arrive</string>
+    <string name="oem_open_settings">Open battery settings</string>
+    <string name="oem_transsion">Tecno, Infinix and itel</string>
+    <string name="oem_xiaomi">Xiaomi, Redmi and POCO</string>
+    <string name="oem_oppo">OPPO, realme and OnePlus</string>
+    <string name="oem_vivo">vivo</string>
+    <string name="oem_huawei">Huawei and HONOR</string>
+    <string name="oem_samsung">Samsung</string>
+    <string name="oem_other">Most</string>
+    <string name="oem_steps_transsion">Open Phone Master, then Power Manager.\nTap Auto-start management and allow Hesabu.\nIn Settings, Apps, Hesabu, Battery, choose Unrestricted.</string>
+    <string name="oem_steps_xiaomi">Open Settings, Apps, Manage apps, Hesabu.\nTurn Autostart on.\nUnder Battery saver choose No restrictions.\nIn Security, Boost speed, Lock apps, lock Hesabu so it is not cleared.</string>
+    <string name="oem_steps_oppo">Open Settings, Battery, More settings.\nAllow Hesabu to run in the background and to auto-launch.\nIn Settings, Apps, Hesabu, Battery usage, allow background activity.</string>
+    <string name="oem_steps_vivo">Open i Manager, App manager, Autostart manager and allow Hesabu.\nIn Settings, Battery, Background power consumption management, allow Hesabu.</string>
+    <string name="oem_steps_huawei">Open Settings, Battery, App launch.\nTurn off automatic management for Hesabu and allow Auto-launch, Secondary launch and Run in background.</string>
+    <string name="oem_steps_samsung">Open Settings, Apps, Hesabu, Battery.\nChoose Unrestricted.\nIn Settings, Battery, Background usage limits, make sure Hesabu is not a sleeping app.</string>
+    <string name="oem_steps_other">Open Settings, Apps, Hesabu, Battery.\nChoose Unrestricted or allow background activity.</string>
+
+    <!-- Import paths [[COPY-REVIEW]] -->
+    <string name="share_target_label">Add to Hesabu</string>
+    <plurals name="import_result_parsed">
+        <item quantity="one">1 transaction added</item>
+        <item quantity="other">%d transactions added</item>
+    </plurals>
+    <string name="import_result_duplicate">Already in your ledger</string>
+    <plurals name="import_result_unknown">
+        <item quantity="one">Hesabu could not read this message. It is waiting in Teach Hesabu.</item>
+        <item quantity="other">Hesabu could not read %d messages. They are waiting in Teach Hesabu.</item>
+    </plurals>
+    <string name="import_result_nothing">No money messages found in the shared text</string>
 </resources>

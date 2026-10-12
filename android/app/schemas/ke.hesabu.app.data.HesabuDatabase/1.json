@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "01c61230a5edb0393999eba80ed593ed",
+    "identityHash": "8fbc11b90bb3478b88d6f9cdd8876298",
     "entities": [
       {
         "tableName": "transactions",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `provider` TEXT NOT NULL, `direction` TEXT NOT NULL, `amount_cents` INTEGER NOT NULL, `currency` TEXT NOT NULL, `counterparty` TEXT, `category` TEXT, `occurred_at` INTEGER NOT NULL, `raw_hash` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `account_ref` TEXT NOT NULL, `provider` TEXT NOT NULL, `external_ref` TEXT, `type` TEXT NOT NULL, `direction` TEXT NOT NULL, `amount_cents` INTEGER NOT NULL, `fee_cents` INTEGER NOT NULL, `balance_after_cents` INTEGER, `occurred_at` INTEGER NOT NULL, `received_at` INTEGER NOT NULL, `counterparty_name` TEXT, `counterparty_kind` TEXT NOT NULL, `counterparty_ref_masked` TEXT, `paybill` TEXT, `till` TEXT, `counterparty_account_ref` TEXT, `category_id` TEXT, `category_source` TEXT NOT NULL, `category_confidence` REAL NOT NULL, `is_transfer` INTEGER NOT NULL, `is_transfer_hint` INTEGER NOT NULL, `transfer_pair_id` TEXT, `parse_confidence` REAL NOT NULL, `source` TEXT NOT NULL, `raw_hash` TEXT NOT NULL, `pack_id` TEXT NOT NULL, `pack_version` TEXT NOT NULL, `family_id` TEXT NOT NULL, `user_edited` INTEGER NOT NULL, `note` TEXT, `tags` TEXT NOT NULL, `updated_at` INTEGER NOT NULL, `synced_at` INTEGER, `balance_break` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,8 +15,26 @@
             "notNull": true
           },
           {
+            "fieldPath": "accountRef",
+            "columnName": "account_ref",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "provider",
             "columnName": "provider",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "externalRef",
+            "columnName": "external_ref",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -33,33 +51,171 @@
             "notNull": true
           },
           {
-            "fieldPath": "currency",
-            "columnName": "currency",
+            "fieldPath": "feeCents",
+            "columnName": "fee_cents",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "balanceAfterCents",
+            "columnName": "balance_after_cents",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "occurredAtMillis",
+            "columnName": "occurred_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "receivedAtMillis",
+            "columnName": "received_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "counterpartyName",
+            "columnName": "counterparty_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "counterpartyKind",
+            "columnName": "counterparty_kind",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "counterparty",
-            "columnName": "counterparty",
+            "fieldPath": "counterpartyRefMasked",
+            "columnName": "counterparty_ref_masked",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "category",
-            "columnName": "category",
+            "fieldPath": "paybill",
+            "columnName": "paybill",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "occurredAt",
-            "columnName": "occurred_at",
+            "fieldPath": "till",
+            "columnName": "till",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "counterpartyAccountRef",
+            "columnName": "counterparty_account_ref",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "category_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categorySource",
+            "columnName": "category_source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryConfidence",
+            "columnName": "category_confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTransfer",
+            "columnName": "is_transfer",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isTransferHint",
+            "columnName": "is_transfer_hint",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "transferPairId",
+            "columnName": "transfer_pair_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parseConfidence",
+            "columnName": "parse_confidence",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "rawHash",
             "columnName": "raw_hash",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packId",
+            "columnName": "pack_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packVersion",
+            "columnName": "pack_version",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "familyId",
+            "columnName": "family_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userEdited",
+            "columnName": "user_edited",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "note",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtMillis",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncedAtMillis",
+            "columnName": "synced_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "balanceBreak",
+            "columnName": "balance_break",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -80,6 +236,16 @@
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_transactions_raw_hash` ON `${TABLE_NAME}` (`raw_hash`)"
           },
           {
+            "name": "index_transactions_provider_external_ref",
+            "unique": false,
+            "columnNames": [
+              "provider",
+              "external_ref"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_provider_external_ref` ON `${TABLE_NAME}` (`provider`, `external_ref`)"
+          },
+          {
             "name": "index_transactions_occurred_at",
             "unique": false,
             "columnNames": [
@@ -87,15 +253,414 @@
             ],
             "orders": [],
             "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_occurred_at` ON `${TABLE_NAME}` (`occurred_at`)"
+          },
+          {
+            "name": "index_transactions_account_ref_occurred_at",
+            "unique": false,
+            "columnNames": [
+              "account_ref",
+              "occurred_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_account_ref_occurred_at` ON `${TABLE_NAME}` (`account_ref`, `occurred_at`)"
+          },
+          {
+            "name": "index_transactions_category_id",
+            "unique": false,
+            "columnNames": [
+              "category_id"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_category_id` ON `${TABLE_NAME}` (`category_id`)"
+          },
+          {
+            "name": "index_transactions_synced_at",
+            "unique": false,
+            "columnNames": [
+              "synced_at"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_transactions_synced_at` ON `${TABLE_NAME}` (`synced_at`)"
           }
         ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "accounts",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`account_ref` TEXT NOT NULL, `provider` TEXT NOT NULL, `institution` TEXT, `label` TEXT NOT NULL, `mask` TEXT, `last_balance_cents` INTEGER, `last_balance_at` INTEGER, `last_message_at` INTEGER, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`account_ref`))",
+        "fields": [
+          {
+            "fieldPath": "accountRef",
+            "columnName": "account_ref",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "provider",
+            "columnName": "provider",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "institution",
+            "columnName": "institution",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mask",
+            "columnName": "mask",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastBalanceCents",
+            "columnName": "last_balance_cents",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastBalanceAtMillis",
+            "columnName": "last_balance_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastMessageAtMillis",
+            "columnName": "last_message_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAtMillis",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "account_ref"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "unknown_messages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sender` TEXT NOT NULL, `body_encrypted` BLOB NOT NULL, `received_at` INTEGER NOT NULL, `raw_hash` TEXT NOT NULL, `status` TEXT NOT NULL, `pack_ids` TEXT NOT NULL, `source` TEXT NOT NULL, `labelled_transaction_id` TEXT, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sender",
+            "columnName": "sender",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "bodyEncrypted",
+            "columnName": "body_encrypted",
+            "affinity": "BLOB",
+            "notNull": true
+          },
+          {
+            "fieldPath": "receivedAtMillis",
+            "columnName": "received_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "rawHash",
+            "columnName": "raw_hash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "packIds",
+            "columnName": "pack_ids",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "labelledTransactionId",
+            "columnName": "labelled_transaction_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updatedAtMillis",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_unknown_messages_raw_hash",
+            "unique": true,
+            "columnNames": [
+              "raw_hash"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_unknown_messages_raw_hash` ON `${TABLE_NAME}` (`raw_hash`)"
+          },
+          {
+            "name": "index_unknown_messages_status",
+            "unique": false,
+            "columnNames": [
+              "status"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_unknown_messages_status` ON `${TABLE_NAME}` (`status`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "categories",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `parent_id` TEXT, `name_en` TEXT NOT NULL, `name_sw` TEXT NOT NULL, `kind` TEXT NOT NULL, `sort_order` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentId",
+            "columnName": "parent_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameEn",
+            "columnName": "name_en",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nameSw",
+            "columnName": "name_sw",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sort_order",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "merchant_seeds",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `match_kind` TEXT NOT NULL, `match_value` TEXT NOT NULL, `display_name` TEXT, `category_id` TEXT NOT NULL, `confidence` REAL NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchKind",
+            "columnName": "match_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchValue",
+            "columnName": "match_value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "displayName",
+            "columnName": "display_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_merchant_seeds_match_kind_match_value",
+            "unique": false,
+            "columnNames": [
+              "match_kind",
+              "match_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_merchant_seeds_match_kind_match_value` ON `${TABLE_NAME}` (`match_kind`, `match_value`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_rules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `match_kind` TEXT NOT NULL, `match_value` TEXT NOT NULL, `category_id` TEXT NOT NULL, `mark_transfer` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchKind",
+            "columnName": "match_kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "matchValue",
+            "columnName": "match_value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "category_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "markTransfer",
+            "columnName": "mark_transfer",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtMillis",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_user_rules_match_kind_match_value",
+            "unique": false,
+            "columnNames": [
+              "match_kind",
+              "match_value"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_user_rules_match_kind_match_value` ON `${TABLE_NAME}` (`match_kind`, `match_value`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "sync_queue",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transaction_id` TEXT NOT NULL, `enqueued_at` INTEGER NOT NULL, `attempts` INTEGER NOT NULL, `last_error` TEXT, PRIMARY KEY(`transaction_id`))",
+        "fields": [
+          {
+            "fieldPath": "transactionId",
+            "columnName": "transaction_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enqueuedAtMillis",
+            "columnName": "enqueued_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "attempts",
+            "columnName": "attempts",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastError",
+            "columnName": "last_error",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "transaction_id"
+          ]
+        },
+        "indices": [],
         "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '01c61230a5edb0393999eba80ed593ed')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fbc11b90bb3478b88d6f9cdd8876298')"
     ]
   }
 }

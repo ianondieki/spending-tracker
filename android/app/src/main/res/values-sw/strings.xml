@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- [[NAME-REVIEW]] [[COPY-REVIEW]] Kiswahili copy; the English file is the source. -->
+    <string name="app_name">Hesabu</string>
+
+    <string name="nav_home">Nyumbani</string>
+    <string name="nav_transactions">Miamala</string>
+    <string name="nav_reports">Ripoti</string>
+    <string name="nav_settings">Mipangilio</string>
+
+    <string name="placeholder_home">Pesa zako, mahali pamoja.</string>
+    <string name="placeholder_transactions">Kila ujumbe wa M-Pesa, Airtel Money na benki, unasomwa kwenye simu hii.</string>
+    <string name="placeholder_reports">Ripoti za wiki na mwezi zitaonekana hapa.</string>
+    <string name="placeholder_settings">Ruhusa, utumaji na faragha.</string>
+    <string name="placeholder_coming_soon">Inakuja hivi karibuni</string>
+
+    <string name="money_a11y">shilingi %1$s</string>
+
+    <string name="action_continue">Endelea</string>
+    <string name="action_done">Nimemaliza</string>
+    <string name="action_back">Rudi</string>
+    <string name="action_retry">Jaribu tena</string>
+    <string name="action_cancel">Ghairi</string>
+    <string name="action_save">Hifadhi</string>
+
+    <string name="welcome_title">Hesabu husoma jumbe zako za pesa badala yako</string>
+    <string name="welcome_subtitle">Hesabu ya wiki na ya mwezi ya pesa zako zilipoenda, inayohesabiwa kutoka jumbe zilizo kwenye simu hii.</string>
+    <string name="welcome_point_1">Hesabu husoma jumbe za M-Pesa, Airtel Money, T-Kash na benki kwenye simu hii na kuweka daftari.</string>
+    <string name="welcome_point_2">Jumbe haziondoki kwenye simu. Ni hesabu pekee zinazotoka, ukiwasha ripoti.</string>
+    <string name="welcome_point_3">Kila nambari inaweza kufunguliwa kuona jumbe ilizohesabiwa kutoka.</string>
+    <string name="welcome_skip_import">Ruka ruhusa ya SMS na uingize jumbe kwa kushiriki au kubandika</string>
+
+    <string name="disclosure_title">Kabla Hesabu isome jumbe zako</string>
+    <string name="disclosure_subtitle">Hesabu inaomba ruhusa ya SMS kusoma jumbe za pesa. Hivi ndivyo inamaanisha.</string>
+    <string name="disclosure_reads_title">Hesabu inasoma nini</string>
+    <string name="disclosure_reads_body">Jumbe kutoka kwa watumaji hawa wa kifedha pekee. Jumbe za wengine hazisomwi, na hazipakiwi zaidi ya kukagua mtumaji.</string>
+    <string name="disclosure_leaves_title">Kinachotoka kwenye simu</string>
+    <string name="disclosure_leaves_body">Miamala iliyopangwa: kiasi, ada, tarehe, aina na mhusika aliyefichwa. Kamwe si ujumbe wenyewe, na ni ukiwasha usawazishaji na anwani yako ya seva.</string>
+    <string name="disclosure_revoke_title">Jinsi ya kusimamisha</string>
+    <string name="disclosure_revoke_body">Zima ruhusa ya SMS wakati wowote kwenye Mipangilio ya Android, Programu, Hesabu, Ruhusa. Hesabu itaendelea kufanya kazi kwa jumbe unazoshiriki au kubandika.</string>
+    <string name="disclosure_allow">Ruhusu ufikiaji wa SMS</string>
+    <string name="disclosure_not_now">Si sasa</string>
+    <string name="disclosure_not_now_consequence">Bila ruhusa ya SMS Hesabu haiwezi kusoma jumbe zinapofika. Unaweza kushiriki au kubandika jumbe kwenye Hesabu badala yake.</string>
+
+    <string name="backfill_title">Inasoma kikasha chako</string>
+    <string name="backfill_done_title">Kikasha kimesomwa</string>
+    <plurals name="backfill_subtitle">
+        <item quantity="one">Jumbe za pesa za mwezi uliopita, zikihesabiwa kwa mtumaji.</item>
+        <item quantity="other">Jumbe za pesa za miezi %d iliyopita, zikihesabiwa kwa mtumaji.</item>
+    </plurals>
+    <string name="backfill_progress">Jumbe %1$d kati ya %2$d</string>
+    <string name="backfill_reading">Inatafuta jumbe za pesa</string>
+    <string name="backfill_total_label">Miamala iliyopatikana</string>
+    <plurals name="backfill_unknown">
+        <item quantity="one">Ujumbe %d haukueleweka. Unaweza kufundisha Hesabu baadaye.</item>
+        <item quantity="other">Jumbe %d hazikueleweka. Unaweza kufundisha Hesabu baadaye.</item>
+    </plurals>
+    <string name="backfill_failed">Hesabu haikuweza kusoma kikasha. Hakikisha ruhusa ya SMS imetolewa, kisha jaribu tena kutoka Mipangilio.</string>
+    <string name="backfill_skip">Endelea kwa nyuma</string>
+
+    <string name="oem_title">Iache Hesabu iendelee kufanya kazi kwa nyuma</string>
+    <string name="oem_subtitle">Simu za %1$s huzuia programu kusoma jumbe kwa nyuma isipokuwa uruhusu.</string>
+    <string name="oem_steps_title">Hatua</string>
+    <string name="oem_why_label">Kwa nini</string>
+    <string name="oem_why_value">Ili jumbe mpya zihesabiwe zinapofika</string>
+    <string name="oem_open_settings">Fungua mipangilio ya betri</string>
+    <string name="oem_transsion">Tecno, Infinix na itel</string>
+    <string name="oem_xiaomi">Xiaomi, Redmi na POCO</string>
+    <string name="oem_oppo">OPPO, realme na OnePlus</string>
+    <string name="oem_vivo">vivo</string>
+    <string name="oem_huawei">Huawei na HONOR</string>
+    <string name="oem_samsung">Samsung</string>
+    <string name="oem_other">Nyingi</string>
+    <string name="oem_steps_transsion">Fungua Phone Master, kisha Power Manager.\nGusa Auto-start management na uruhusu Hesabu.\nKatika Mipangilio, Programu, Hesabu, Betri, chagua Bila kizuizi.</string>
+    <string name="oem_steps_xiaomi">Fungua Mipangilio, Programu, Dhibiti programu, Hesabu.\nWasha Autostart.\nChini ya Kiokoa betri chagua Bila vizuizi.\nKatika Usalama, Boost speed, Lock apps, funga Hesabu isifutwe.</string>
+    <string name="oem_steps_oppo">Fungua Mipangilio, Betri, Mipangilio zaidi.\nRuhusu Hesabu kufanya kazi kwa nyuma na kujianzisha.\nKatika Mipangilio, Programu, Hesabu, Matumizi ya betri, ruhusu shughuli za nyuma.</string>
+    <string name="oem_steps_vivo">Fungua i Manager, App manager, Autostart manager na uruhusu Hesabu.\nKatika Mipangilio, Betri, Background power consumption management, ruhusu Hesabu.</string>
+    <string name="oem_steps_huawei">Fungua Mipangilio, Betri, App launch.\nZima usimamizi wa kiotomatiki kwa Hesabu na uruhusu Auto-launch, Secondary launch na Run in background.</string>
+    <string name="oem_steps_samsung">Fungua Mipangilio, Programu, Hesabu, Betri.\nChagua Bila kizuizi.\nKatika Mipangilio, Betri, Background usage limits, hakikisha Hesabu si programu inayolala.</string>
+    <string name="oem_steps_other">Fungua Mipangilio, Programu, Hesabu, Betri.\nChagua Bila kizuizi au ruhusu shughuli za nyuma.</string>
+
+    <string name="share_target_label">Ongeza kwenye Hesabu</string>
+    <plurals name="import_result_parsed">
+        <item quantity="one">Muamala 1 umeongezwa</item>
+        <item quantity="other">Miamala %d imeongezwa</item>
+    </plurals>
+    <string name="import_result_duplicate">Tayari upo kwenye daftari lako</string>
+    <plurals name="import_result_unknown">
+        <item quantity="one">Hesabu haikuweza kusoma ujumbe huu. Unasubiri katika Fundisha Hesabu.</item>
+        <item quantity="other">Hesabu haikuweza kusoma jumbe %d. Zinasubiri katika Fundisha Hesabu.</item>
+    </plurals>
+    <string name="import_result_nothing">Hakuna jumbe za pesa kwenye maandishi yaliyoshirikiwa</string>
+</resources>
