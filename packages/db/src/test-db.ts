@@ -1,7 +1,7 @@
 /**
  * Shared test harness: opens DATABASE_URL (default: the compose/CI credentials), migrates from a
- * clean slate once per test file and hands out a Db. When Postgres is unreachable and CI is not set,
- * the suite is skipped with a warning instead of failing a laptop without a database; in CI it fails.
+ * clean slate once per test file and hands out a Db. Without DATABASE_URL the suites are skipped with a warning;
+ * with it set but unreachable they are skipped locally and fail in CI (which always provides Postgres).
  */
 import { connect, dropAll, migrate, type Sql } from './client.js';
 import { Db } from './index.js';
@@ -9,6 +9,10 @@ import { Db } from './index.js';
 export const TEST_DATABASE_URL = process.env['DATABASE_URL'] ?? 'postgres://hesabu:hesabu@localhost:5432/hesabu';
 
 export async function canReachDatabase(): Promise<boolean> {
+  if (!process.env['DATABASE_URL']) {
+    console.warn('[db tests] skipped: DATABASE_URL is not set (make dev, then export DATABASE_URL from .env.example)');
+    return false;
+  }
   let sql: Sql | null = null;
   try {
     sql = connect(TEST_DATABASE_URL, { max: 1 });

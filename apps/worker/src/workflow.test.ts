@@ -5,12 +5,12 @@
 import { FactsSheetSchema } from '@hesabu/analytics';
 import { FakeModelClient, readAiConfig, ReportDocumentSchema } from '@hesabu/agents';
 import { createApp, InMemoryQueue } from '@hesabu/api';
-import { DEMO_CATEGORIES, demoAccounts, demoTransactions, hashToken, type Db, type ReportDeliverJob } from '@hesabu/db';
+import { hashToken, parseDemoInbox, type Db, type ReportDeliverJob } from '@hesabu/db';
 import { canReachDatabase, openTestDb } from '@hesabu/db/test-db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { FakeEmailSender } from './adapters/email.js';
-import { StubRenderer } from './adapters/renderer.js';
+import { PackageRenderer, StubRenderer } from './adapters/renderer.js';
 import { MemoryStorage } from './adapters/storage.js';
 import { FakeWhatsAppSender } from './adapters/whatsapp.js';
 import { runDeliveryJob } from './deliver.js';
@@ -18,7 +18,9 @@ import { schedulerTick } from './scheduler.js';
 import { collectionWindow, runReportJob, type WorkflowDeps } from './workflow.js';
 
 const reachable = await canReachDatabase();
-const NOW = new Date('2026-10-12T09:00:00+03:00'); // Monday
+const NOW = new Date('2026-10-12T09:00:00+03:00'); // Monday after the demo inbox's last week (5–11 Oct 2026)
+const inbox = parseDemoInbox();
+const browser = await import('@hesabu/renderer').then((m) => m.browserAvailable()).catch(() => false);
 const env = { DEVICE_TOKEN_SECRET: 'device-secret-for-tests-0123456789', REPORT_LINK_SECRET: 'report-link-secret-for-tests-0123456789', APP_BASE_URL: 'https://hesabu.test' };
 
 describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)', () => {
@@ -45,14 +47,16 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     token = body.device_token;
     userId = body.user_id;
     const tenant = db.forUser(userId);
-    await tenant.upsertCategories([...DEMO_CATEGORIES]);
+    await tenant.upsertCategories(inbox.categories);
     await tenant.updatePreferences({ email: 'demo@example.test', whatsapp_e164: '+254700000321', channels: ['email', 'whatsapp'], locale: 'en' });
     await tenant.grantConsent('email_delivery');
     await tenant.grantConsent('whatsapp_delivery');
-    await tenant.upsertBudget({ category_id: 'groceries', period: 'weekly', limit_cents: 300_000 });
-    const sync = await post('/v1/sync', { device_id: 'demo', app_version: '1.0.0', parser_version: '1.0.0', accounts: demoAccounts(NOW), transactions: demoTransactions(NOW), unknown_message_count: 3, sent_at: NOW.toISOString() });
+    await tenant.upsertBudget({ category_id: 'food_groceries', period: 'weekly', limit_cents: 600_000 });
+    const sync = await post('/v1/sync', { device_id: 'demo', app_version: '1.0.0', parser_version: '1.0.0', accounts: inbox.accounts, transactions: inbox.transactions, unknown_message_count: 3, sent_at: NOW.toISOString() });
     expect(sync.status).toBe(200);
-    expect(((await sync.json()) as { rejected: unknown[] }).rejected).toEqual([]);
+    const synced = (await sync.json()) as { accepted: number; rejected: unknown[] };
+    expect(synced.rejected).toEqual([]);
+    expect(synced.accepted).toBe(inbox.transactions.length);
     deps = {
       db, renderer: new StubRenderer(), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
       appBaseUrl: 'https://hesabu.test', reportLinkSecret: env.REPORT_LINK_SECRET, reportLinkTtlDays: 30,
@@ -153,6 +157,30 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     const failed = await db.forUser(userId).getReport(summary.report_id);
     expect(failed?.status).toBe('failed');
     expect(failed?.last_error).toContain('renderer exploded');
+  });
+
+  it.skipIf(!browser)('renders through the real @hesabu/renderer (Playwright) in light and dark', async () => {
+    const renderer = new PackageRenderer();
+    try {
+      const tenant = db.forUser(userId);
+      for (const theme of ['light', 'dark'] as const) {
+        await tenant.updatePreferences({ theme });
+        const res = await post('/v1/reports/generate', { kind: 'weekly', period: '2026-10-07', force: true });
+        const summary = (await res.json()) as { report_id: string };
+        const result = await runReportJob({ ...deps, renderer }, { user_id: userId, report_id: summary.report_id, deliver: false });
+        expect(result?.report.status).toBe('done');
+        const hero = await storage.get(result!.report.artefacts.hero_png_key!);
+        expect(hero.byteLength).toBeGreaterThan(5_000); // a real 1080×1350 screenshot, not the 1×1 stub
+        const pdf = await storage.get(result!.report.artefacts.pdf_key!);
+        expect(new TextDecoder().decode(pdf.slice(0, 5))).toBe('%PDF-');
+        expect(pdf.byteLength).toBeGreaterThan(10_000);
+        expect(Object.keys(result!.report.artefacts.chart_keys ?? {}).length).toBeGreaterThan(3);
+        const html = new TextDecoder().decode(await storage.get(result!.report.artefacts.html_key!));
+        expect(html).toContain(result!.document.title);
+      }
+    } finally {
+      await renderer.close();
+    }
   });
 
   it('scheduler tick queues the due weekly report after the Sunday slot', async () => {
