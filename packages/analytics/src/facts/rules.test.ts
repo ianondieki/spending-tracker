@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 import { FactsSheetSchema, type FactsSheet } from '../contracts/facts-sheet.js';
 import type { Transaction } from '../contracts/transaction.js';
-import { makeTransaction, sampleCategories, SAMPLE_BANK, sampleId } from '../fixtures.js';
+import { makeTransaction, sampleCategories, sampleFactsInput, SAMPLE_BANK, sampleId } from '../fixtures.js';
 import { periodContaining } from '../period.js';
 import { classify } from './classify.js';
 import { computeFacts } from './compute.js';
@@ -279,5 +279,55 @@ describe('integer helpers', () => {
     expect(medianCents([1, 2])).toBe(2);
     expect(medianCents([])).toBe(0);
     expect(() => divRound(1, 0)).toThrow(TypeError);
+  });
+});
+
+describe('display names and what counts as a merchant', () => {
+  it('normalises raw counterparty names for display', async () => {
+    const { displayName } = await import('./classify.js');
+    expect(displayName('NAIVAS LTD KILIMANI')).toBe('Naivas Kilimani');
+    expect(displayName('KPLC PREPAID')).toBe('KPLC Prepaid');
+    expect(displayName('QUICKMART LTD')).toBe('Quickmart');
+    expect(displayName('MAKAO PROPERTIES')).toBe('Makao Properties');
+    expect(displayName('M-PESA')).toBe('M-Pesa');
+    expect(displayName('DSTV KENYA')).toBe('DSTV Kenya');
+    expect(displayName('JOHN K')).toBe('John K');
+    expect(displayName('Java House')).toBe('Java House');
+    expect(displayName('AGENT 123456 KINOO')).toBe('Agent 123456 Kinoo');
+    expect(displayName('  ')).toBeNull();
+    expect(displayName(null)).toBeNull();
+  });
+
+  it('uses the caller-supplied canonical name everywhere it shows a name', () => {
+    const cp = { kind: 'till' as const, name: 'NAIVAS LTD KILIMANI', till: '834501' };
+    const sheet = computeFacts({
+      ...sampleFactsInput('weekly'),
+      transactions: [makeTransaction(1, { occurred_at: at('2026-09-22', '10:00'), counterparty: cp, amount_cents: 300_000 })],
+      merchantName: (c) => (c.till === '834501' ? 'Naivas' : null),
+    });
+    expect(sheet.merchants.map((m) => m.name)).toEqual(['Naivas']);
+    expect(sheet.largest[0]?.counterparty).toBe('Naivas');
+    expect(sheet.candidate_insights.find((i) => i.kind === 'biggest_transaction')?.params['counterparty']).toBe('Naivas');
+    expect(sheet.display_strings).toContain('Naivas');
+  });
+
+  it('keeps agent withdrawals, transfers and people out of merchants and largest', () => {
+    const sheet = computeFacts({
+      ...sampleFactsInput('weekly'),
+      transactions: [
+        makeTransaction(1, { type: 'WITHDRAW', occurred_at: at('2026-09-22', '10:00'), counterparty: { kind: 'agent', name: 'KASARANI AGENCIES LTD' }, amount_cents: 850_000 }),
+        makeTransaction(2, { type: 'ATM', occurred_at: at('2026-09-22', '11:00'), counterparty: { kind: 'bank', name: 'EQUITY ATM' }, amount_cents: 500_000 }),
+        makeTransaction(3, { type: 'SEND_MONEY', occurred_at: at('2026-09-22', '12:00'), counterparty: { kind: 'person', name: 'MARY W', ref_masked: '07XXXXX456' }, amount_cents: 200_000 }),
+        makeTransaction(4, { type: 'MPESA_TO_BANK', occurred_at: at('2026-09-22', '13:00'), counterparty: { kind: 'bank', name: 'EQUITY BANK' }, amount_cents: 1_000_000, is_transfer: true }),
+        makeTransaction(5, { type: 'BUY_GOODS', occurred_at: at('2026-09-22', '14:00'), counterparty: { kind: 'till', name: 'QUICKMART LTD' }, amount_cents: 120_000 }),
+      ],
+    });
+    expect(sheet.merchants.map((m) => m.name)).toEqual(['Quickmart']);
+    expect(sheet.largest.map((t) => t.counterparty)).toEqual(['Mary W', 'Quickmart']);
+    expect(sheet.totals.cash_withdrawn.cents).toBe(1_350_000);
+    expect(sheet.totals.transfers.cents).toBe(1_000_000);
+    expect(sheet.people.map((p) => p.name)).toEqual(['Mary W']);
+    expect(sheet.candidate_insights.find((i) => i.kind === 'cash_withdrawn')?.params).toEqual({ amount: 'KSh 13,500', count: '2' });
+    expect(sheet.candidate_insights.find((i) => i.kind === 'biggest_transaction')?.params['counterparty']).toBe('Mary W');
   });
 });

@@ -1,6 +1,7 @@
 /** Daily series, weekday/weekend split, time-of-day buckets and the largest transactions. */
 import type { DayFact, FactsSheet, Period, TimeOfDayFact, TxFact } from '../contracts/facts-sheet.js';
 import { count, money, pct, ratioPct, sumMinor } from '../money.js';
+import { isCashLike } from './classify.js';
 import { addDays, isWeekend, isoDate, parseIsoDate, weekdayNameEn, weekdayNameSw, type LocalDate } from '../period.js';
 import type { Tx } from './prepare.js';
 import { isIncome, isSpend } from './totals.js';
@@ -86,7 +87,7 @@ export function txFact(t: Tx): TxFact {
   };
 }
 
-/** Top five spending transactions by amount (earlier first on a tie). */
+/** Top five payments by amount (earlier first on a tie). Cash withdrawals are not payments to anyone and are left out. */
 export function largest(spend: readonly Tx[]): Tx[] {
-  return [...spend].sort((a, b) => b.amount - a.amount).slice(0, 5);
+  return spend.filter((t) => !isCashLike(t)).sort((a, b) => b.amount - a.amount).slice(0, 5);
 }

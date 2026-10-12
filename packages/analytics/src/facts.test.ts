@@ -69,10 +69,10 @@ describe('computeFacts on the weekly sample', () => {
     const rows = sheet.categories.map((c) => [c.category_id, cents(c.out) / 100, c.share.value, c.delta.cents / 100, c.delta.pct.value, c.delta.direction, c.count.value, c.top_merchant]);
     expect(rows).toEqual([
       ['shopping', 4_300, 26, 4_300, 0, 'na', 1, 'Carrefour Junction'],
-      ['cash', 3_000, 18, 1_000, 50, 'up', 1, 'Kilimani Shop Agent'],
+      ['cash', 3_000, 18, 1_000, 50, 'up', 1, null],
       ['family_friends', 2_800, 17, 800, 40, 'up', 2, null],
       ['eating_out', 2_750, 16, 1_770, 181, 'up', 2, 'Java House'],
-      ['utilities', 2_000, 12, 2_000, 0, 'na', 2, 'KPLC PREPAID'],
+      ['utilities', 2_000, 12, 2_000, 0, 'na', 2, 'KPLC Prepaid'],
       ['food_groceries', 1_850, 11, -750, -29, 'down', 1, 'Naivas Kilimani'],
       ['airtime', 100, 1, -100, -50, 'down', 1, null],
     ]);
@@ -88,9 +88,8 @@ describe('computeFacts on the weekly sample', () => {
   it('lists merchants by spend and marks the ones never seen before the period', () => {
     expect(sheet.merchants.map((m) => [m.name, cents(m.out) / 100, m.count.value, m.is_new, m.category_id])).toEqual([
       ['Carrefour Junction', 4_300, 1, true, 'shopping'],
-      ['Kilimani Shop Agent', 3_000, 1, false, 'cash'],
       ['Java House', 2_100, 1, false, 'eating_out'],
-      ['KPLC PREPAID', 2_000, 2, false, 'utilities'],
+      ['KPLC Prepaid', 2_000, 2, false, 'utilities'],
       ['Naivas Kilimani', 1_850, 1, false, 'food_groceries'],
       ['Kenchic Inn', 650, 1, true, 'eating_out'],
     ]);
@@ -102,8 +101,8 @@ describe('computeFacts on the weekly sample', () => {
 
   it('totals people sent to and received from', () => {
     expect(sheet.people.map((p) => [p.name, p.ref_masked, cents(p.sent) / 100, cents(p.received) / 100, p.count.value])).toEqual([
-      ['JANE WANJIKU', '07XXXXX456', 2_000, 700, 2],
-      ['PETER OTIENO', '07XXXXX789', 800, 0, 1],
+      ['Jane Wanjiku', '07XXXXX456', 2_000, 700, 2],
+      ['Peter Otieno', '07XXXXX789', 800, 0, 1],
     ]);
     expect(sheet.people[0]?.drilldown.filter.counterparty_ref).toBe('07XXXXX456');
   });
@@ -149,13 +148,13 @@ describe('computeFacts on the weekly sample', () => {
     ]);
   });
 
-  it('lists the five largest spending transactions', () => {
+  it('lists the five largest payments (cash withdrawals are not payments to anyone)', () => {
     expect(sheet.largest.map((t) => [t.counterparty, cents(t.amount) / 100, t.type, t.category_id])).toEqual([
       ['Carrefour Junction', 4_300, 'CARD_PURCHASE', 'shopping'],
-      ['Kilimani Shop Agent', 3_000, 'WITHDRAW', 'cash'],
       ['Java House', 2_100, 'BUY_GOODS', 'eating_out'],
-      ['JANE WANJIKU', 2_000, 'SEND_MONEY', 'family_friends'],
+      ['Jane Wanjiku', 2_000, 'SEND_MONEY', 'family_friends'],
       ['Naivas Kilimani', 1_850, 'BUY_GOODS', 'food_groceries'],
+      ['KPLC Prepaid', 1_000, 'PAYBILL', 'utilities'],
     ]);
     expect(sheet.largest[0]?.id).toBe(sampleId(25));
   });
@@ -189,16 +188,16 @@ describe('computeFacts on the weekly sample', () => {
 
   it('groups income by source and kind', () => {
     expect(sheet.income.map((i) => [i.source, i.kind, cents(i.in) / 100, i.count.value])).toEqual([
-      ['ACME LTD SALARY', 'salary', 85_000, 1],
-      ['JANE WANJIKU', 'person', 700, 1],
+      ['Acme Salary', 'salary', 85_000, 1],
+      ['Jane Wanjiku', 'person', 700, 1],
     ]);
   });
 
   it('flags the duplicate, the unusual amount, the reversal and the fee spike', () => {
     expect(sheet.anomalies).toEqual([
-      { kind: 'duplicate', transaction_ids: [sampleId(31), sampleId(32)], params: { merchant: 'KPLC PREPAID', amount: 'KSh 1,000', count: '2', date: '2026-09-25' } },
+      { kind: 'duplicate', transaction_ids: [sampleId(31), sampleId(32)], params: { merchant: 'KPLC Prepaid', amount: 'KSh 1,000', count: '2', date: '2026-09-25' } },
       { kind: 'unusual_amount', transaction_ids: [sampleId(24)], params: { merchant: 'Java House', amount: 'KSh 2,100', typical: 'KSh 480', date: '2026-09-22' } },
-      { kind: 'reversal', transaction_ids: [sampleId(38)], params: { amount: 'KSh 1,000', date: '2026-09-27', counterparty: 'KPLC PREPAID' } },
+      { kind: 'reversal', transaction_ids: [sampleId(38)], params: { amount: 'KSh 1,000', date: '2026-09-27', counterparty: 'KPLC Prepaid' } },
       // Saturday fees 150 + 69 = 219 > 3 x (81 / 7); Monday's 29 is not.
       { kind: 'fee_spike', transaction_ids: [sampleId(34), sampleId(36)], params: { date: '2026-09-26', fees: 'KSh 219', average: 'KSh 12' } },
     ]);
@@ -253,14 +252,14 @@ describe('computeFacts on the weekly sample', () => {
       amount: 'KSh 4,300', counterparty: 'Carrefour Junction', date: '2026-09-23', category_id: 'shopping',
     });
     expect(insight(sheet, 'new_merchant:Kenchic Inn').params).toEqual({ merchant: 'Kenchic Inn', out: 'KSh 650', count: '1' });
-    expect(insight(sheet, `duplicate_payment:${sampleId(31)}`).params).toEqual({ merchant: 'KPLC PREPAID', amount: 'KSh 1,000', count: '2' });
+    expect(insight(sheet, `duplicate_payment:${sampleId(31)}`).params).toEqual({ merchant: 'KPLC Prepaid', amount: 'KSh 1,000', count: '2' });
     expect(insight(sheet, `unusual_amount:${sampleId(24)}`).params).toEqual({ merchant: 'Java House', amount: 'KSh 2,100', typical: 'KSh 480' });
     expect(insight(sheet, 'fees_total').params).toEqual({ fees: 'KSh 266', fee_ratio: '2%', count: '5' });
     expect(insight(sheet, 'fuliza_usage').params).toEqual({ drawdown: 'KSh 500', repaid: 'KSh 505', cost: 'KSh 5', days: '2' });
     expect(insight(sheet, 'cash_withdrawn').params).toEqual({ amount: 'KSh 3,000', count: '1' });
     expect(insight(sheet, 'savings_rate').params).toEqual({ rate: '2%', savings: 'KSh 2,000', income: 'KSh 85,700' });
-    expect(insight(sheet, 'income_received').params).toEqual({ income: 'KSh 85,700', count: '2', top_source: 'ACME LTD SALARY' });
-    expect(insight(sheet, 'sent_to_people').params).toEqual({ total: 'KSh 2,800', count: '2', top_person: 'JANE WANJIKU', top_amount: 'KSh 2,000' });
+    expect(insight(sheet, 'income_received').params).toEqual({ income: 'KSh 85,700', count: '2', top_source: 'Acme Salary' });
+    expect(insight(sheet, 'sent_to_people').params).toEqual({ total: 'KSh 2,800', count: '2', top_person: 'Jane Wanjiku', top_amount: 'KSh 2,000' });
     expect(insight(sheet, 'spendiest_day:2026-09-23').params).toEqual({ weekday_en: 'Wednesday', weekday_sw: 'Jumatano', date: '2026-09-23', out: 'KSh 4,300' });
     expect(insight(sheet, 'weekend_share').params).toEqual({ share: '23%', weekend_out: 'KSh 3,800', weekday_out: 'KSh 13,000' });
     expect(insight(sheet, 'late_night_spend').params).toEqual({ out: 'KSh 1,450', count: '2' });

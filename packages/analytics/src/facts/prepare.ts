@@ -2,9 +2,11 @@
  * Validation and enrichment of the input window. Every later step works on `Tx`, sorted by time then id, so
  * the output does not depend on the order the caller supplied the transactions in.
  */
-import type { CounterpartyKind, Transaction } from '../contracts/transaction.js';
+import type { Counterparty, CounterpartyKind, Transaction } from '../contracts/transaction.js';
 import { isoDate, localHour, toLocalDate, type LocalDate } from '../period.js';
-import { classify, cleanName, isIgnored, nameKey, type TxClass } from './classify.js';
+import { classify, cleanName, displayName, isIgnored, nameKey, type TxClass } from './classify.js';
+
+export type NameOf = (counterparty: Counterparty) => string | null;
 
 export const UNCATEGORISED = 'uncategorised';
 
@@ -21,7 +23,7 @@ export interface Tx {
   /** fee_cents plus, for type FEE, the amount: this transaction's contribution to totals.fees. */
   readonly feeTotal: number;
   readonly balance: number | null;
-  /** Cleaned counterparty name (display form) and its grouping key. */
+  /** Display name of the counterparty (canonical or normalised) and its grouping key. */
   readonly name: string | null;
   readonly key: string | null;
   readonly cpKind: CounterpartyKind;
@@ -46,7 +48,7 @@ export function compareTx(a: Tx, b: Tx): number {
  * Drops BALANCE_QUERY and FAILED rows and anything at or after `endMs`; fails closed (throws) on a row whose
  * money fields are not non-negative safe integers or whose time does not parse.
  */
-export function prepare(transactions: readonly Transaction[], endMs: number): Tx[] {
+export function prepare(transactions: readonly Transaction[], endMs: number, nameOf?: NameOf): Tx[] {
   const out: Tx[] = [];
   for (const t of transactions) {
     if (isIgnored(t)) continue;
@@ -59,6 +61,7 @@ export function prepare(transactions: readonly Transaction[], endMs: number): Tx
     const local = toLocalDate(ms);
     const feeTotal = fee + (t.type === 'FEE' ? amount : 0);
     if (!Number.isSafeInteger(feeTotal)) throw new TypeError(`computeFacts: transaction ${t.id} fee overflows`);
+    const name = cleanName(nameOf?.(t.counterparty)) ?? displayName(t.counterparty.name);
     out.push({
       src: t,
       id: t.id,
@@ -71,8 +74,8 @@ export function prepare(transactions: readonly Transaction[], endMs: number): Tx
       fee,
       feeTotal,
       balance,
-      name: cleanName(t.counterparty.name),
-      key: nameKey(t.counterparty.name),
+      name,
+      key: nameKey(name),
       cpKind: t.counterparty.kind,
       refMasked: cleanName(t.counterparty.ref_masked),
       categoryId: t.category_id ?? UNCATEGORISED,
