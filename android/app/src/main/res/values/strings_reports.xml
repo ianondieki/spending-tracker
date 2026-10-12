@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Reports list and report screens, and the report charts. [[COPY-REVIEW]] -->
+
+    <!-- Reports list -->
+    <string name="reports_title">Reports</string>
+    <string name="reports_group_weekly">Weekly</string>
+    <string name="reports_group_monthly">Monthly</string>
+    <string name="reports_loading">Loading your reports</string>
+    <string name="reports_empty_title">No reports yet</string>
+    <string name="reports_empty_body">Your first weekly report is made at the end of this week. You can also ask for one now.</string>
+    <string name="reports_generate">Generate this week\'s report</string>
+    <string name="reports_generate_working">Asking your server for this week\'s report</string>
+    <string name="reports_generate_queued">Report requested. It appears here when it is ready.</string>
+    <string name="reports_generate_offline">Reports are made on your server. Add your server address in Settings first.</string>
+    <string name="reports_generate_failed">The report could not be requested</string>
+    <!-- [[COPY-REVIEW]] Shown above the sample when no server address is set. -->
+    <string name="reports_not_configured">Add your server address in Settings to fetch reports</string>
+    <string name="reports_sample_note">Below is a sample report, so you can see how one reads.</string>
+    <string name="reports_demo_note">Demo mode is on, so this is a sample report.</string>
+    <string name="reports_error_title">Reports could not be loaded</string>
+    <string name="reports_error_network">Hesabu could not reach your server. Check your connection, then try again.</string>
+    <string name="reports_error_unauthorised">Your server did not accept this phone. Check the server address in Settings, then try again.</string>
+    <string name="reports_error_server">Your server had a problem. Try again in a minute.</string>
+    <string name="reports_period_range">%1$s to %2$s</string>
+
+    <!-- Report status, one word or phrase for each pipeline step -->
+    <string name="reports_status_queued">Queued</string>
+    <string name="reports_status_collecting">Counting</string>
+    <string name="reports_status_writing">Writing</string>
+    <string name="reports_status_checking">Checking the numbers</string>
+    <string name="reports_status_rendering">Designing</string>
+    <string name="reports_status_delivering">Sending</string>
+    <string name="reports_status_done">Ready</string>
+    <string name="reports_status_failed">Could not be made</string>
+    <string name="reports_status_working">Being made</string>
+
+    <!-- Delivery state; %1$s is the channel -->
+    <string name="reports_channel_whatsapp">WhatsApp</string>
+    <string name="reports_channel_email">email</string>
+    <string name="reports_channel_share">sharing</string>
+    <string name="reports_delivery_pending">%1$s waiting</string>
+    <string name="reports_delivery_sent">%1$s sent</string>
+    <string name="reports_delivery_delivered">%1$s delivered</string>
+    <string name="reports_delivery_read">%1$s read</string>
+    <string name="reports_delivery_failed">%1$s failed</string>
+    <string name="reports_delivery_skipped">%1$s skipped</string>
+    <string name="reports_delivery_shared">shared from this phone</string>
+
+    <!-- One report -->
+    <string name="report_title_fallback">Report</string>
+    <string name="report_loading">Opening the report</string>
+    <string name="report_error_title">This report could not be opened</string>
+    <string name="report_error_not_found">Your server does not have this report any more. Go back to Reports to see the current list.</string>
+    <string name="report_not_ready_title">This report is still being made</string>
+    <string name="report_not_ready_body">Current step: %1$s. Come back in a few minutes.</string>
+    <string name="report_check_again">Check again</string>
+    <string name="report_failed_title">This report could not be made</string>
+    <string name="report_failed_body">Your server stopped before the report was finished. Ask for it again from Reports.</string>
+    <string name="report_hero_total_week">This week</string>
+    <string name="report_hero_total_month">This month</string>
+    <string name="report_hero_rest">Everything else</string>
+    <string name="report_delta_up_week">up on last week</string>
+    <string name="report_delta_down_week">down on last week</string>
+    <string name="report_delta_flat_week">level with last week</string>
+    <string name="report_delta_na_week">No earlier week to compare with</string>
+    <string name="report_delta_up_month">up on last month</string>
+    <string name="report_delta_down_month">down on last month</string>
+    <string name="report_delta_flat_month">level with last month</string>
+    <string name="report_delta_na_month">No earlier month to compare with</string>
+    <string name="report_insights_title">What stood out</string>
+    <string name="report_footer_heading">About this report</string>
+    <string name="report_footer_accounts">Accounts counted: %1$s</string>
+    <string name="report_footer_unknown">Messages Hesabu could not read: %1$s</string>
+    <string name="report_footer_unknown_none">Hesabu read every money message in this period.</string>
+
+    <!-- Sharing -->
+    <string name="report_share">Share this report</string>
+    <string name="report_share_image">Share image</string>
+    <string name="report_share_pdf">Share PDF</string>
+    <string name="report_share_image_missing">The image is not ready yet</string>
+    <string name="report_share_pdf_missing">The PDF is not ready yet</string>
+    <string name="report_share_preparing_image">Preparing the image</string>
+    <string name="report_share_preparing_pdf">Preparing the PDF</string>
+    <string name="report_share_failed_title">The file could not be downloaded</string>
+    <string name="report_share_failed_body">Check your connection, then try again.</string>
+    <string name="report_share_chooser">Share report</string>
+
+    <!-- Charts -->
+    <string name="chart_show_table">Show as table</string>
+    <string name="chart_show_chart">Show as chart</string>
+    <string name="chart_empty_body">There is nothing to draw for this period.</string>
+    <string name="chart_other">Other</string>
+    <string name="chart_centre_spent">Spent</string>
+    <string name="chart_total">Total</string>
+    <string name="chart_daily_average">Daily average %1$s</string>
+    <string name="chart_daily_average_row">Daily average</string>
+    <string name="chart_spendiest">Spendiest day</string>
+    <string name="chart_new">New</string>
+    <string name="chart_fees">Fees</string>
+    <string name="chart_fee_ratio">%1$s of what you spent</string>
+    <string name="chart_fee_share">Share of what you spent</string>
+
+    <!-- Chart descriptions read by TalkBack after the alt text -->
+    <string name="chart_a11y_total">Total %1$s.</string>
+    <string name="chart_a11y_slice">%1$s %2$s, %3$s.</string>
+    <string name="chart_a11y_highest">Highest %1$s, %2$s.</string>
+    <string name="chart_a11y_average">Daily average %1$s.</string>
+    <string name="chart_a11y_item">%1$s %2$s.</string>
+    <string name="chart_a11y_fees">Fees %1$s.</string>
+    <string name="chart_a11y_fees_ratio">Fees %1$s, %2$s of spending.</string>
+    <string name="chart_a11y_balance">Ends at %1$s. Lowest %2$s, highest %3$s.</string>
+</resources>
