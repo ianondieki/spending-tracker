@@ -30,10 +30,10 @@ const dateTime = z.iso.datetime({ offset: true });
 export const CounterpartySchema = z.strictObject({
   name: z.string().max(120).nullable().optional(),
   kind: CounterpartyKindSchema,
-  ref_masked: z.string().nullable().optional(),
-  paybill: z.string().nullable().optional(),
-  till: z.string().nullable().optional(),
-  account_ref: z.string().nullable().optional(),
+  ref_masked: z.string().max(40).nullable().optional(),
+  paybill: z.string().max(20).nullable().optional(),
+  till: z.string().max(20).nullable().optional(),
+  account_ref: z.string().max(64).nullable().optional(),
 });
 export type Counterparty = z.infer<typeof CounterpartySchema>;
 
@@ -43,9 +43,9 @@ export const TX_SOURCES = ['sms', 'notification', 'import', 'manual', 'share'] a
 
 export const TransactionSchema = z.strictObject({
   id: z.uuid(),
-  account_ref: z.string(),
+  account_ref: z.string().max(80),
   provider: ProviderSchema,
-  external_ref: z.string().nullable().optional(),
+  external_ref: z.string().max(40).nullable().optional(),
   type: TxTypeSchema,
   direction: z.enum(DIRECTIONS),
   amount_cents: MoneyCentsSchema,
@@ -54,7 +54,7 @@ export const TransactionSchema = z.strictObject({
   occurred_at: dateTime,
   received_at: dateTime,
   counterparty: CounterpartySchema,
-  category_id: z.string().nullable().optional(),
+  category_id: z.string().max(80).nullable().optional(),
   category_source: z.enum(CATEGORY_SOURCES),
   category_confidence: z.number().min(0).max(1).optional(),
   is_transfer: z.boolean(),
@@ -62,29 +62,29 @@ export const TransactionSchema = z.strictObject({
   parse_confidence: z.number().min(0).max(1),
   source: z.enum(TX_SOURCES),
   raw_hash: z.string().regex(/^[a-f0-9]{64}$/),
-  parser: z.strictObject({ pack_id: z.string(), pack_version: z.string(), family_id: z.string() }),
+  parser: z.strictObject({ pack_id: z.string().max(40), pack_version: z.string().max(20), family_id: z.string().max(60) }),
   user_edited: z.boolean(),
   note: z.string().max(500).nullable().optional(),
-  tags: z.array(z.string()).max(20).optional(),
+  tags: z.array(z.string().max(40)).max(20).optional(),
   updated_at: dateTime,
 });
 export type Transaction = z.infer<typeof TransactionSchema>;
 
 export const AccountSchema = z.strictObject({
-  account_ref: z.string(),
+  account_ref: z.string().max(80),
   provider: ProviderSchema,
-  institution: z.string().nullable().optional(),
-  label: z.string(),
-  mask: z.string().nullable().optional(),
+  institution: z.string().max(80).nullable().optional(),
+  label: z.string().max(80),
+  mask: z.string().max(40).nullable().optional(),
   last_balance_cents: z.number().int().nullable().optional(),
   last_balance_at: dateTime.nullable().optional(),
 });
 export type Account = z.infer<typeof AccountSchema>;
 
 export const SyncRequestSchema = z.strictObject({
-  device_id: z.string(),
-  app_version: z.string(),
-  parser_version: z.string(),
+  device_id: z.string().max(200),
+  app_version: z.string().max(40),
+  parser_version: z.string().max(40),
   accounts: z.array(AccountSchema),
   transactions: z.array(TransactionSchema).max(500),
   unknown_message_count: z.number().int().min(0),
@@ -94,7 +94,7 @@ export type SyncRequest = z.infer<typeof SyncRequestSchema>;
 
 export const SyncResponseSchema = z.strictObject({
   accepted: z.number().int(),
-  rejected: z.array(z.object({ id: z.string(), reason: z.string() })),
+  rejected: z.array(z.object({ id: z.string().max(64), reason: z.string().max(120) })),
   server_time: dateTime,
   next_report_at: dateTime.nullable().optional(),
 });

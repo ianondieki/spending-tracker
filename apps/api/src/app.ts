@@ -3,10 +3,12 @@ import { randomBytes } from 'node:crypto';
 
 import { AddressTakenError, DeviceRevokedError, hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
 import { Hono, type Context } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import type { ZodType } from 'zod';
 
 import { readApiConfig, type ApiConfig, type Env } from './env.js';
 import { InMemoryQueue, type JobQueue } from './queue.js';
+import { bearerKey, clientIp, RateLimiter } from './rate-limit.js';
 import { emailWebhook } from './routes/email-webhook.js';
 import { extractRoute, type Extractor } from './routes/extract.js';
 import { whatsappWebhook } from './routes/whatsapp-webhook.js';
@@ -15,6 +17,11 @@ import { DeliverBodySchema, GenerateBodySchema, PreferencesSchema, RegisterBodyS
 import { toSummary } from './summary.js';
 
 export const API_VERSION = '1.0.0';
+
+/** Bodies larger than this are refused before parsing (M5). */
+export const MAX_BODY_BYTES = 1_000_000;
+/** Reports can be generated for periods that ended within this many months (M5: bounds the render work). */
+export const MAX_REPORT_AGE_MONTHS = 13;
 export { InMemoryQueue, PgBossQueue, type JobQueue } from './queue.js';
 
 export interface AppDeps {
@@ -23,6 +30,8 @@ export interface AppDeps {
   readonly env?: Env;
   readonly extractor?: Extractor;
   readonly now?: () => Date;
+  /** Injected limiter (tests); defaults to a fresh in-memory one per app. */
+  readonly limiter?: RateLimiter;
 }
 
 export interface AppVars {
@@ -59,7 +68,18 @@ export function createApp(deps: AppDeps): ApiApp {
   const config: ApiConfig = readApiConfig(env);
   const queue = deps.queue ?? new InMemoryQueue();
   const now = deps.now ?? (() => new Date());
+  const limiter = deps.limiter ?? new RateLimiter(now);
   const app = new Hono<{ Variables: AppVars }>();
+
+  app.use('/v1/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json(errorBody('too_large', 'request body exceeds 1 MB'), 413) }));
+  app.use('/webhooks/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json(errorBody('too_large', 'request body exceeds 1 MB'), 413) }));
+  // Tight limits where a request is unauthenticated or expensive (M5).
+  app.use('/v1/devices/register', limiter.middleware('register', { windowMs: 60 * 60 * 1000, limit: 20, keyOf: clientIp }));
+  app.use('/v1/public/*', limiter.middleware('public', { windowMs: 60 * 1000, limit: 60, keyOf: clientIp }));
+  app.use('/r/*', limiter.middleware('public', { windowMs: 60 * 1000, limit: 60, keyOf: clientIp }));
+  app.use('/v1/reports/generate', limiter.middleware('generate', { windowMs: 60 * 60 * 1000, limit: 30, keyOf: bearerKey }));
+  app.use('/v1/me/email/send-link', limiter.middleware('email-link', { windowMs: 60 * 60 * 1000, limit: 5, keyOf: bearerKey }));
+  app.use('/v1/unknown-messages/extract', limiter.middleware('extract', { windowMs: 60 * 60 * 1000, limit: 30, keyOf: bearerKey }));
 
   app.onError((err, c) => {
     console.error('api error', err.message);
@@ -196,6 +216,14 @@ export function createApp(deps: AppDeps): ApiApp {
       period = resolvePeriod(body.value.kind, body.value.period, { weekStart: prefs.week_start, now: now() });
     } catch {
       return c.json(errorBody('invalid', 'period must be last_week, last_month, current or an ISO date'), 400);
+    }
+    const oldest = new Date(now());
+    oldest.setUTCMonth(oldest.getUTCMonth() - MAX_REPORT_AGE_MONTHS);
+    if (new Date(period.end).getTime() < oldest.getTime()) {
+      return c.json(errorBody('invalid', `reports cover periods that ended within the last ${MAX_REPORT_AGE_MONTHS} months`), 400);
+    }
+    if (new Date(period.start).getTime() > now().getTime()) {
+      return c.json(errorBody('invalid', 'the period has not started yet'), 400);
     }
     let report = await tenant.ensureReport(body.value.kind, period.start, period.end);
     const busy = ['collecting', 'writing', 'checking', 'rendering', 'delivering'].includes(report.status);

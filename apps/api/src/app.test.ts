@@ -382,6 +382,32 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(await miss.json()).toEqual({ ok: true, handled: false });
   });
 
+  it('M5: bounds body size, string lengths, report age and request rates', async () => {
+    const big = JSON.stringify({ ...syncBody([]), parser_version: 'x'.repeat(1_100_000) });
+    expect((await app.request('/v1/sync', { method: 'POST', headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` }, body: big })).status).toBe(413);
+    const longString = await json('/v1/sync', syncBody([sampleTransaction('77777777-7777-4777-8777-777777777777', { account_ref: 'a'.repeat(81) })]));
+    expect(longString.status).toBe(400);
+    const ancient = await json('/v1/reports/generate', { kind: 'monthly', period: '2024-01-15' });
+    expect(ancient.status).toBe(400);
+    expect(((await ancient.json()) as { message: string }).message).toContain('13 months');
+    const future = await json('/v1/reports/generate', { kind: 'weekly', period: '2027-06-01' });
+    expect(future.status).toBe(400);
+    // Registration: 20 per IP per hour, then 429 with retry-after.
+    const fresh = createApp({ db, env, now: () => FIXED_NOW });
+    let last = 0;
+    for (let i = 0; i < 21; i += 1) {
+      const r = await fresh.request('/v1/devices/register', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.9' }, body: JSON.stringify({ device_id: `burst-${i}`, platform: 'android', app_version: '1' }) });
+      last = r.status;
+      if (r.status === 429) expect(r.headers.get('retry-after')).toMatch(/^\d+$/);
+    }
+    expect(last).toBe(429);
+    const otherIp = await fresh.request('/v1/devices/register', { method: 'POST', headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.10' }, body: JSON.stringify({ device_id: 'burst-x', platform: 'android', app_version: '1' }) });
+    expect(otherIp.status).toBe(200);
+    // Public resolver: 60 per IP per minute.
+    for (let i = 0; i < 60; i += 1) await fresh.request('/v1/public/reports/nope', { headers: { 'x-forwarded-for': '198.51.100.1' } });
+    expect((await fresh.request('/v1/public/reports/nope', { headers: { 'x-forwarded-for': '198.51.100.1' } })).status).toBe(429);
+  });
+
   it('404s unknown routes', async () => {
     expect((await get('/nope', '')).status).toBe(404);
   });
