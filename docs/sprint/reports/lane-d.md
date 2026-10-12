@@ -13,6 +13,7 @@ shipped and green; item 6 (the user's real redacted export) has not arrived, so 
 | 4 | Taxonomy | `packages/taxonomy` | 22 groups / 109 ids with en and sw names (`[[COPY-REVIEW]]`), 38 provider-default rules covering all 30 TxTypes, 77 merchant seeds (9 verified with URLs), `matchMerchant`, `resolveCategory`, JSON in `data/` for the app and backend, 76 tests |
 | 5 | Demo inbox | `corpus/demo/demo-inbox.jsonl` + `demo-inbox.expected.json` + generator | 82 messages, eight Monday weeks, 100 % parsed, 1 duplicate dropped, 3 transfer pairs, 0 balance breaks, one Fuliza episode |
 | 6 | Real export | — | not received; re-checked at every hourly merge |
+| + | Report display names (orchestrator package 2) | `packages/taxonomy/src/display.ts` | `normaliseMerchantName`, `isMerchantCounterparty`, optional `display_name` on 22 seeds |
 | + | Cross-engine parity dumps (orchestrator check-in 1) | `corpus/expected/`, `pack-engine dump`, `src/dump.test.ts` | canonical JSONL per corpus file and for the demo inbox; the Kotlin engine asserts byte identity |
 
 ## How to run
@@ -41,7 +42,7 @@ message's 12-char `sha256` prefix in that provider's `MISSING-FAMILIES.md`, and 
 | Package | Tests |
 |---|---|
 | `@hesabu/pack-engine` | 121 (regex subset 28, normalisers 45, post-processing 9, packs and corpus 24, demo 8, fuzz 4, dump 7, engine clarifications 8) |
-| `@hesabu/taxonomy` | 76 |
+| `@hesabu/taxonomy` | 98 (incl. 22 for display names and merchant-list filtering) |
 
 Root `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` are green for the whole monorepo at the last push.
 
@@ -89,3 +90,4 @@ Not available: no real export in `corpus/` at the time of writing.
 
 - 14:05 UTC: items 1–5 done and pushed (commits `da03aa2..07f43ff`); monorepo green; no real export.
 - 14:56 UTC: orchestrator check-in 1 package done: merged the camelCase group-name fix, `pack-engine dump` + `corpus/expected/` with a drift test, Kiswahili airtime and balance families from the one public source, a test per engine clarification (`41fbc00`). No real export.
+- 15:16 UTC: merged c588cf8; normaliseMerchantName + isMerchantCounterparty in @hesabu/taxonomy for Lane B's analytics. No real export.

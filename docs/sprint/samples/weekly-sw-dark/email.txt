@@ -1,0 +1,78 @@
+Hesabu, Ripoti ya wiki, 5 hadi 11 Oktoba 2026
+
+Wiki yako ya pesa
+-----------------
+
+Jumatatu                         KSh 2,620
+Jumanne                            KSh 100
+Jumatano                         KSh 1,500
+Alhamisi                           KSh 895
+Ijumaa                           KSh 1,580
+Jumamosi                         KSh 2,820
+Jumapili                             KSh 0
+Jumla ya matumizi                KSh 9,515
+KSh -23,375 ikilinganishwa na wiki iliyopita
+
+Umetumia kidogo kuliko wiki iliyopita (KSh -23,375, -71%).
+
+Mapato: KSh 0 (KSh -85,000)
+Matumizi: KSh 9,515 (KSh -23,375)
+Ada: KSh 29 (KSh -233)
+Tofauti: KSh -9,544 (KSh -61,392)
+
+Supamaketi ilichukua sehemu kubwa zaidi: 73% ya matumizi
+Chati ya duara ya matumizi kwa aina, jumla KSh 9,515: Supamaketi KSh 6,920 (73%); Kutoa kwa wakala KSh 1,500 (16%); Teksi ya app KSh 895 (9%); Airtime na bando KSh 200 (2%).
+
+Matumizi yalikuwa juu zaidi Jumamosi: KSh 2,820
+Chati ya nguzo ya matumizi kwa siku. Siku ya juu zaidi: Jumamosi 2026-10-10, KSh 2,820. Wastani wa kila siku: KSh 1,359.
+
+Pesa iliyotoka ilizidi iliyoingia: tofauti ni KSh -9,544
+Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 0, matumizi KSh 9,515. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 32,890.
+
+Ulilipa Naivas zaidi: KSh 4,100
+Chati ya nguzo ya maeneo uliyolipa zaidi: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200.
+
+food groceries imetumia 0% ya bajeti yake
+Nguzo za bajeti: food groceries KSh 0 kati ya KSh 6,000, inaelekea KSh 0.
+
+Ada zilichukua 0% ya matumizi yako: KSh 29
+Kipimo cha ada: KSh 29 kama ada, 0% ya matumizi.
+
+Mambo yaliyojitokeza
+--------------------
+- Matumizi yameshuka hadi KSh 9,515, kutoka KSh 32,890
+  Hayo ni mabadiliko ya KSh -23,375 (-71%) ukilinganisha na kipindi kilichopita.
+- Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 6,920
+  Hiyo ni 73% ya matumizi yako yote katika kipindi hiki.
+- Malipo yako makubwa zaidi: KSh 2,820 kwa Quickmart
+  Yalitoka tarehe 2026-10-10. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako.
+- Ulilipa KSh 29 kama ada
+  Ada zilikuwa 0% ya matumizi yako. Idadi ya makato: 1. Ada za kutuma, kutoa pesa, Fuliza na benki zote zimejumuishwa.
+- Ulitoa pesa taslimu KSh 1,500
+  Idadi ya mara ulizotoa: 1. Unachotumia kwa pesa taslimu hakionekani kwenye jumbe zako, kwa hivyo kinabaki kama jumla moja hapa.
+- Jumamosi ndiyo siku uliyotumia zaidi
+  Ulitumia KSh 2,820 tarehe 2026-10-10.
+- Wikendi zilichukua 30% ya matumizi yako
+  KSh 2,820 Jumamosi na Jumapili, ukilinganisha na KSh 6,695 kuanzia Jumatatu hadi Ijumaa.
+
+Pesa yako ilikwenda wapi
+------------------------
+Supamaketi  |  KSh 6,920  |  73%  |  KSh +210
+Kutoa kwa wakala  |  KSh 1,500  |  16%  |  KSh -500
+Teksi ya app  |  KSh 895  |  9%  |  KSh +35
+Airtime na bando  |  KSh 200  |  2%  |  KSh 0
+Jumla  |  KSh 9,515  |    |  KSh -23,375
+
+> Ulilipa KSh 29 kama ada, yaani 0% ya matumizi yako. Ada za kutuma, kutoa pesa, Fuliza na kuhamisha kwenda benki zote zimehesabiwa hapa.
+
+Ya kuangalia wiki ijayo
+-----------------------
+1. Uber: takriban KSh 773 kila wiki
+2. Naivas: takriban KSh 1,460 kila wiki
+3. Quickmart: takriban KSh 2,610 kila wiki
+
+Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna kilichokisiwa.
+Akaunti zilizojumuishwa: Demo Bank, M-Pesa
+Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
+
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiIwMWRkMGZjOC0yY2ExLTRhNjQtYmIyMy0yYTc5MGRmZjY0ZGIiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiNTEtdU5TeEIifQ.Ez1QOrsdV5Fsi4OGCzikCQ2auY27QaP_Rqqgsz4m-vE

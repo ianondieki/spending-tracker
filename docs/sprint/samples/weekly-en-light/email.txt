@@ -1,0 +1,78 @@
+Hesabu, Weekly report, 5 to 11 October 2026
+
+Your week in money
+------------------
+
+Monday                           KSh 2,620
+Tuesday                            KSh 100
+Wednesday                        KSh 1,500
+Thursday                           KSh 895
+Friday                           KSh 1,580
+Saturday                         KSh 2,820
+Sunday                               KSh 0
+Total spent                      KSh 9,515
+KSh -23,375 vs last week
+
+You spent less than last week (KSh -23,375, -71%).
+
+Money in: KSh 0 (KSh -85,000)
+Money out: KSh 9,515 (KSh -23,375)
+Fees: KSh 29 (KSh -233)
+Net: KSh -9,544 (KSh -61,392)
+
+Supermarket took the largest share: 73% of spending
+Donut chart of spending by category, KSh 9,515 in all: Supermarket KSh 6,920 (73%); Agent withdrawal KSh 1,500 (16%); Ride-hailing KSh 895 (9%); Airtime & bundles KSh 200 (2%).
+
+Spending peaked on Saturday at KSh 2,820
+Bar chart of spending by day. Highest: Saturday 2026-10-10, KSh 2,820. Daily average: KSh 1,359.
+
+More went out than came in: net KSh -9,544
+Bars comparing money in and out. This period: in KSh 0, out KSh 9,515. Period before: in KSh 85,000, out KSh 32,890.
+
+You paid Naivas the most: KSh 4,100
+Bar chart of the places you paid most: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200.
+
+food groceries has used 0% of its budget
+Budget bars: food groceries KSh 0 of KSh 6,000, heading for KSh 0.
+
+Fees took 0% of your spending: KSh 29
+Fee meter: KSh 29 in fees, 0% of money out.
+
+What stood out
+--------------
+- Spending fell to KSh 9,515, from KSh 32,890
+  That is a change of KSh -23,375 (-71%) on the period before.
+- Supermarket was your biggest spend at KSh 6,920
+  That is 73% of everything you spent in this period.
+- Your largest payment was KSh 2,820 to Quickmart
+  It went out on 2026-10-10. One large payment can explain much of the movement in your totals.
+- You paid KSh 29 in fees
+  Fees were 0% of your spending. Charges counted: 1. Sending, withdrawal, Fuliza and bank charges are all included.
+- You withdrew KSh 1,500 in cash
+  Withdrawals: 1. What you spend in cash does not appear in your messages, so it stays as one line here.
+- Saturday was your biggest spending day
+  You spent KSh 2,820 on 2026-10-10.
+- Weekends took 30% of your spending
+  KSh 2,820 on Saturday and Sunday, against KSh 6,695 from Monday to Friday.
+
+Where your money went
+---------------------
+Supermarket  |  KSh 6,920  |  73%  |  KSh +210
+Agent withdrawal  |  KSh 1,500  |  16%  |  KSh -500
+Ride-hailing  |  KSh 895  |  9%  |  KSh +35
+Airtime & bundles  |  KSh 200  |  2%  |  KSh 0
+Total  |  KSh 9,515  |    |  KSh -23,375
+
+> You paid KSh 29 in fees, 0% of what you spent. Charges for sending, withdrawing, Fuliza and bank transfers all count here.
+
+To watch next week
+------------------
+1. Uber: about KSh 773 every week
+2. Naivas: about KSh 1,460 every week
+3. Quickmart: about KSh 2,610 every week
+
+Every number here is computed from your transaction messages on your phone. Nothing was guessed.
+Accounts covered: Demo Bank, M-Pesa
+Messages Hesabu could not read: Messages not yet understood: 0
+
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiIwMWRkMGZjOC0yY2ExLTRhNjQtYmIyMy0yYTc5MGRmZjY0ZGIiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiMlRPNW5yRWgifQ.fCcf6UyUORekwj1EzxekeCOiacW2aUudk997NyfAAoA

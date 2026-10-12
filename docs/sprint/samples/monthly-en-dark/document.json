@@ -1,0 +1,476 @@
+{
+  "version": "1",
+  "report_id": "5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+  "kind": "monthly",
+  "locale": "en",
+  "period_label": "September 2026",
+  "title": "Your month in money",
+  "sections": [
+    {
+      "type": "hero",
+      "total_out": "KSh 62,890",
+      "delta": "KSh +38,755",
+      "delta_direction": "up",
+      "verdict": "You spent 161% more than last month (KSh +38,755).",
+      "tally": [
+        {
+          "label": "Supermarket",
+          "value": "KSh 25,180",
+          "cents": 2518000
+        },
+        {
+          "label": "Rent",
+          "value": "KSh 18,000",
+          "cents": 1800000
+        },
+        {
+          "label": "Agent withdrawal",
+          "value": "KSh 8,500",
+          "cents": 850000
+        },
+        {
+          "label": "Ride-hailing",
+          "value": "KSh 3,090",
+          "cents": 309000
+        },
+        {
+          "label": "Electricity (KPLC tokens & bills)",
+          "value": "KSh 3,000",
+          "cents": 300000
+        },
+        {
+          "label": "Sent to people",
+          "value": "KSh 3,000",
+          "cents": 300000
+        },
+        {
+          "label": "Streaming",
+          "value": "KSh 1,100",
+          "cents": 110000
+        }
+      ]
+    },
+    {
+      "type": "kpis",
+      "items": [
+        {
+          "label": "Money in",
+          "value": "KSh 86,500",
+          "delta": "KSh +1,500",
+          "tone": "in"
+        },
+        {
+          "label": "Money out",
+          "value": "KSh 62,890",
+          "delta": "KSh +38,755",
+          "tone": "out"
+        },
+        {
+          "label": "Fees",
+          "value": "KSh 419",
+          "delta": "KSh +228",
+          "tone": "fee"
+        },
+        {
+          "label": "Net",
+          "value": "KSh 23,191",
+          "delta": "KSh -37,483",
+          "tone": "neutral"
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "chart_id": "donut",
+      "chart_type": "donut",
+      "title": "Supermarket took the largest share: 40% of spending",
+      "takeaway": null,
+      "data_ref": "/categories",
+      "alt_text": "Donut chart of spending by category, KSh 62,890 in all: Supermarket KSh 25,180 (40%); Rent KSh 18,000 (29%); Agent withdrawal KSh 8,500 (14%); Ride-hailing KSh 3,090 (5%); Electricity (KPLC tokens & bills) KSh 3,000 (5%); Sent to people KSh 3,000 (5%)."
+    },
+    {
+      "type": "chart",
+      "chart_id": "daily_bars",
+      "chart_type": "daily_bars",
+      "title": "Spending peaked on Tuesday at KSh 18,100",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Bar chart of spending by day. Highest: Tuesday 2026-09-01, KSh 18,100. Daily average: KSh 2,096."
+    },
+    {
+      "type": "chart",
+      "chart_id": "stacked_in_out",
+      "chart_type": "stacked_in_out",
+      "title": "More came in than went out: net KSh 23,191",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Bars comparing money in and out. This period: in KSh 86,500, out KSh 62,890. Period before: in KSh 85,000, out KSh 24,135."
+    },
+    {
+      "type": "chart",
+      "chart_id": "top_bars_merchants",
+      "chart_type": "top_bars",
+      "title": "You paid Makao Properties the most: KSh 18,000",
+      "takeaway": null,
+      "data_ref": "/merchants",
+      "alt_text": "Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900."
+    },
+    {
+      "type": "chart",
+      "chart_id": "trend_lines",
+      "chart_type": "trend_lines",
+      "title": "Spending this month: KSh 62,890, against recent months",
+      "takeaway": null,
+      "data_ref": "/trend_months",
+      "alt_text": "Line chart of money in, money out and net by month, from Apr 2026 to Sep 2026. This month: in KSh 86,500, out KSh 62,890, net KSh 23,191."
+    },
+    {
+      "type": "chart",
+      "chart_id": "waterfall",
+      "chart_type": "waterfall",
+      "title": "From KSh 86,500 in to KSh 23,191 net",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Waterfall from money in, KSh 86,500, through spending by category to net, KSh 23,191. Largest category: Supermarket, KSh 25,180."
+    },
+    {
+      "type": "chart",
+      "chart_id": "calendar_heatmap",
+      "chart_type": "calendar_heatmap",
+      "title": "Your heaviest day was 2026-09-01: KSh 18,100",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Calendar of daily spending for September 2026. Heaviest day: 2026-09-01, KSh 18,100. Daily average: KSh 2,096."
+    },
+    {
+      "type": "chart",
+      "chart_id": "budget_bullets",
+      "chart_type": "budget_bullets",
+      "title": "transport has used 0% of its budget",
+      "takeaway": null,
+      "data_ref": "/budgets",
+      "alt_text": "Budget bars: transport KSh 0 of KSh 8,000, heading for KSh 0."
+    },
+    {
+      "type": "chart",
+      "chart_id": "fee_meter",
+      "chart_type": "fee_meter",
+      "title": "Fees took 1% of your spending: KSh 419",
+      "takeaway": null,
+      "data_ref": "/totals/fees",
+      "alt_text": "Fee meter: KSh 419 in fees, 1% of money out."
+    },
+    {
+      "type": "insights",
+      "title": "What stood out",
+      "items": [
+        {
+          "insight_id": "spend_vs_last",
+          "headline": "Spending rose to KSh 62,890, from KSh 24,135",
+          "body": "That is a change of KSh +38,755 (161%) on the period before. The categories show where the extra went.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "fuliza_usage",
+          "headline": "You used KSh 1,599 of Fuliza",
+          "body": "You repaid KSh 1,615. Fuliza charges came to KSh 16. Days in overdraft: 2.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "FULIZA_DRAWDOWN",
+                "FULIZA_REPAY"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "category_rising:food_groceries.supermarket",
+          "headline": "Supermarket went up to KSh 25,180",
+          "body": "Change from the period before: KSh +12,000 (91%).",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "category_rising:cash_withdrawals.agent",
+          "headline": "Agent withdrawal went up to KSh 8,500",
+          "body": "Change from the period before: KSh +5,000 (143%).",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "cash_withdrawals.agent",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "top_category:food_groceries.supermarket",
+          "headline": "Supermarket was your biggest spend at KSh 25,180",
+          "body": "That is 40% of everything you spent in this period.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "biggest_transaction:abcf87f5-9be4-4176-8a23-e2595fe93ae7",
+          "headline": "Your largest payment was KSh 18,000 to Makao Properties",
+          "body": "It went out on 2026-09-01. One large payment can explain much of the movement in your totals.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "transaction_ids": [
+                "abcf87f5-9be4-4176-8a23-e2595fe93ae7"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "new_merchant:Makao Properties",
+          "headline": "You paid somewhere new: Makao Properties",
+          "body": "This is the first time Makao Properties shows up in your messages. Total so far: KSh 18,000. Payments: 1.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "merchant": "Makao Properties"
+            }
+          }
+        },
+        {
+          "insight_id": "fees_total",
+          "headline": "You paid KSh 419 in fees",
+          "body": "Fees were 1% of your spending. Charges counted: 13. Sending, withdrawal, Fuliza and bank charges are all included.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "abcf87f5-9be4-4176-8a23-e2595fe93ae7",
+                "f98e7a7c-5e0b-4ab8-a2f1-6c4168fbfe1f",
+                "3d0aa74b-b680-4e50-8ce1-79b5dbacde0c",
+                "c86aa94d-11cf-4aa1-b174-1777a3ce0be4",
+                "f355ac60-93b9-45bb-ba82-37e5bab020e8",
+                "f0d85d7e-7c3b-407c-ac5d-f09f37cabf30",
+                "7ca865b6-c79c-4b15-a6b5-0c26c514b957",
+                "c341fce1-3bf3-469e-9a14-2bf93fe7ab67",
+                "d04a0845-38e4-4632-9c05-a2b20c9ba86e",
+                "d78006a2-29ed-40db-bfbc-8d05f0789843",
+                "9652f2a9-33cf-4c31-a44d-6050f3cfb641",
+                "6426a528-d48a-4f31-a7dc-5ec1fa81278d",
+                "509a1b7e-d881-4684-b561-4844de929b6d"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "cash_withdrawn",
+          "headline": "You withdrew KSh 8,500 in cash",
+          "body": "Withdrawals: 5. What you spend in cash does not appear in your messages, so it stays as one line here.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "WITHDRAW",
+                "ATM"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "savings_rate",
+          "headline": "You set aside 6% of your income",
+          "body": "KSh 5,000 went to savings out of KSh 86,500 that came in.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "MSHWARI_DEPOSIT"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "income_received",
+          "headline": "KSh 86,500 came in",
+          "body": "Payments received: 2. The largest source was Acme Logistics Salary.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "68374996-da08-4426-8f11-4120867bab6b",
+                "246167df-8476-41da-86d5-86b03ef97c8b"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "sent_to_people",
+          "headline": "You sent KSh 3,000 to people",
+          "body": "Transfers to people: 1. The most went to Jane Wanjiru: KSh 3,000.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "9652f2a9-33cf-4c31-a44d-6050f3cfb641"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Where your money went",
+      "columns": [
+        "Category",
+        "Spent",
+        "Share",
+        "Change"
+      ],
+      "rows": [
+        [
+          "Supermarket",
+          "KSh 25,180",
+          "40%",
+          "KSh +12,000"
+        ],
+        [
+          "Rent",
+          "KSh 18,000",
+          "29%",
+          ""
+        ],
+        [
+          "Agent withdrawal",
+          "KSh 8,500",
+          "14%",
+          "KSh +5,000"
+        ],
+        [
+          "Ride-hailing",
+          "KSh 3,090",
+          "5%",
+          "KSh +1,755"
+        ],
+        [
+          "Electricity (KPLC tokens & bills)",
+          "KSh 3,000",
+          "5%",
+          "KSh +1,500"
+        ],
+        [
+          "Sent to people",
+          "KSh 3,000",
+          "5%",
+          "KSh 0"
+        ],
+        [
+          "Streaming",
+          "KSh 1,100",
+          "2%",
+          "KSh 0"
+        ],
+        [
+          "Airtime & bundles",
+          "KSh 900",
+          "1%",
+          "KSh +500"
+        ]
+      ],
+      "numeric_columns": [
+        1,
+        2,
+        3
+      ],
+      "total_row": [
+        "Total",
+        "KSh 62,890",
+        "",
+        "KSh +38,755"
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "fee",
+      "body": "You paid KSh 419 in fees, 1% of what you spent. Charges for sending, withdrawing, Fuliza and bank transfers all count here."
+    },
+    {
+      "type": "watch",
+      "title": "To watch next month",
+      "items": [
+        "Naivas: about KSh 2,015 every week",
+        "Uber: about KSh 738 every week",
+        "Quickmart: about KSh 2,550 every week"
+      ]
+    },
+    {
+      "type": "footer",
+      "accounts_covered": [
+        "Demo Bank",
+        "M-Pesa"
+      ],
+      "computed_note": "Every number here is computed from your transaction messages on your phone. Nothing was guessed.",
+      "unknown_count": "Messages not yet understood: 0"
+    }
+  ],
+  "whatsapp": {
+    "caption": "*Your month in money*\nSeptember 2026\n\nSpent: *KSh 62,890*\nYou spent 161% more than last month (KSh +38,755).\n\n• Spending rose to KSh 62,890, from KSh 24,135\n• You used KSh 1,599 of Fuliza\n• Supermarket went up to KSh 25,180\n\nFull report: https://hesabu.example/r/5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+    "hero_chart_ids": [
+      "donut"
+    ]
+  },
+  "email": {
+    "subject": "Your month in money: September 2026",
+    "preheader": "You spent KSh 62,890 (KSh +38,755). Fees: KSh 419."
+  },
+  "meta": {
+    "generated_at": "2026-10-12T06:00:00.000Z",
+    "facts_version": "1",
+    "writer": "fallback",
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "fact_check": {
+      "passed": true,
+      "violations": [],
+      "attempts": 0
+    }
+  }
+}

@@ -13,7 +13,13 @@ export const SAVINGS_TYPES: ReadonlySet<TxType> = new Set<TxType>(['MSHWARI_DEPO
 export const LOAN_REPAYMENT_TYPES: ReadonlySet<TxType> = new Set<TxType>(['FULIZA_REPAY', 'MSHWARI_LOAN_REPAY', 'LOAN_REPAY']);
 export const LOAN_DRAWDOWN_TYPES: ReadonlySet<TxType> = new Set<TxType>(['FULIZA_DRAWDOWN', 'MSHWARI_LOAN']);
 export const CASH_TYPES: ReadonlySet<TxType> = new Set<TxType>(['WITHDRAW', 'ATM']);
-export const MERCHANT_KINDS: ReadonlySet<string> = new Set(['merchant', 'paybill', 'till', 'agent', 'bank']);
+/** Counterparty kinds that are a place you pay. Agents are cash points, people are people: neither is a merchant. */
+export const MERCHANT_KINDS: ReadonlySet<string> = new Set(['merchant', 'paybill', 'till', 'bank']);
+
+/** A cash withdrawal (by type or by counterparty kind): never a merchant payment, never "the largest payment to". */
+export function isCashLike(t: { readonly src: Pick<Transaction, 'type'>; readonly cpKind: string }): boolean {
+  return CASH_TYPES.has(t.src.type) || t.cpKind === 'agent';
+}
 
 export type TxClass = 'spend' | 'income' | 'transfer' | 'savings' | 'loan_repayment' | 'loan_in' | 'fee' | 'reversal' | 'other';
 
@@ -42,6 +48,34 @@ export function cleanName(name: string | null | undefined): string | null {
   if (name == null) return null;
   const cleaned = name.trim().replace(/\s+/g, ' ');
   return cleaned === '' ? null : cleaned;
+}
+
+/** Tokens dropped from merchant names (company suffixes) and tokens kept in capitals (known acronyms). */
+const DROPPED_TOKENS: ReadonlySet<string> = new Set(['LTD', 'LTD.', 'LIMITED', 'PLC', 'INC', 'INC.', 'CO.']);
+const ACRONYMS: ReadonlySet<string> = new Set([
+  'KPLC', 'DSTV', 'GOTV', 'NHIF', 'SHA', 'NSSF', 'KRA', 'KCB', 'NCBA', 'CBD', 'ATM', 'SACCO', 'KQ', 'KWS', 'KPA', 'KWAL', 'NTSA',
+  'TSC', 'KEMSA', 'UON', 'JKUAT', 'KU', 'MKU', 'USIU', 'HELB', 'NTV', 'KTN', 'TV', 'IT', 'ICT', 'HQ', 'II', 'III', 'IV', 'UK', 'US', 'USA', 'KE', 'EA',
+]);
+
+/**
+ * Display normaliser for counterparty names: trims, drops company suffixes (LTD, LIMITED, PLC), title-cases words
+ * and keeps known acronyms and tokens with digits. "NAIVAS LTD KILIMANI" → "Naivas Kilimani", "KPLC PREPAID" →
+ * "KPLC Prepaid", "M-PESA" → "M-Pesa", "JOHN K" → "John K". Callers may supply a better (canonical) name instead.
+ */
+export function displayName(name: string | null | undefined): string | null {
+  const cleaned = cleanName(name);
+  if (cleaned === null) return null;
+  const words = cleaned.split(' ').filter((w) => !DROPPED_TOKENS.has(w.toUpperCase()));
+  if (words.length === 0) return cleaned;
+  const cased = words.map((w) => {
+    const upper = w.toUpperCase();
+    if (ACRONYMS.has(upper) || /\d/.test(w)) return upper === w ? w : w;
+    if (upper !== w) return w; // already mixed case: leave as typed
+    return w
+      .toLowerCase()
+      .replace(/(^|[-'’/&.(])([a-z])/g, (_m, pre: string, ch: string) => pre + ch.toUpperCase());
+  });
+  return cased.join(' ');
 }
 
 /** Grouping key for counterparty names: cleaned and lower-cased. */

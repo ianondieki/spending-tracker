@@ -1,0 +1,335 @@
+{
+  "version": "1",
+  "report_id": "01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+  "kind": "weekly",
+  "locale": "en",
+  "period_label": "5 to 11 October 2026",
+  "title": "Your week in money",
+  "sections": [
+    {
+      "type": "hero",
+      "total_out": "KSh 9,515",
+      "delta": "KSh -23,375",
+      "delta_direction": "down",
+      "verdict": "You spent less than last week (KSh -23,375, -71%).",
+      "tally": [
+        {
+          "label": "Monday",
+          "value": "KSh 2,620",
+          "cents": 262000
+        },
+        {
+          "label": "Tuesday",
+          "value": "KSh 100",
+          "cents": 10000
+        },
+        {
+          "label": "Wednesday",
+          "value": "KSh 1,500",
+          "cents": 150000
+        },
+        {
+          "label": "Thursday",
+          "value": "KSh 895",
+          "cents": 89500
+        },
+        {
+          "label": "Friday",
+          "value": "KSh 1,580",
+          "cents": 158000
+        },
+        {
+          "label": "Saturday",
+          "value": "KSh 2,820",
+          "cents": 282000
+        },
+        {
+          "label": "Sunday",
+          "value": "KSh 0",
+          "cents": 0
+        }
+      ]
+    },
+    {
+      "type": "kpis",
+      "items": [
+        {
+          "label": "Money in",
+          "value": "KSh 0",
+          "delta": "KSh -85,000",
+          "tone": "in"
+        },
+        {
+          "label": "Money out",
+          "value": "KSh 9,515",
+          "delta": "KSh -23,375",
+          "tone": "out"
+        },
+        {
+          "label": "Fees",
+          "value": "KSh 29",
+          "delta": "KSh -233",
+          "tone": "fee"
+        },
+        {
+          "label": "Net",
+          "value": "KSh -9,544",
+          "delta": "KSh -61,392",
+          "tone": "neutral"
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "chart_id": "donut",
+      "chart_type": "donut",
+      "title": "Supermarket took the largest share: 73% of spending",
+      "takeaway": null,
+      "data_ref": "/categories",
+      "alt_text": "Donut chart of spending by category, KSh 9,515 in all: Supermarket KSh 6,920 (73%); Agent withdrawal KSh 1,500 (16%); Ride-hailing KSh 895 (9%); Airtime & bundles KSh 200 (2%)."
+    },
+    {
+      "type": "chart",
+      "chart_id": "daily_bars",
+      "chart_type": "daily_bars",
+      "title": "Spending peaked on Saturday at KSh 2,820",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Bar chart of spending by day. Highest: Saturday 2026-10-10, KSh 2,820. Daily average: KSh 1,359."
+    },
+    {
+      "type": "chart",
+      "chart_id": "stacked_in_out",
+      "chart_type": "stacked_in_out",
+      "title": "More went out than came in: net KSh -9,544",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Bars comparing money in and out. This period: in KSh 0, out KSh 9,515. Period before: in KSh 85,000, out KSh 32,890."
+    },
+    {
+      "type": "chart",
+      "chart_id": "top_bars_merchants",
+      "chart_type": "top_bars",
+      "title": "You paid Naivas the most: KSh 4,100",
+      "takeaway": null,
+      "data_ref": "/merchants",
+      "alt_text": "Bar chart of the places you paid most: Naivas KSh 4,100; Quickmart KSh 2,820; Uber KSh 895; Safaricom airtime & bundles KSh 200."
+    },
+    {
+      "type": "chart",
+      "chart_id": "budget_bullets",
+      "chart_type": "budget_bullets",
+      "title": "food groceries has used 0% of its budget",
+      "takeaway": null,
+      "data_ref": "/budgets",
+      "alt_text": "Budget bars: food groceries KSh 0 of KSh 6,000, heading for KSh 0."
+    },
+    {
+      "type": "chart",
+      "chart_id": "fee_meter",
+      "chart_type": "fee_meter",
+      "title": "Fees took 0% of your spending: KSh 29",
+      "takeaway": null,
+      "data_ref": "/totals/fees",
+      "alt_text": "Fee meter: KSh 29 in fees, 0% of money out."
+    },
+    {
+      "type": "insights",
+      "title": "What stood out",
+      "items": [
+        {
+          "insight_id": "spend_vs_last",
+          "headline": "Spending fell to KSh 9,515, from KSh 32,890",
+          "body": "That is a change of KSh -23,375 (-71%) on the period before.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "top_category:food_groceries.supermarket",
+          "headline": "Supermarket was your biggest spend at KSh 6,920",
+          "body": "That is 73% of everything you spent in this period.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "biggest_transaction:f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5",
+          "headline": "Your largest payment was KSh 2,820 to Quickmart",
+          "body": "It went out on 2026-10-10. One large payment can explain much of the movement in your totals.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "transaction_ids": [
+                "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "fees_total",
+          "headline": "You paid KSh 29 in fees",
+          "body": "Fees were 0% of your spending. Charges counted: 1. Sending, withdrawal, Fuliza and bank charges are all included.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "transaction_ids": [
+                "8f226991-1a44-4704-8cd6-678cf18e6c61"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "cash_withdrawn",
+          "headline": "You withdrew KSh 1,500 in cash",
+          "body": "Withdrawals: 1. What you spend in cash does not appear in your messages, so it stays as one line here.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "types": [
+                "WITHDRAW",
+                "ATM"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "spendiest_day:2026-10-10",
+          "headline": "Saturday was your biggest spending day",
+          "body": "You spent KSh 2,820 on 2026-10-10.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-10T00:00:00+03:00",
+              "to": "2026-10-11T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "weekend_share",
+          "headline": "Weekends took 30% of your spending",
+          "body": "KSh 2,820 on Saturday and Sunday, against KSh 6,695 from Monday to Friday.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-10-05T00:00:00+03:00",
+              "to": "2026-10-12T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Where your money went",
+      "columns": [
+        "Category",
+        "Spent",
+        "Share",
+        "Change"
+      ],
+      "rows": [
+        [
+          "Supermarket",
+          "KSh 6,920",
+          "73%",
+          "KSh +210"
+        ],
+        [
+          "Agent withdrawal",
+          "KSh 1,500",
+          "16%",
+          "KSh -500"
+        ],
+        [
+          "Ride-hailing",
+          "KSh 895",
+          "9%",
+          "KSh +35"
+        ],
+        [
+          "Airtime & bundles",
+          "KSh 200",
+          "2%",
+          "KSh 0"
+        ]
+      ],
+      "numeric_columns": [
+        1,
+        2,
+        3
+      ],
+      "total_row": [
+        "Total",
+        "KSh 9,515",
+        "",
+        "KSh -23,375"
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "fee",
+      "body": "You paid KSh 29 in fees, 0% of what you spent. Charges for sending, withdrawing, Fuliza and bank transfers all count here."
+    },
+    {
+      "type": "watch",
+      "title": "To watch next week",
+      "items": [
+        "Uber: about KSh 773 every week",
+        "Naivas: about KSh 1,460 every week",
+        "Quickmart: about KSh 2,610 every week"
+      ]
+    },
+    {
+      "type": "footer",
+      "accounts_covered": [
+        "Demo Bank",
+        "M-Pesa"
+      ],
+      "computed_note": "Every number here is computed from your transaction messages on your phone. Nothing was guessed.",
+      "unknown_count": "Messages not yet understood: 0"
+    }
+  ],
+  "whatsapp": {
+    "caption": "*Your week in money*\n5 to 11 October 2026\n\nSpent: *KSh 9,515*\nYou spent less than last week (KSh -23,375, -71%).\n\n• Spending fell to KSh 9,515, from KSh 32,890\n• Supermarket was your biggest spend at KSh 6,920\n• Your largest payment was KSh 2,820 to Quickmart\n\nFull report: https://hesabu.example/r/01dd0fc8-2ca1-4a64-bb23-2a790dff64db",
+    "hero_chart_ids": [
+      "donut"
+    ]
+  },
+  "email": {
+    "subject": "Your week in money: 5 to 11 October 2026",
+    "preheader": "You spent KSh 9,515 (KSh -23,375). Fees: KSh 29."
+  },
+  "meta": {
+    "generated_at": "2026-10-12T06:00:00.000Z",
+    "facts_version": "1",
+    "writer": "fallback",
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "fact_check": {
+      "passed": true,
+      "violations": [],
+      "attempts": 0
+    }
+  }
+}

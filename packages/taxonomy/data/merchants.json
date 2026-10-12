@@ -6,6 +6,7 @@
     {
       "id": "kplc_prepaid",
       "name": "Kenya Power (prepaid tokens)",
+      "display_name": "KPLC Prepaid",
       "aliases": ["KPLC PREPAID", "KENYA POWER PREPAID", "KPLC TOKENS", "KENYA POWER TOKENS"],
       "paybills": ["888880"],
       "tills": [],
@@ -18,6 +19,7 @@
     {
       "id": "kplc_postpaid",
       "name": "Kenya Power (postpaid)",
+      "display_name": "KPLC Postpaid",
       "aliases": [
         "KPLC POSTPAID",
         "KENYA POWER POSTPAID",
@@ -37,6 +39,7 @@
     {
       "id": "nairobi_water",
       "name": "Nairobi City Water & Sewerage Co.",
+      "display_name": "Nairobi Water",
       "aliases": [
         "NAIROBI WATER",
         "NAIROBI CITY WATER",
@@ -56,6 +59,7 @@
     {
       "id": "safaricom_airtime",
       "name": "Safaricom airtime & bundles",
+      "display_name": "Safaricom",
       "aliases": [
         "SAFARICOM",
         "SAFARICOM LIMITED",
@@ -135,6 +139,7 @@
     {
       "id": "faiba",
       "name": "Faiba (Jamii Telecommunications)",
+      "display_name": "Faiba",
       "aliases": [
         "FAIBA",
         "JAMII TELECOMMUNICATIONS",
@@ -154,6 +159,7 @@
     {
       "id": "zuku",
       "name": "Zuku (Wananchi Group)",
+      "display_name": "Zuku",
       "aliases": [
         "ZUKU",
         "ZUKU FIBRE",
@@ -173,6 +179,7 @@
     {
       "id": "multichoice_dstv",
       "name": "DStv (MultiChoice Kenya)",
+      "display_name": "DStv",
       "aliases": [
         "DSTV",
         "DSTV KENYA",
@@ -192,6 +199,7 @@
     {
       "id": "multichoice_gotv",
       "name": "GOtv (MultiChoice Kenya)",
+      "display_name": "GOtv",
       "aliases": ["GOTV", "GOTV KENYA", "MULTICHOICE GOTV", "GOTV MULTICHOICE"],
       "paybills": ["423655"],
       "tills": [],
@@ -282,6 +290,7 @@
     {
       "id": "carrefour",
       "name": "Carrefour (Majid Al Futtaim)",
+      "display_name": "Carrefour",
       "aliases": [
         "CARREFOUR",
         "CARREFOUR KENYA",
@@ -372,6 +381,7 @@
     {
       "id": "kfc",
       "name": "KFC (Kuku Foods)",
+      "display_name": "KFC",
       "aliases": ["KFC", "KUKU FOODS", "KUKU FOODS KENYA", "KFC KENYA"],
       "paybills": [],
       "tills": [],
@@ -384,6 +394,7 @@
     {
       "id": "chicken_inn",
       "name": "Chicken Inn (Simbisa Brands)",
+      "display_name": "Chicken Inn",
       "aliases": [
         "CHICKEN INN",
         "SIMBISA",
@@ -464,6 +475,7 @@
     {
       "id": "madaraka_express",
       "name": "Madaraka Express (Kenya Railways)",
+      "display_name": "Madaraka Express",
       "aliases": [
         "MADARAKA EXPRESS",
         "KENYA RAILWAYS",
@@ -538,6 +550,7 @@
     {
       "id": "shell_vivo",
       "name": "Shell (Vivo Energy)",
+      "display_name": "Shell",
       "aliases": ["SHELL", "SHELL KENYA", "VIVO ENERGY", "VIVO ENERGY KENYA"],
       "paybills": [],
       "tills": [],
@@ -562,6 +575,7 @@
     {
       "id": "nairobi_expressway",
       "name": "Nairobi Expressway (Moja Expressway)",
+      "display_name": "Nairobi Expressway",
       "aliases": ["NAIROBI EXPRESSWAY", "MOJA EXPRESSWAY", "MOJA EXPRESSWAY COMPANY"],
       "paybills": [],
       "tills": [],
@@ -574,6 +588,7 @@
     {
       "id": "sha",
       "name": "Social Health Authority (SHA)",
+      "display_name": "SHA",
       "aliases": [
         "SHA",
         "SOCIAL HEALTH AUTHORITY",
@@ -592,6 +607,7 @@
     {
       "id": "nhif",
       "name": "NHIF (legacy)",
+      "display_name": "NHIF",
       "aliases": ["NHIF", "NATIONAL HOSPITAL INSURANCE FUND", "NATIONAL HEALTH INSURANCE FUND"],
       "paybills": [],
       "tills": [],
@@ -616,6 +632,7 @@
     {
       "id": "aga_khan_hospital",
       "name": "Aga Khan University Hospital",
+      "display_name": "Aga Khan Hospital",
       "aliases": ["AGA KHAN", "AGA KHAN UNIVERSITY HOSPITAL", "AGA KHAN HOSPITAL", "AKUH"],
       "paybills": [],
       "tills": [],
@@ -640,6 +657,7 @@
     {
       "id": "knh",
       "name": "Kenyatta National Hospital",
+      "display_name": "Kenyatta National Hospital",
       "aliases": ["KENYATTA NATIONAL HOSPITAL", "KNH"],
       "paybills": [],
       "tills": [],
@@ -688,6 +706,7 @@
     {
       "id": "ecitizen",
       "name": "eCitizen (Government of Kenya)",
+      "display_name": "eCitizen",
       "aliases": [
         "ECITIZEN",
         "E CITIZEN",
@@ -787,6 +806,7 @@
     {
       "id": "coop_bank",
       "name": "Co-operative Bank of Kenya",
+      "display_name": "Co-op Bank",
       "aliases": [
         "CO OPERATIVE BANK",
         "COOPERATIVE BANK",
@@ -876,6 +896,7 @@
     {
       "id": "im_bank",
       "name": "I&M Bank",
+      "display_name": "I&M Bank",
       "aliases": ["I&M BANK", "I AND M BANK", "I&M", "I&M BANK LTD", "I&M BANK KENYA"],
       "paybills": ["542542"],
       "tills": [],
@@ -1105,6 +1126,7 @@
     {
       "id": "church_tithe_generic",
       "name": "Church / tithe (generic)",
+      "display_name": "Church / tithe",
       "aliases": [
         "CHURCH",
         "TITHE",

@@ -1,0 +1,476 @@
+{
+  "version": "1",
+  "report_id": "5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+  "kind": "monthly",
+  "locale": "sw",
+  "period_label": "Septemba 2026",
+  "title": "Mwezi wako wa pesa",
+  "sections": [
+    {
+      "type": "hero",
+      "total_out": "KSh 62,890",
+      "delta": "KSh +38,755",
+      "delta_direction": "up",
+      "verdict": "Umetumia 161% zaidi ya mwezi uliopita (KSh +38,755).",
+      "tally": [
+        {
+          "label": "Supamaketi",
+          "value": "KSh 25,180",
+          "cents": 2518000
+        },
+        {
+          "label": "Kodi ya nyumba",
+          "value": "KSh 18,000",
+          "cents": 1800000
+        },
+        {
+          "label": "Kutoa kwa wakala",
+          "value": "KSh 8,500",
+          "cents": 850000
+        },
+        {
+          "label": "Teksi ya app",
+          "value": "KSh 3,090",
+          "cents": 309000
+        },
+        {
+          "label": "Stima (tokeni na bili za KPLC)",
+          "value": "KSh 3,000",
+          "cents": 300000
+        },
+        {
+          "label": "Pesa ulizotuma kwa watu",
+          "value": "KSh 3,000",
+          "cents": 300000
+        },
+        {
+          "label": "Kutazama mtandaoni",
+          "value": "KSh 1,100",
+          "cents": 110000
+        }
+      ]
+    },
+    {
+      "type": "kpis",
+      "items": [
+        {
+          "label": "Mapato",
+          "value": "KSh 86,500",
+          "delta": "KSh +1,500",
+          "tone": "in"
+        },
+        {
+          "label": "Matumizi",
+          "value": "KSh 62,890",
+          "delta": "KSh +38,755",
+          "tone": "out"
+        },
+        {
+          "label": "Ada",
+          "value": "KSh 419",
+          "delta": "KSh +228",
+          "tone": "fee"
+        },
+        {
+          "label": "Tofauti",
+          "value": "KSh 23,191",
+          "delta": "KSh -37,483",
+          "tone": "neutral"
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "chart_id": "donut",
+      "chart_type": "donut",
+      "title": "Supamaketi ilichukua sehemu kubwa zaidi: 40% ya matumizi",
+      "takeaway": null,
+      "data_ref": "/categories",
+      "alt_text": "Chati ya duara ya matumizi kwa aina, jumla KSh 62,890: Supamaketi KSh 25,180 (40%); Kodi ya nyumba KSh 18,000 (29%); Kutoa kwa wakala KSh 8,500 (14%); Teksi ya app KSh 3,090 (5%); Stima (tokeni na bili za KPLC) KSh 3,000 (5%); Pesa ulizotuma kwa watu KSh 3,000 (5%)."
+    },
+    {
+      "type": "chart",
+      "chart_id": "daily_bars",
+      "chart_type": "daily_bars",
+      "title": "Matumizi yalikuwa juu zaidi Jumanne: KSh 18,100",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Chati ya nguzo ya matumizi kwa siku. Siku ya juu zaidi: Jumanne 2026-09-01, KSh 18,100. Wastani wa kila siku: KSh 2,096."
+    },
+    {
+      "type": "chart",
+      "chart_id": "stacked_in_out",
+      "chart_type": "stacked_in_out",
+      "title": "Pesa iliyoingia ilizidi iliyotoka: tofauti ni KSh 23,191",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Nguzo zinazolinganisha mapato na matumizi. Kipindi hiki: mapato KSh 86,500, matumizi KSh 62,890. Kipindi kilichopita: mapato KSh 85,000, matumizi KSh 24,135."
+    },
+    {
+      "type": "chart",
+      "chart_id": "top_bars_merchants",
+      "chart_type": "top_bars",
+      "title": "Ulilipa Makao Properties zaidi: KSh 18,000",
+      "takeaway": null,
+      "data_ref": "/merchants",
+      "alt_text": "Chati ya nguzo ya maeneo uliyolipa zaidi: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900."
+    },
+    {
+      "type": "chart",
+      "chart_id": "trend_lines",
+      "chart_type": "trend_lines",
+      "title": "Matumizi ya mwezi huu: KSh 62,890, ukilinganisha na miezi iliyopita",
+      "takeaway": null,
+      "data_ref": "/trend_months",
+      "alt_text": "Chati ya mistari ya mapato, matumizi na tofauti kwa kila mwezi, kuanzia Apr 2026 hadi Sep 2026. Mwezi huu: mapato KSh 86,500, matumizi KSh 62,890, tofauti KSh 23,191."
+    },
+    {
+      "type": "chart",
+      "chart_id": "waterfall",
+      "chart_type": "waterfall",
+      "title": "Kutoka mapato ya KSh 86,500 hadi tofauti ya KSh 23,191",
+      "takeaway": null,
+      "data_ref": "/totals",
+      "alt_text": "Chati ya mtiririko kutoka mapato, KSh 86,500, kupitia matumizi kwa aina hadi tofauti, KSh 23,191. Aina kubwa zaidi: Supamaketi, KSh 25,180."
+    },
+    {
+      "type": "chart",
+      "chart_id": "calendar_heatmap",
+      "chart_type": "calendar_heatmap",
+      "title": "Siku uliyotumia zaidi ilikuwa 2026-09-01: KSh 18,100",
+      "takeaway": null,
+      "data_ref": "/daily",
+      "alt_text": "Kalenda ya matumizi ya kila siku kwa Septemba 2026. Siku ya juu zaidi: 2026-09-01, KSh 18,100. Wastani wa kila siku: KSh 2,096."
+    },
+    {
+      "type": "chart",
+      "chart_id": "budget_bullets",
+      "chart_type": "budget_bullets",
+      "title": "transport imetumia 0% ya bajeti yake",
+      "takeaway": null,
+      "data_ref": "/budgets",
+      "alt_text": "Nguzo za bajeti: transport KSh 0 kati ya KSh 8,000, inaelekea KSh 0."
+    },
+    {
+      "type": "chart",
+      "chart_id": "fee_meter",
+      "chart_type": "fee_meter",
+      "title": "Ada zilichukua 1% ya matumizi yako: KSh 419",
+      "takeaway": null,
+      "data_ref": "/totals/fees",
+      "alt_text": "Kipimo cha ada: KSh 419 kama ada, 1% ya matumizi."
+    },
+    {
+      "type": "insights",
+      "title": "Mambo yaliyojitokeza",
+      "items": [
+        {
+          "insight_id": "spend_vs_last",
+          "headline": "Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135",
+          "body": "Hayo ni mabadiliko ya KSh +38,755 (161%) ukilinganisha na kipindi kilichopita. Aina za matumizi zinaonyesha ziada ilikwenda wapi.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "fuliza_usage",
+          "headline": "Ulitumia Fuliza ya KSh 1,599",
+          "body": "Ulirejesha KSh 1,615. Gharama za Fuliza zilikuwa KSh 16. Siku ulizokuwa kwenye Fuliza: 2.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "FULIZA_DRAWDOWN",
+                "FULIZA_REPAY"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "category_rising:food_groceries.supermarket",
+          "headline": "Supamaketi imepanda hadi KSh 25,180",
+          "body": "Mabadiliko kutoka kipindi kilichopita: KSh +12,000 (91%).",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "category_rising:cash_withdrawals.agent",
+          "headline": "Kutoa kwa wakala imepanda hadi KSh 8,500",
+          "body": "Mabadiliko kutoka kipindi kilichopita: KSh +5,000 (143%).",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "cash_withdrawals.agent",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "top_category:food_groceries.supermarket",
+          "headline": "Supamaketi ndiyo ilichukua pesa nyingi zaidi: KSh 25,180",
+          "body": "Hiyo ni 40% ya matumizi yako yote katika kipindi hiki.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "category_id": "food_groceries.supermarket",
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "biggest_transaction:abcf87f5-9be4-4176-8a23-e2595fe93ae7",
+          "headline": "Malipo yako makubwa zaidi: KSh 18,000 kwa Makao Properties",
+          "body": "Yalitoka tarehe 2026-09-01. Malipo makubwa ya mara moja yanaweza kueleza sehemu kubwa ya mabadiliko ya jumla zako.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "transaction_ids": [
+                "abcf87f5-9be4-4176-8a23-e2595fe93ae7"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "new_merchant:Makao Properties",
+          "headline": "Ulilipa mahali papya: Makao Properties",
+          "body": "Hii ni mara ya kwanza Makao Properties kuonekana kwenye jumbe zako. Jumla hadi sasa: KSh 18,000. Idadi ya malipo: 1.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "merchant": "Makao Properties"
+            }
+          }
+        },
+        {
+          "insight_id": "fees_total",
+          "headline": "Ulilipa KSh 419 kama ada",
+          "body": "Ada zilikuwa 1% ya matumizi yako. Idadi ya makato: 13. Ada za kutuma, kutoa pesa, Fuliza na benki zote zimejumuishwa.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "abcf87f5-9be4-4176-8a23-e2595fe93ae7",
+                "f98e7a7c-5e0b-4ab8-a2f1-6c4168fbfe1f",
+                "3d0aa74b-b680-4e50-8ce1-79b5dbacde0c",
+                "c86aa94d-11cf-4aa1-b174-1777a3ce0be4",
+                "f355ac60-93b9-45bb-ba82-37e5bab020e8",
+                "f0d85d7e-7c3b-407c-ac5d-f09f37cabf30",
+                "7ca865b6-c79c-4b15-a6b5-0c26c514b957",
+                "c341fce1-3bf3-469e-9a14-2bf93fe7ab67",
+                "d04a0845-38e4-4632-9c05-a2b20c9ba86e",
+                "d78006a2-29ed-40db-bfbc-8d05f0789843",
+                "9652f2a9-33cf-4c31-a44d-6050f3cfb641",
+                "6426a528-d48a-4f31-a7dc-5ec1fa81278d",
+                "509a1b7e-d881-4684-b561-4844de929b6d"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "cash_withdrawn",
+          "headline": "Ulitoa pesa taslimu KSh 8,500",
+          "body": "Idadi ya mara ulizotoa: 5. Unachotumia kwa pesa taslimu hakionekani kwenye jumbe zako, kwa hivyo kinabaki kama jumla moja hapa.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "WITHDRAW",
+                "ATM"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "savings_rate",
+          "headline": "Uliweka akiba 6% ya mapato yako",
+          "body": "Pesa KSh 5,000 zilienda kwenye akiba, kati ya KSh 86,500 zilizoingia.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "types": [
+                "MSHWARI_DEPOSIT"
+              ],
+              "direction": "out"
+            }
+          }
+        },
+        {
+          "insight_id": "income_received",
+          "headline": "Pesa zilizoingia: KSh 86,500",
+          "body": "Malipo uliyopokea: 2. Chanzo kikubwa zaidi kilikuwa Acme Logistics Salary.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "68374996-da08-4426-8f11-4120867bab6b",
+                "246167df-8476-41da-86d5-86b03ef97c8b"
+              ]
+            }
+          }
+        },
+        {
+          "insight_id": "sent_to_people",
+          "headline": "Ulituma KSh 3,000 kwa watu",
+          "body": "Idadi ya miamala kwa watu: 1. Kiasi kikubwa zaidi kilienda kwa Jane Wanjiru: KSh 3,000.",
+          "drilldown": {
+            "kind": "transactions",
+            "filter": {
+              "from": "2026-09-01T00:00:00+03:00",
+              "to": "2026-10-01T00:00:00+03:00",
+              "transaction_ids": [
+                "9652f2a9-33cf-4c31-a44d-6050f3cfb641"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Pesa yako ilikwenda wapi",
+      "columns": [
+        "Aina",
+        "Matumizi",
+        "Sehemu",
+        "Mabadiliko"
+      ],
+      "rows": [
+        [
+          "Supamaketi",
+          "KSh 25,180",
+          "40%",
+          "KSh +12,000"
+        ],
+        [
+          "Kodi ya nyumba",
+          "KSh 18,000",
+          "29%",
+          ""
+        ],
+        [
+          "Kutoa kwa wakala",
+          "KSh 8,500",
+          "14%",
+          "KSh +5,000"
+        ],
+        [
+          "Teksi ya app",
+          "KSh 3,090",
+          "5%",
+          "KSh +1,755"
+        ],
+        [
+          "Stima (tokeni na bili za KPLC)",
+          "KSh 3,000",
+          "5%",
+          "KSh +1,500"
+        ],
+        [
+          "Pesa ulizotuma kwa watu",
+          "KSh 3,000",
+          "5%",
+          "KSh 0"
+        ],
+        [
+          "Kutazama mtandaoni",
+          "KSh 1,100",
+          "2%",
+          "KSh 0"
+        ],
+        [
+          "Airtime na bando",
+          "KSh 900",
+          "1%",
+          "KSh +500"
+        ]
+      ],
+      "numeric_columns": [
+        1,
+        2,
+        3
+      ],
+      "total_row": [
+        "Jumla",
+        "KSh 62,890",
+        "",
+        "KSh +38,755"
+      ]
+    },
+    {
+      "type": "callout",
+      "tone": "fee",
+      "body": "Ulilipa KSh 419 kama ada, yaani 1% ya matumizi yako. Ada za kutuma, kutoa pesa, Fuliza na kuhamisha kwenda benki zote zimehesabiwa hapa."
+    },
+    {
+      "type": "watch",
+      "title": "Ya kuangalia mwezi ujao",
+      "items": [
+        "Naivas: takriban KSh 2,015 kila wiki",
+        "Uber: takriban KSh 738 kila wiki",
+        "Quickmart: takriban KSh 2,550 kila wiki"
+      ]
+    },
+    {
+      "type": "footer",
+      "accounts_covered": [
+        "Demo Bank",
+        "M-Pesa"
+      ],
+      "computed_note": "Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna kilichokisiwa.",
+      "unknown_count": "Jumbe ambazo bado hazijaeleweka: 0"
+    }
+  ],
+  "whatsapp": {
+    "caption": "*Mwezi wako wa pesa*\nSeptemba 2026\n\nMatumizi: *KSh 62,890*\nUmetumia 161% zaidi ya mwezi uliopita (KSh +38,755).\n\n• Matumizi yamepanda hadi KSh 62,890, kutoka KSh 24,135\n• Ulitumia Fuliza ya KSh 1,599\n• Supamaketi imepanda hadi KSh 25,180\n\nRipoti kamili: https://hesabu.example/r/5ad715ae-50dc-4fcc-bdc6-977cbc90ac00",
+    "hero_chart_ids": [
+      "donut"
+    ]
+  },
+  "email": {
+    "subject": "Mwezi wako wa pesa: Septemba 2026",
+    "preheader": "Umetumia KSh 62,890 (KSh +38,755). Ada: KSh 419."
+  },
+  "meta": {
+    "generated_at": "2026-10-12T06:00:00.000Z",
+    "facts_version": "1",
+    "writer": "fallback",
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "fact_check": {
+      "passed": true,
+      "violations": [],
+      "attempts": 0
+    }
+  }
+}

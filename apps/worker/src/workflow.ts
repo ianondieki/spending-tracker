@@ -11,7 +11,8 @@ import {
   AnthropicModelClient, BudgetGuard, FakeModelClient, produceReport, ReportDocumentSchema,
   type AiConfig, type CostLedger, type ModelClient, type ReportDocument,
 } from '@hesabu/agents';
-import { DbCostLedger, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
+import { DbCostLedger, taxonomyCategoryRows, type CategoryRow, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
+import * as taxonomy from '@hesabu/taxonomy';
 
 import type { Renderer } from './adapters/renderer.js';
 import type { Storage } from './adapters/storage.js';
@@ -75,12 +76,14 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     if (!user) throw new Error('user not found');
     const period = periodFromReport(report, user.week_start, now);
     const window = collectionWindow(period);
-    const [transactions, accounts, categories, budgets] = await Promise.all([
+    const [transactions, accounts, userCategories, budgets] = await Promise.all([
       tenant.listTransactions(window),
       tenant.listAccounts(),
       tenant.listCategories(),
       tenant.listBudgets(),
     ]);
+    // System taxonomy names first, the user's own categories (and renames) on top.
+    const categories = mergeCategories(taxonomyCategoryRows(), userCategories);
     const previous = await tenant.findReport(report.kind, previousPeriod(period, { weekStart: user.week_start, now }).start);
     const lateArrivals = previous?.generated_at ? await tenant.countLateArrivals({ from: previous.period_start, to: previous.period_end }, previous.generated_at) : 0;
     const previousTotals = previous?.facts_json ? FactsSheetSchema.safeParse(previous.facts_json) : null;
@@ -94,6 +97,7 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
       budgets: budgets.map((b) => ({ category_id: b.category_id, limit_cents: b.limit_cents, period: b.period })),
       unknown_message_count: 0,
       late_arrival_count: lateArrivals,
+      merchantName: merchantDisplayName,
       generated_at: now.toISOString(),
       previous_report_totals: previousTotals?.success
         ? { out_cents: previousTotals.data.totals.out.cents, in_cents: previousTotals.data.totals.in.cents, fees_cents: previousTotals.data.totals.fees.cents }
@@ -136,7 +140,8 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
 
     // 5. render and store artefacts
     const link = await createSignedReportLink(tenant, report.id, { secret: deps.reportLinkSecret, ttlDays: deps.reportLinkTtlDays, appBaseUrl: deps.appBaseUrl, now });
-    const rendered = await deps.renderer.render(document, facts, { theme: 'light', locale: user.locale, baseUrl: deps.appBaseUrl, reportUrl: link.url });
+    const theme = user.theme === 'dark' ? 'dark' : 'light';
+    const rendered = await deps.renderer.render(document, facts, { theme, locale: user.locale, baseUrl: deps.appBaseUrl, reportUrl: link.url });
     const prefix = `reports/${job.user_id}/${report.id}`;
     const hero = await deps.storage.put(`${prefix}/hero.png`, rendered.heroPng, 'image/png');
     const pdf = await deps.storage.put(`${prefix}/report.pdf`, rendered.pdf, 'application/pdf');
@@ -174,6 +179,26 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     await tenant.audit('worker', 'report.failed', { kind: report.kind, period_start: report.period_start, error: message.slice(0, 200) });
     throw err;
   }
+}
+
+/**
+ * Display name for a counterparty: the taxonomy's canonical merchant name when a seed matches (by pay bill, till or
+ * alias), else the taxonomy's `normaliseMerchantName` when that export exists, else null so the facts engine applies
+ * its own normaliser. Used for every name the report shows.
+ */
+export function merchantDisplayName(cp: { kind: string; name?: string | null; paybill?: string | null; till?: string | null }): string | null {
+  if (cp.kind === 'person' || cp.kind === 'self' || cp.kind === 'unknown') return null;
+  const match = taxonomy.matchMerchant({ name: cp.name ?? null, paybill: cp.paybill ?? null, till: cp.till ?? null });
+  if (match) return match.merchant.name;
+  const normalise = (taxonomy as { normaliseMerchantName?: (name: string) => string }).normaliseMerchantName;
+  return normalise && cp.name ? normalise(cp.name) : null;
+}
+
+export function mergeCategories(system: readonly CategoryRow[], user: readonly CategoryRow[]): CategoryRow[] {
+  const byId = new Map<string, CategoryRow>();
+  for (const c of system) byId.set(c.category_id, c);
+  for (const c of user) byId.set(c.category_id, c);
+  return [...byId.values()];
 }
 
 async function queueDeliveries(deps: WorkflowDeps, tenant: TenantDb, report: ReportRow): Promise<('email' | 'whatsapp')[]> {

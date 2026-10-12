@@ -54,3 +54,4 @@ export * from './tokens.js';
 export * from './jobs.js';
 export { demoAccounts, demoTransactions, DEMO_CATEGORIES } from './demo-data.js';
 export { DbCostLedger, startOfNairobiDay, type LedgerEntry } from './cost-ledger.js';
+export { categorise, DEMO_INBOX_PATH, DEMO_VARIABLES, demoInboxAvailable, parseDemoInbox, taxonomyCategoryRows, type DemoInbox } from './demo-inbox.js';

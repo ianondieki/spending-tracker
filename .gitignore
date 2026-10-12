@@ -27,3 +27,6 @@ next-env.d.ts
 *.xml
 !tools/redact-sms/fixtures/*.xml
 !android/**/*.xml
+# python bytecode
+__pycache__/
+*.pyc

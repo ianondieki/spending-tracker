@@ -1,0 +1,101 @@
+Hesabu, Monthly report, September 2026
+
+Your month in money
+-------------------
+
+Supermarket                     KSh 25,180
+Rent                            KSh 18,000
+Agent withdrawal                 KSh 8,500
+Ride-hailing                     KSh 3,090
+Electricity (KPLC tokens & bills)     KSh 3,000
+Sent to people                   KSh 3,000
+Streaming                        KSh 1,100
+Total spent                     KSh 62,890
+KSh +38,755 vs last month
+
+You spent 161% more than last month (KSh +38,755).
+
+Money in: KSh 86,500 (KSh +1,500)
+Money out: KSh 62,890 (KSh +38,755)
+Fees: KSh 419 (KSh +228)
+Net: KSh 23,191 (KSh -37,483)
+
+Supermarket took the largest share: 40% of spending
+Donut chart of spending by category, KSh 62,890 in all: Supermarket KSh 25,180 (40%); Rent KSh 18,000 (29%); Agent withdrawal KSh 8,500 (14%); Ride-hailing KSh 3,090 (5%); Electricity (KPLC tokens & bills) KSh 3,000 (5%); Sent to people KSh 3,000 (5%).
+
+Spending peaked on Tuesday at KSh 18,100
+Bar chart of spending by day. Highest: Tuesday 2026-09-01, KSh 18,100. Daily average: KSh 2,096.
+
+More came in than went out: net KSh 23,191
+Bars comparing money in and out. This period: in KSh 86,500, out KSh 62,890. Period before: in KSh 85,000, out KSh 24,135.
+
+You paid Makao Properties the most: KSh 18,000
+Bar chart of the places you paid most: Makao Properties KSh 18,000; Naivas KSh 14,740; Quickmart KSh 10,440; Uber KSh 3,090; Kenya Power (prepaid tokens) KSh 3,000; Netflix KSh 1,100; Safaricom airtime & bundles KSh 900.
+
+Spending this month: KSh 62,890, against recent months
+Line chart of money in, money out and net by month, from Apr 2026 to Sep 2026. This month: in KSh 86,500, out KSh 62,890, net KSh 23,191.
+
+From KSh 86,500 in to KSh 23,191 net
+Waterfall from money in, KSh 86,500, through spending by category to net, KSh 23,191. Largest category: Supermarket, KSh 25,180.
+
+Your heaviest day was 2026-09-01: KSh 18,100
+Calendar of daily spending for September 2026. Heaviest day: 2026-09-01, KSh 18,100. Daily average: KSh 2,096.
+
+transport has used 0% of its budget
+Budget bars: transport KSh 0 of KSh 8,000, heading for KSh 0.
+
+Fees took 1% of your spending: KSh 419
+Fee meter: KSh 419 in fees, 1% of money out.
+
+What stood out
+--------------
+- Spending rose to KSh 62,890, from KSh 24,135
+  That is a change of KSh +38,755 (161%) on the period before. The categories show where the extra went.
+- You used KSh 1,599 of Fuliza
+  You repaid KSh 1,615. Fuliza charges came to KSh 16. Days in overdraft: 2.
+- Supermarket went up to KSh 25,180
+  Change from the period before: KSh +12,000 (91%).
+- Agent withdrawal went up to KSh 8,500
+  Change from the period before: KSh +5,000 (143%).
+- Supermarket was your biggest spend at KSh 25,180
+  That is 40% of everything you spent in this period.
+- Your largest payment was KSh 18,000 to Makao Properties
+  It went out on 2026-09-01. One large payment can explain much of the movement in your totals.
+- You paid somewhere new: Makao Properties
+  This is the first time Makao Properties shows up in your messages. Total so far: KSh 18,000. Payments: 1.
+- You paid KSh 419 in fees
+  Fees were 1% of your spending. Charges counted: 13. Sending, withdrawal, Fuliza and bank charges are all included.
+- You withdrew KSh 8,500 in cash
+  Withdrawals: 5. What you spend in cash does not appear in your messages, so it stays as one line here.
+- You set aside 6% of your income
+  KSh 5,000 went to savings out of KSh 86,500 that came in.
+- KSh 86,500 came in
+  Payments received: 2. The largest source was Acme Logistics Salary.
+- You sent KSh 3,000 to people
+  Transfers to people: 1. The most went to Jane Wanjiru: KSh 3,000.
+
+Where your money went
+---------------------
+Supermarket  |  KSh 25,180  |  40%  |  KSh +12,000
+Rent  |  KSh 18,000  |  29%  |  
+Agent withdrawal  |  KSh 8,500  |  14%  |  KSh +5,000
+Ride-hailing  |  KSh 3,090  |  5%  |  KSh +1,755
+Electricity (KPLC tokens & bills)  |  KSh 3,000  |  5%  |  KSh +1,500
+Sent to people  |  KSh 3,000  |  5%  |  KSh 0
+Streaming  |  KSh 1,100  |  2%  |  KSh 0
+Airtime & bundles  |  KSh 900  |  1%  |  KSh +500
+Total  |  KSh 62,890  |    |  KSh +38,755
+
+> You paid KSh 419 in fees, 1% of what you spent. Charges for sending, withdrawing, Fuliza and bank transfers all count here.
+
+To watch next month
+-------------------
+1. Naivas: about KSh 2,015 every week
+2. Uber: about KSh 738 every week
+3. Quickmart: about KSh 2,550 every week
+
+Every number here is computed from your transaction messages on your phone. Nothing was guessed.
+Accounts covered: Demo Bank, M-Pesa
+Messages Hesabu could not read: Messages not yet understood: 0
+
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWQ3MTVhZS01MGRjLTRmY2MtYmRjNi05NzdjYmM5MGFjMDAiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiMTR1NFhMVWEifQ.A9-O8eriduszuW1x7WDSLw-HjwDdZbRzU6AeAa7hzQs
