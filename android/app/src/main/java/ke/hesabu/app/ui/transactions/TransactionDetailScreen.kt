@@ -78,7 +78,7 @@ fun TransactionDetailContent(
     val tone = when { t.isTransfer -> MoneyTone.Transfer; t.direction == "in" -> MoneyTone.In; else -> MoneyTone.Out }
     HesabuScreen(title = t.counterpartyName ?: typeLabel(t.type), subtitle = periods.dateTimeOf(t.occurredAtMillis), onBack = onBack) {
         Sheet {
-            MoneyText(t.amountCents, tone = tone, style = HesabuTheme.money.hero, decimals = 2, textAlign = TextAlign.Start, modifier = Modifier.fillMaxWidth())
+            MoneyText(t.amountCents, tone = tone, style = HesabuTheme.money.total, decimals = 2, textAlign = TextAlign.Start, modifier = Modifier.fillMaxWidth())
             Text(
                 listOfNotNull(typeLabel(t.type), if (t.isTransfer) stringResource(R.string.tx_transfer) else null).joinToString(", "),
                 style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft,

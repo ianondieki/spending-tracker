@@ -86,8 +86,8 @@ fun Tally(
             )
         }
         rows.forEachIndexed { i, row ->
-            // Rows take the first 80 % of the reveal, each one fading in over its own slice, top to bottom.
-            val rowAlpha = if (n == 0) 1f else ((p * 0.8f * n) - i).coerceIn(0f, 1f)
+            // Row i fades in over its own slice of the reveal, top to bottom; every row is fully opaque at p = 1.
+            val rowAlpha = if (n == 0) 1f else ((p * (n + 1)) - i).coerceIn(0f, 1f)
             LedgerRow(
                 label = row.label,
                 cents = row.cents,

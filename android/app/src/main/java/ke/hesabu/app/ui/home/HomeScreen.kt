@@ -81,12 +81,10 @@ fun HomeContent(
                     emptyText = stringResource(R.string.home_week_nothing_yet),
                 )
                 Spacer(Modifier.height(16.dp))
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                    Kpi(stringResource(R.string.home_kpi_in), state.weekInCents, MoneyTone.In, Modifier.weight(1f))
-                    Kpi(stringResource(R.string.home_kpi_fees), state.weekFeeCents, MoneyTone.Fee, Modifier.weight(1f))
-                    val delta = state.lastWeekOutCents?.let { state.weekOutCents - it }
-                    if (delta != null) Kpi(stringResource(R.string.home_kpi_vs_last_week), delta, MoneyTone.Neutral, Modifier.weight(1f), signed = true)
-                }
+                Kpi(stringResource(R.string.home_kpi_in), state.weekInCents, MoneyTone.In)
+                Kpi(stringResource(R.string.home_kpi_fees), state.weekFeeCents, MoneyTone.Fee)
+                val delta = state.lastWeekOutCents?.let { state.weekOutCents - it }
+                if (delta != null) Kpi(stringResource(R.string.home_kpi_vs_last_week), delta, MoneyTone.Neutral, signed = true)
                 QuietButton(stringResource(R.string.home_see_transactions), onOpenTransactions, Modifier.padding(top = 8.dp))
             }
         }
@@ -141,12 +139,15 @@ fun HomeContent(
     }
 }
 
+/** A quiet ledger line under the tally: label left, amount right, no rule. A signed delta reads "+KSh 1,200". */
 @Composable
-private fun Kpi(label: String, cents: Long, tone: MoneyTone, modifier: Modifier = Modifier, signed: Boolean = false) {
-    Column(modifier) {
-        Text(label, style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft)
-        val text = if (signed && cents > 0) "+" + Money.formatKsh(cents) else Money.formatKsh(cents)
-        Text(text, style = HesabuTheme.money.emphasis, color = HesabuTheme.colors.let { c -> when (tone) { MoneyTone.In -> c.moneyIn; MoneyTone.Fee -> c.fee; else -> c.ink } }, maxLines = 1)
+private fun Kpi(label: String, cents: Long, tone: MoneyTone, signed: Boolean = false) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.inkSoft, modifier = Modifier.weight(1f))
+        if (signed && cents > 0) {
+            Text("+", style = HesabuTheme.money.row, color = HesabuTheme.colors.ink)
+        }
+        MoneyText(cents, tone = tone)
     }
 }
 
