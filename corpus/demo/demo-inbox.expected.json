@@ -1,0 +1,64 @@
+{
+  "messages": 82,
+  "parsed": 82,
+  "ignored": 0,
+  "unknown": 0,
+  "duplicates_dropped": 1,
+  "transactions_after_dedupe": 81,
+  "per_family": {
+    "airtime_self": 16,
+    "bank_to_mpesa": 2,
+    "buy_goods": 32,
+    "demo_credit": 3,
+    "demo_debit": 2,
+    "demo_debit_to_mpesa": 2,
+    "fuliza_drawdown": 1,
+    "fuliza_repay": 1,
+    "mpesa_to_bank": 1,
+    "mshwari_deposit": 2,
+    "paybill": 9,
+    "receive_money": 1,
+    "send_money": 2,
+    "withdraw": 8
+  },
+  "transfer_pairs": [
+    {
+      "out_family": "demo_debit_to_mpesa",
+      "in_family": "bank_to_mpesa",
+      "amount_cents": 5500000,
+      "occurred_at": "2026-08-28T09:20:00+03:00"
+    },
+    {
+      "out_family": "demo_debit_to_mpesa",
+      "in_family": "bank_to_mpesa",
+      "amount_cents": 6000000,
+      "occurred_at": "2026-09-28T09:20:00+03:00"
+    },
+    {
+      "out_family": "mpesa_to_bank",
+      "in_family": "demo_credit",
+      "amount_cents": 1000000,
+      "occurred_at": "2026-09-30T09:30:00+03:00"
+    }
+  ],
+  "balance_chain": {
+    "checked": 78,
+    "breaks": 0
+  },
+  "per_account": {
+    "mpesa:07XXXXX123": {
+      "transactions": 74,
+      "in_cents": 11809900,
+      "out_cents": 14307499,
+      "fees_cents": 62099,
+      "last_balance_cents": 85901
+    },
+    "bank:demo:XXX456": {
+      "transactions": 7,
+      "in_cents": 18000000,
+      "out_cents": 11524000,
+      "fees_cents": 10000,
+      "last_balance_cents": 7089450
+    }
+  }
+}
