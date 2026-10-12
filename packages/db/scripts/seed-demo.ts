@@ -31,6 +31,7 @@ await tenant.grantConsent('whatsapp_delivery');
 await tenant.upsertBudget({ category_id: inbox ? 'food_groceries' : 'groceries', period: 'weekly', limit_cents: 600_000 });
 await tenant.upsertBudget({ category_id: inbox ? 'transport' : 'eating_out', period: 'monthly', limit_cents: 800_000 });
 await tenant.upsertAccounts(inbox ? inbox.accounts : demoAccounts(now));
+if (process.env['RESEED'] === '1') console.log(`RESEED=1: removed ${await tenant.deleteAllTransactions()} existing transactions`);
 const outcome = await tenant.upsertTransactions(inbox ? inbox.transactions : demoTransactions(now));
 await tenant.audit('system', 'seed.demo', { accepted: outcome.accepted, rejected: outcome.rejected.length });
 console.log(`demo user ${reg.user_id}${reg.created_user ? ' (new)' : ''}: ${outcome.accepted} transactions, ${outcome.rejected.length} rejected`);

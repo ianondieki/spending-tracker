@@ -24,8 +24,9 @@ describe.skipIf(!demoInboxAvailable())('demo inbox through the pack engine', () 
     const naivas = inbox.transactions.find((t) => /NAIVAS/i.test(t.counterparty.name ?? ''));
     expect(naivas?.category_id).toBeTruthy();
     expect(inbox.categories.length).toBeGreaterThan(10);
-    // Rent to an unseeded pay bill and the bank's ledger fee stay uncategorised; everything else resolves.
+    // Merchant seeds, provider defaults and the persona's own rules (rent, the bank's ledger fee) cover every spend.
     const uncategorisedOut = inbox.transactions.filter((t) => t.category_id === null && t.direction === 'out' && !t.is_transfer && t.type !== 'FULIZA_REPAY');
-    expect(uncategorisedOut.length).toBeLessThanOrEqual(4);
+    expect(uncategorisedOut).toEqual([]);
+    expect(inbox.transactions.find((t) => t.counterparty.name === 'MAKAO PROPERTIES')).toMatchObject({ category_id: 'housing_rent.rent', category_source: 'user' });
   });
 });

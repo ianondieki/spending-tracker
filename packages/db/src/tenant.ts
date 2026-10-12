@@ -240,10 +240,10 @@ export class TenantDb {
   // ----- transactions -----
 
   /**
-   * Idempotent upsert by transaction id: an existing row is only replaced when the incoming
+   * Idempotent upsert by (user, transaction id): an existing row is only replaced when the incoming
    * `updated_at` is newer. A row whose provider reference or message hash already exists under a
-   * different id is rejected (the device keeps the first id). A row whose id belongs to another
-   * user is rejected without revealing why.
+   * different id is rejected (the device keeps the first id). Ids are per user, so another user's
+   * identical id never collides.
    */
   async upsertTransactions(txs: readonly Transaction[]): Promise<SyncOutcome> {
     const rejected: SyncOutcome['rejected'] = [];
@@ -252,7 +252,7 @@ export class TenantDb {
       for (const t of txs) {
         try {
           await tx.savepoint(async (sp) => {
-            const rows = await sp`INSERT INTO transactions (
+            await sp`INSERT INTO transactions (
                 id, user_id, account_ref, provider, external_ref, type, direction, amount_cents, fee_cents,
                 balance_after_cents, occurred_at, received_at, counterparty, category_id, category_source,
                 category_confidence, is_transfer, transfer_pair_id, parse_confidence, source, raw_hash, parser,
@@ -263,7 +263,7 @@ export class TenantDb {
                 ${sp.json(t.counterparty as never)}, ${t.category_id ?? null}, ${t.category_source}, ${t.category_confidence ?? null},
                 ${t.is_transfer}, ${t.transfer_pair_id ?? null}, ${t.parse_confidence}, ${t.source}, ${t.raw_hash},
                 ${sp.json(t.parser as never)}, ${t.user_edited}, ${t.note ?? null}, ${sp.json((t.tags ?? []) as never)}, ${t.updated_at})
-              ON CONFLICT (id) DO UPDATE SET
+              ON CONFLICT (user_id, id) DO UPDATE SET
                 account_ref = EXCLUDED.account_ref, provider = EXCLUDED.provider, external_ref = EXCLUDED.external_ref,
                 type = EXCLUDED.type, direction = EXCLUDED.direction, amount_cents = EXCLUDED.amount_cents,
                 fee_cents = EXCLUDED.fee_cents, balance_after_cents = EXCLUDED.balance_after_cents,
@@ -274,16 +274,9 @@ export class TenantDb {
                 source = EXCLUDED.source, raw_hash = EXCLUDED.raw_hash, parser = EXCLUDED.parser,
                 user_edited = EXCLUDED.user_edited, note = EXCLUDED.note, tags = EXCLUDED.tags,
                 updated_at = EXCLUDED.updated_at, synced_at = now()
-              WHERE transactions.user_id = ${this.userId} AND EXCLUDED.updated_at > transactions.updated_at
-              RETURNING id`;
-            if (rows.length === 0) {
-              // Either stale (older updated_at) or the id belongs to someone else; both are "not applied".
-              const mine = await sp`SELECT 1 FROM transactions WHERE id = ${t.id} AND user_id = ${this.userId}`;
-              if (mine.length === 0) throw new Error('conflict');
-              accepted += 1; // already stored, newer or equal: idempotent success
-            } else {
-              accepted += 1;
-            }
+              WHERE EXCLUDED.updated_at > transactions.updated_at`;
+            // A no-op update means the stored copy is as new or newer: idempotent success.
+            accepted += 1;
           });
         } catch (err) {
           const code = (err as postgres.PostgresError).code;
@@ -293,6 +286,12 @@ export class TenantDb {
       }
     });
     return { accepted, rejected };
+  }
+
+  /** Removes every transaction of this user (reseeding a demo or a user-requested wipe). Returns the count. */
+  async deleteAllTransactions(): Promise<number> {
+    const rows = await this.tx((tx) => tx`DELETE FROM transactions WHERE user_id = ${this.userId} RETURNING id`);
+    return rows.length;
   }
 
   async listTransactions(window: TransactionWindow): Promise<TransactionRow[]> {

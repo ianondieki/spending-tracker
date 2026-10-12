@@ -48,10 +48,12 @@ try {
   const inbox = parseDemoInbox();
   await tenant.upsertCategories(inbox.categories);
   await tenant.upsertAccounts(inbox.accounts);
-  await tenant.upsertTransactions(inbox.transactions);
+  await tenant.deleteAllTransactions(); // always a fresh ledger: the upsert keeps rows whose updated_at is unchanged
+  const outcome = await tenant.upsertTransactions(inbox.transactions);
+  if (outcome.rejected.length > 0) throw new Error(`seed rejected ${outcome.rejected.length} transactions: ${JSON.stringify(outcome.rejected.slice(0, 3))}`);
   await tenant.upsertBudget({ category_id: 'food_groceries', period: 'weekly', limit_cents: 600_000 });
   await tenant.upsertBudget({ category_id: 'transport', period: 'monthly', limit_cents: 800_000 });
-  console.log(`seeded ${inbox.transactions.length} transactions for ${reg.user_id}`);
+  console.log(`seeded ${outcome.accepted} transactions for ${reg.user_id}`);
 
   const { resolvePeriod } = await import('@hesabu/analytics');
   for (const kind of ['weekly', 'monthly'] as const) {
@@ -78,7 +80,6 @@ try {
         await writeFile(join(dir, 'report.pdf'), await storage.get(a.pdf_key!));
         await writeFile(join(dir, 'email.html'), await storage.get(a.html_key!.replace(/web\.html$/, 'email.html')));
         await writeFile(join(dir, 'email.txt'), await storage.get(a.html_key!.replace(/web\.html$/, 'email.txt')));
-        await writeFile(join(dir, 'web.html'), await storage.get(a.html_key!));
         await writeFile(join(dir, 'document.json'), JSON.stringify(result.document, null, 2) + '\n');
         await writeFile(join(dir, 'facts.json'), JSON.stringify(result.facts, null, 2) + '\n');
         for (const [chartId, key] of Object.entries(a.chart_keys ?? {})) {

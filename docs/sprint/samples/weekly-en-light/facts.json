@@ -1,0 +1,1357 @@
+{
+  "version": "1",
+  "generated_at": "2026-10-12T06:00:00.000Z",
+  "user": {
+    "locale": "en",
+    "week_start": "monday",
+    "display_name": "Wanjiru"
+  },
+  "period": {
+    "kind": "week",
+    "start": "2026-10-05T00:00:00+03:00",
+    "end": "2026-10-12T00:00:00+03:00",
+    "label_en": "5 to 11 October 2026",
+    "label_sw": "5 hadi 11 Oktoba 2026",
+    "days": 7,
+    "days_elapsed": 7,
+    "timezone": "Africa/Nairobi"
+  },
+  "previous_period": {
+    "kind": "week",
+    "start": "2026-09-28T00:00:00+03:00",
+    "end": "2026-10-05T00:00:00+03:00",
+    "label_en": "28 September to 4 October 2026",
+    "label_sw": "28 Septemba hadi 4 Oktoba 2026",
+    "days": 7,
+    "days_elapsed": 7,
+    "timezone": "Africa/Nairobi"
+  },
+  "totals": {
+    "in": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "out": {
+      "cents": 951500,
+      "display": "KSh 9,515"
+    },
+    "fees": {
+      "cents": 2900,
+      "display": "KSh 29"
+    },
+    "net": {
+      "cents": -954400,
+      "display": "KSh -9,544"
+    },
+    "transfers": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "cash_withdrawn": {
+      "cents": 150000,
+      "display": "KSh 1,500"
+    },
+    "savings_out": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "loan_repayments": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "transaction_count": {
+      "value": 7,
+      "display": "7"
+    },
+    "fee_ratio": {
+      "value": 0,
+      "display": "0%"
+    },
+    "savings_rate": {
+      "value": 0,
+      "display": "0%"
+    }
+  },
+  "previous_totals": {
+    "in": {
+      "cents": 8500000,
+      "display": "KSh 85,000"
+    },
+    "out": {
+      "cents": 3289000,
+      "display": "KSh 32,890"
+    },
+    "fees": {
+      "cents": 26200,
+      "display": "KSh 262"
+    },
+    "net": {
+      "cents": 5184800,
+      "display": "KSh 51,848"
+    },
+    "transfers": {
+      "cents": 7000000,
+      "display": "KSh 70,000"
+    },
+    "cash_withdrawn": {
+      "cents": 200000,
+      "display": "KSh 2,000"
+    },
+    "savings_out": {
+      "cents": 500000,
+      "display": "KSh 5,000"
+    },
+    "loan_repayments": {
+      "cents": 161499,
+      "display": "KSh 1,615"
+    },
+    "transaction_count": {
+      "value": 18,
+      "display": "18"
+    },
+    "fee_ratio": {
+      "value": 1,
+      "display": "1%"
+    },
+    "savings_rate": {
+      "value": 6,
+      "display": "6%"
+    }
+  },
+  "deltas": {
+    "out": {
+      "cents": -2337500,
+      "display": "KSh -23,375",
+      "pct": {
+        "value": -71,
+        "display": "-71%"
+      },
+      "direction": "down"
+    },
+    "in": {
+      "cents": -8500000,
+      "display": "KSh -85,000",
+      "pct": {
+        "value": -100,
+        "display": "-100%"
+      },
+      "direction": "down"
+    },
+    "fees": {
+      "cents": -23300,
+      "display": "KSh -233",
+      "pct": {
+        "value": -89,
+        "display": "-89%"
+      },
+      "direction": "down"
+    },
+    "net": {
+      "cents": -6139200,
+      "display": "KSh -61,392",
+      "pct": {
+        "value": -118,
+        "display": "-118%"
+      },
+      "direction": "down"
+    }
+  },
+  "categories": [
+    {
+      "category_id": "food_groceries.supermarket",
+      "name_en": "Supermarket",
+      "name_sw": "Supamaketi",
+      "out": {
+        "cents": 692000,
+        "display": "KSh 6,920"
+      },
+      "share": {
+        "value": 73,
+        "display": "73%"
+      },
+      "delta": {
+        "cents": 21000,
+        "display": "KSh +210",
+        "pct": {
+          "value": 3,
+          "display": "3%"
+        },
+        "direction": "up"
+      },
+      "count": {
+        "value": 3,
+        "display": "3"
+      },
+      "top_merchant": "NAIVAS LTD KILIMANI",
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "food_groceries.supermarket",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "category_id": "cash_withdrawals.agent",
+      "name_en": "Agent withdrawal",
+      "name_sw": "Kutoa kwa wakala",
+      "out": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "share": {
+        "value": 16,
+        "display": "16%"
+      },
+      "delta": {
+        "cents": -50000,
+        "display": "KSh -500",
+        "pct": {
+          "value": -25,
+          "display": "-25%"
+        },
+        "direction": "down"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      },
+      "top_merchant": "KASARANI AGENCIES LTD",
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "cash_withdrawals.agent",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "category_id": "transport.ride_hailing",
+      "name_en": "Ride-hailing",
+      "name_sw": "Teksi ya app",
+      "out": {
+        "cents": 89500,
+        "display": "KSh 895"
+      },
+      "share": {
+        "value": 9,
+        "display": "9%"
+      },
+      "delta": {
+        "cents": 3500,
+        "display": "KSh +35",
+        "pct": {
+          "value": 4,
+          "display": "4%"
+        },
+        "direction": "up"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      },
+      "top_merchant": "UBER KENYA",
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "transport.ride_hailing",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "category_id": "airtime_bundles",
+      "name_en": "Airtime & bundles",
+      "name_sw": "Airtime na bando",
+      "out": {
+        "cents": 20000,
+        "display": "KSh 200"
+      },
+      "share": {
+        "value": 2,
+        "display": "2%"
+      },
+      "delta": {
+        "cents": 0,
+        "display": "KSh 0",
+        "pct": {
+          "value": 0,
+          "display": "0%"
+        },
+        "direction": "flat"
+      },
+      "count": {
+        "value": 2,
+        "display": "2"
+      },
+      "top_merchant": "Safaricom",
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "airtime_bundles",
+          "direction": "out"
+        }
+      }
+    }
+  ],
+  "merchants": [
+    {
+      "name": "NAIVAS LTD KILIMANI",
+      "category_id": "food_groceries.supermarket",
+      "out": {
+        "cents": 410000,
+        "display": "KSh 4,100"
+      },
+      "count": {
+        "value": 2,
+        "display": "2"
+      },
+      "is_new": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "merchant": "NAIVAS LTD KILIMANI"
+        }
+      }
+    },
+    {
+      "name": "QUICKMART LTD",
+      "category_id": "food_groceries.supermarket",
+      "out": {
+        "cents": 282000,
+        "display": "KSh 2,820"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      },
+      "is_new": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "merchant": "QUICKMART LTD"
+        }
+      }
+    },
+    {
+      "name": "KASARANI AGENCIES LTD",
+      "category_id": "cash_withdrawals.agent",
+      "out": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      },
+      "is_new": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "merchant": "KASARANI AGENCIES LTD"
+        }
+      }
+    },
+    {
+      "name": "UBER KENYA",
+      "category_id": "transport.ride_hailing",
+      "out": {
+        "cents": 89500,
+        "display": "KSh 895"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      },
+      "is_new": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "merchant": "UBER KENYA"
+        }
+      }
+    },
+    {
+      "name": "Safaricom",
+      "category_id": "airtime_bundles",
+      "out": {
+        "cents": 20000,
+        "display": "KSh 200"
+      },
+      "count": {
+        "value": 2,
+        "display": "2"
+      },
+      "is_new": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "merchant": "Safaricom"
+        }
+      }
+    }
+  ],
+  "people": [],
+  "accounts": [
+    {
+      "account_ref": "bank:demo:XXX456",
+      "label": "Demo Bank",
+      "provider": "bank",
+      "balance": {
+        "cents": 7089450,
+        "display": "KSh 70,895"
+      },
+      "balance_at": "2026-09-30T20:50:00.000Z",
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "out": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "fees": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "balance_series": []
+    },
+    {
+      "account_ref": "mpesa:07XXXXX123",
+      "label": "M-Pesa",
+      "provider": "mpesa",
+      "balance": {
+        "cents": 85901,
+        "display": "KSh 859"
+      },
+      "balance_at": "2026-10-10T08:20:00.000Z",
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "out": {
+        "cents": 951500,
+        "display": "KSh 9,515"
+      },
+      "fees": {
+        "cents": 2900,
+        "display": "KSh 29"
+      },
+      "balance_series": [
+        {
+          "at": "2026-10-05T15:40:00.000Z",
+          "cents": 778301
+        },
+        {
+          "at": "2026-10-06T04:30:00.000Z",
+          "cents": 768301
+        },
+        {
+          "at": "2026-10-07T04:05:00.000Z",
+          "cents": 615401
+        },
+        {
+          "at": "2026-10-08T18:15:00.000Z",
+          "cents": 525901
+        },
+        {
+          "at": "2026-10-09T04:32:00.000Z",
+          "cents": 515901
+        },
+        {
+          "at": "2026-10-09T16:05:00.000Z",
+          "cents": 367901
+        },
+        {
+          "at": "2026-10-10T08:20:00.000Z",
+          "cents": 85901
+        }
+      ]
+    }
+  ],
+  "daily": [
+    {
+      "date": "2026-10-05",
+      "weekday_en": "Monday",
+      "weekday_sw": "Jumatatu",
+      "out": {
+        "cents": 262000,
+        "display": "KSh 2,620"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "weekday_en": "Tuesday",
+      "weekday_sw": "Jumanne",
+      "out": {
+        "cents": 10000,
+        "display": "KSh 100"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "weekday_en": "Wednesday",
+      "weekday_sw": "Jumatano",
+      "out": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "weekday_en": "Thursday",
+      "weekday_sw": "Alhamisi",
+      "out": {
+        "cents": 89500,
+        "display": "KSh 895"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "weekday_en": "Friday",
+      "weekday_sw": "Ijumaa",
+      "out": {
+        "cents": 158000,
+        "display": "KSh 1,580"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 2,
+        "display": "2"
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "weekday_en": "Saturday",
+      "weekday_sw": "Jumamosi",
+      "out": {
+        "cents": 282000,
+        "display": "KSh 2,820"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "weekday_en": "Sunday",
+      "weekday_sw": "Jumapili",
+      "out": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 0,
+        "display": "0"
+      }
+    }
+  ],
+  "average_daily_out": {
+    "cents": 135929,
+    "display": "KSh 1,359"
+  },
+  "spendiest_day": {
+    "date": "2026-10-10",
+    "weekday_en": "Saturday",
+    "weekday_sw": "Jumamosi",
+    "out": {
+      "cents": 282000,
+      "display": "KSh 2,820"
+    },
+    "in": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "count": {
+      "value": 1,
+      "display": "1"
+    }
+  },
+  "weekday_weekend": {
+    "weekday_out": {
+      "cents": 669500,
+      "display": "KSh 6,695"
+    },
+    "weekend_out": {
+      "cents": 282000,
+      "display": "KSh 2,820"
+    },
+    "weekend_share": {
+      "value": 30,
+      "display": "30%"
+    }
+  },
+  "time_of_day": [
+    {
+      "bucket": "morning",
+      "out": {
+        "cents": 452000,
+        "display": "KSh 4,520"
+      },
+      "count": {
+        "value": 4,
+        "display": "4"
+      }
+    },
+    {
+      "bucket": "afternoon",
+      "out": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 0,
+        "display": "0"
+      }
+    },
+    {
+      "bucket": "evening",
+      "out": {
+        "cents": 410000,
+        "display": "KSh 4,100"
+      },
+      "count": {
+        "value": 2,
+        "display": "2"
+      }
+    },
+    {
+      "bucket": "night",
+      "out": {
+        "cents": 89500,
+        "display": "KSh 895"
+      },
+      "count": {
+        "value": 1,
+        "display": "1"
+      }
+    }
+  ],
+  "largest": [
+    {
+      "id": "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5",
+      "occurred_at": "2026-10-10T08:20:00.000Z",
+      "amount": {
+        "cents": 282000,
+        "display": "KSh 2,820"
+      },
+      "direction": "out",
+      "counterparty": "QUICKMART LTD",
+      "category_id": "food_groceries.supermarket",
+      "type": "BUY_GOODS"
+    },
+    {
+      "id": "6077067f-fedf-4b70-9775-0b463477c78f",
+      "occurred_at": "2026-10-05T15:40:00.000Z",
+      "amount": {
+        "cents": 262000,
+        "display": "KSh 2,620"
+      },
+      "direction": "out",
+      "counterparty": "NAIVAS LTD KILIMANI",
+      "category_id": "food_groceries.supermarket",
+      "type": "BUY_GOODS"
+    },
+    {
+      "id": "8f226991-1a44-4704-8cd6-678cf18e6c61",
+      "occurred_at": "2026-10-07T04:05:00.000Z",
+      "amount": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "direction": "out",
+      "counterparty": "KASARANI AGENCIES LTD",
+      "category_id": "cash_withdrawals.agent",
+      "type": "WITHDRAW"
+    },
+    {
+      "id": "f11099a5-3e73-4631-8102-108d7ee99a22",
+      "occurred_at": "2026-10-09T16:05:00.000Z",
+      "amount": {
+        "cents": 148000,
+        "display": "KSh 1,480"
+      },
+      "direction": "out",
+      "counterparty": "NAIVAS LTD KILIMANI",
+      "category_id": "food_groceries.supermarket",
+      "type": "BUY_GOODS"
+    },
+    {
+      "id": "bd0f5183-eb25-4258-8278-c6986d5eb19b",
+      "occurred_at": "2026-10-08T18:15:00.000Z",
+      "amount": {
+        "cents": 89500,
+        "display": "KSh 895"
+      },
+      "direction": "out",
+      "counterparty": "UBER KENYA",
+      "category_id": "transport.ride_hailing",
+      "type": "BUY_GOODS"
+    }
+  ],
+  "new_merchants": [],
+  "recurring": [
+    {
+      "merchant": "UBER KENYA",
+      "category_id": "transport.ride_hailing",
+      "cadence": "weekly",
+      "typical_amount": {
+        "cents": 77250,
+        "display": "KSh 773"
+      },
+      "last_paid": "2026-10-08T18:15:00.000Z",
+      "next_expected": "2026-10-15T21:15:00+03:00",
+      "confidence": 1,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "UBER KENYA",
+          "transaction_ids": [
+            "d2cf2b7d-f975-4dc2-af67-f91e727d7288",
+            "b6b98a06-ee93-4872-9b3a-da08cb573029",
+            "69a54cb4-a9e1-45ec-8354-c0b6f7c07e81",
+            "2ca74e6d-0067-4c7f-8562-866483252836",
+            "68238cf0-f177-4a59-ba32-28675517e926",
+            "eeba73df-4590-4550-a28e-dd3087028570",
+            "fd929a65-6972-4b0c-8e2f-d2f7fb0e1e32",
+            "bd0f5183-eb25-4258-8278-c6986d5eb19b"
+          ]
+        }
+      }
+    },
+    {
+      "merchant": "NAIVAS LTD KILIMANI",
+      "category_id": "food_groceries.supermarket",
+      "cadence": "weekly",
+      "typical_amount": {
+        "cents": 146000,
+        "display": "KSh 1,460"
+      },
+      "last_paid": "2026-10-09T16:05:00.000Z",
+      "next_expected": "2026-10-16T19:05:00+03:00",
+      "confidence": 0.8,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "NAIVAS LTD KILIMANI",
+          "transaction_ids": [
+            "bee14aa8-35f6-44c9-9785-79d9f309590b",
+            "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
+            "78c0202f-1576-45dc-9d92-016a9374f4d4",
+            "963f8d3a-1d36-4b51-bab1-49936ef33083",
+            "e94b63b7-e6b7-4620-b802-da58e24f2b93",
+            "f11099a5-3e73-4631-8102-108d7ee99a22"
+          ]
+        }
+      }
+    },
+    {
+      "merchant": "QUICKMART LTD",
+      "category_id": "food_groceries.supermarket",
+      "cadence": "weekly",
+      "typical_amount": {
+        "cents": 261000,
+        "display": "KSh 2,610"
+      },
+      "last_paid": "2026-10-10T08:20:00.000Z",
+      "next_expected": "2026-10-17T11:20:00+03:00",
+      "confidence": 1,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "QUICKMART LTD",
+          "transaction_ids": [
+            "13a975c8-66f2-44d1-bcb0-9703f0f1bf5b",
+            "8e4b2bcc-b190-48cc-b0f8-23043437714b",
+            "a537d286-48bc-4027-94ee-d8b9f9692bfb",
+            "bede395f-37b3-47c1-8a8c-818e6490e78c",
+            "0ff0c2c9-52c4-4bca-81ad-66be7f90828f",
+            "5dd9511c-1813-4d0f-9ea1-b3bb7f546c4c",
+            "4a13437d-62ae-448b-ab04-77829066122e",
+            "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5"
+          ]
+        }
+      }
+    },
+    {
+      "merchant": "Safaricom",
+      "category_id": "airtime_bundles",
+      "cadence": "irregular",
+      "typical_amount": {
+        "cents": 10000,
+        "display": "KSh 100"
+      },
+      "last_paid": "2026-10-09T04:32:00.000Z",
+      "next_expected": null,
+      "confidence": 0,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "Safaricom",
+          "transaction_ids": [
+            "d2e8b9af-b637-4310-9017-caa62a24424e",
+            "a130022f-8f0c-4b2d-920f-eaf059593016",
+            "0fb47fa3-5512-4a08-88af-49133aa32f80",
+            "6562570d-10d4-4123-a60b-f51f58f757a0",
+            "da520cae-50d7-4aa0-a579-0cdc5816a868",
+            "323ab16d-7152-4e47-90c4-5da0e6e29b93",
+            "9b04f0e6-307d-4130-9a70-86b32494b6b8",
+            "f1d9cbcd-ac70-4c82-827e-ea5de8b952ab",
+            "25cd1185-5c16-42ca-b8ef-5c80fd05260e",
+            "b629e2a8-e5e3-440f-91a4-7dda4b21dc10",
+            "1e75b763-d6a3-4cd6-a163-7d29cf81ffef",
+            "504ae07f-042e-447d-9ef3-2d18b1ae65c6",
+            "397b4619-7f69-41c2-9d5b-56de253fc898",
+            "fad00ea6-cae2-4dc9-a5fe-088eb687d5c9",
+            "a6c9207b-075d-4985-b0fa-d661e85d0216",
+            "94f49faa-b5e8-416d-8b3f-b868e84d41af"
+          ]
+        }
+      }
+    },
+    {
+      "merchant": "KASARANI AGENCIES LTD",
+      "category_id": "cash_withdrawals.agent",
+      "cadence": "irregular",
+      "typical_amount": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "last_paid": "2026-10-07T04:05:00.000Z",
+      "next_expected": null,
+      "confidence": 0,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "KASARANI AGENCIES LTD",
+          "transaction_ids": [
+            "ea8aaca4-e876-4b83-b856-38b0f2dd9bad",
+            "f98e7a7c-5e0b-4ab8-a2f1-6c4168fbfe1f",
+            "f355ac60-93b9-45bb-ba82-37e5bab020e8",
+            "7ca865b6-c79c-4b15-a6b5-0c26c514b957",
+            "8f226991-1a44-4704-8cd6-678cf18e6c61"
+          ]
+        }
+      }
+    },
+    {
+      "merchant": "KPLC PREPAID",
+      "category_id": "utilities.electricity",
+      "cadence": "irregular",
+      "typical_amount": {
+        "cents": 150000,
+        "display": "KSh 1,500"
+      },
+      "last_paid": "2026-09-17T17:10:00.000Z",
+      "next_expected": null,
+      "confidence": 0,
+      "is_subscription": false,
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "KPLC PREPAID",
+          "transaction_ids": [
+            "ebcc1603-c03f-48fc-9e17-758ce72c1b6d",
+            "3d0aa74b-b680-4e50-8ce1-79b5dbacde0c",
+            "f0d85d7e-7c3b-407c-ac5d-f09f37cabf30"
+          ]
+        }
+      }
+    }
+  ],
+  "budgets": [
+    {
+      "category_id": "food_groceries",
+      "limit": {
+        "cents": 600000,
+        "display": "KSh 6,000"
+      },
+      "spent": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "projected": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "used": {
+        "value": 0,
+        "display": "0%"
+      },
+      "status": "ok"
+    }
+  ],
+  "overdraft": {
+    "fuliza_drawdown": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "fuliza_repaid": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "fuliza_cost": {
+      "cents": 0,
+      "display": "KSh 0"
+    },
+    "days_in_overdraft": {
+      "value": 0,
+      "display": "0"
+    }
+  },
+  "income": [],
+  "trend_months": [],
+  "ytd": null,
+  "anomalies": [],
+  "late_arrivals": {
+    "value": 0,
+    "display": "0"
+  },
+  "unknown_messages": {
+    "value": 0,
+    "display": "0"
+  },
+  "candidate_insights": [
+    {
+      "id": "spend_vs_last",
+      "kind": "spend_vs_last",
+      "severity": "notable",
+      "params": {
+        "out": "KSh 9,515",
+        "previous_out": "KSh 32,890",
+        "delta": "KSh -23,375",
+        "delta_pct": "-71%",
+        "direction": "down"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "top_category:food_groceries.supermarket",
+      "kind": "top_category",
+      "severity": "info",
+      "params": {
+        "category_id": "food_groceries.supermarket",
+        "category_en": "Supermarket",
+        "category_sw": "Supamaketi",
+        "out": "KSh 6,920",
+        "share": "73%"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "food_groceries.supermarket",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "biggest_transaction:f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5",
+      "kind": "biggest_transaction",
+      "severity": "info",
+      "params": {
+        "amount": "KSh 2,820",
+        "counterparty": "QUICKMART LTD",
+        "date": "2026-10-10",
+        "category_id": "food_groceries.supermarket"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "transaction_ids": [
+            "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5"
+          ]
+        }
+      }
+    },
+    {
+      "id": "fees_total",
+      "kind": "fees_total",
+      "severity": "info",
+      "params": {
+        "fees": "KSh 29",
+        "fee_ratio": "0%",
+        "count": "1"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "transaction_ids": [
+            "8f226991-1a44-4704-8cd6-678cf18e6c61"
+          ]
+        }
+      }
+    },
+    {
+      "id": "cash_withdrawn",
+      "kind": "cash_withdrawn",
+      "severity": "info",
+      "params": {
+        "amount": "KSh 1,500",
+        "count": "1"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "types": [
+            "WITHDRAW",
+            "ATM"
+          ],
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "spendiest_day:2026-10-10",
+      "kind": "spendiest_day",
+      "severity": "info",
+      "params": {
+        "weekday_en": "Saturday",
+        "weekday_sw": "Jumamosi",
+        "date": "2026-10-10",
+        "out": "KSh 2,820"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-10T00:00:00+03:00",
+          "to": "2026-10-11T00:00:00+03:00",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "weekend_share",
+      "kind": "weekend_share",
+      "severity": "info",
+      "params": {
+        "share": "30%",
+        "weekend_out": "KSh 2,820",
+        "weekday_out": "KSh 6,695"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "late_night_spend",
+      "kind": "late_night_spend",
+      "severity": "info",
+      "params": {
+        "out": "KSh 895",
+        "count": "1"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "transaction_ids": [
+            "bd0f5183-eb25-4258-8278-c6986d5eb19b"
+          ]
+        }
+      }
+    },
+    {
+      "id": "recurring_found:UBER KENYA",
+      "kind": "recurring_found",
+      "severity": "info",
+      "params": {
+        "merchant": "UBER KENYA",
+        "amount": "KSh 773",
+        "cadence": "weekly"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "UBER KENYA",
+          "transaction_ids": [
+            "d2cf2b7d-f975-4dc2-af67-f91e727d7288",
+            "b6b98a06-ee93-4872-9b3a-da08cb573029",
+            "69a54cb4-a9e1-45ec-8354-c0b6f7c07e81",
+            "2ca74e6d-0067-4c7f-8562-866483252836",
+            "68238cf0-f177-4a59-ba32-28675517e926",
+            "eeba73df-4590-4550-a28e-dd3087028570",
+            "fd929a65-6972-4b0c-8e2f-d2f7fb0e1e32",
+            "bd0f5183-eb25-4258-8278-c6986d5eb19b"
+          ]
+        }
+      }
+    },
+    {
+      "id": "recurring_found:NAIVAS LTD KILIMANI",
+      "kind": "recurring_found",
+      "severity": "info",
+      "params": {
+        "merchant": "NAIVAS LTD KILIMANI",
+        "amount": "KSh 1,460",
+        "cadence": "weekly"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "NAIVAS LTD KILIMANI",
+          "transaction_ids": [
+            "bee14aa8-35f6-44c9-9785-79d9f309590b",
+            "7b7265cf-0bc9-491a-a0f1-bcecde85592b",
+            "78c0202f-1576-45dc-9d92-016a9374f4d4",
+            "963f8d3a-1d36-4b51-bab1-49936ef33083",
+            "e94b63b7-e6b7-4620-b802-da58e24f2b93",
+            "f11099a5-3e73-4631-8102-108d7ee99a22"
+          ]
+        }
+      }
+    },
+    {
+      "id": "recurring_found:QUICKMART LTD",
+      "kind": "recurring_found",
+      "severity": "info",
+      "params": {
+        "merchant": "QUICKMART LTD",
+        "amount": "KSh 2,610",
+        "cadence": "weekly"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "merchant": "QUICKMART LTD",
+          "transaction_ids": [
+            "13a975c8-66f2-44d1-bcb0-9703f0f1bf5b",
+            "8e4b2bcc-b190-48cc-b0f8-23043437714b",
+            "a537d286-48bc-4027-94ee-d8b9f9692bfb",
+            "bede395f-37b3-47c1-8a8c-818e6490e78c",
+            "0ff0c2c9-52c4-4bca-81ad-66be7f90828f",
+            "5dd9511c-1813-4d0f-9ea1-b3bb7f546c4c",
+            "4a13437d-62ae-448b-ab04-77829066122e",
+            "f81916cc-3b9f-45ae-a8fa-dc1c1bd393f5"
+          ]
+        }
+      }
+    },
+    {
+      "id": "category_falling:housing_rent.rent",
+      "kind": "category_falling",
+      "severity": "info",
+      "params": {
+        "category_id": "housing_rent.rent",
+        "category_en": "Rent",
+        "category_sw": "Kodi ya nyumba",
+        "out": "KSh 0",
+        "delta": "KSh -18,000",
+        "delta_pct": "-100%"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "housing_rent.rent",
+          "direction": "out"
+        }
+      }
+    },
+    {
+      "id": "category_falling:family_friends.sent_to_people",
+      "kind": "category_falling",
+      "severity": "info",
+      "params": {
+        "category_id": "family_friends.sent_to_people",
+        "category_en": "Sent to people",
+        "category_sw": "Pesa ulizotuma kwa watu",
+        "out": "KSh 0",
+        "delta": "KSh -3,000",
+        "delta_pct": "-100%"
+      },
+      "drilldown": {
+        "kind": "transactions",
+        "filter": {
+          "from": "2026-10-05T00:00:00+03:00",
+          "to": "2026-10-12T00:00:00+03:00",
+          "category_id": "family_friends.sent_to_people",
+          "direction": "out"
+        }
+      }
+    }
+  ],
+  "display_strings": [
+    "5 to 11 October 2026",
+    "5 hadi 11 Oktoba 2026",
+    "28 September to 4 October 2026",
+    "28 Septemba hadi 4 Oktoba 2026",
+    "KSh 0",
+    "KSh 9,515",
+    "KSh 29",
+    "KSh -9,544",
+    "KSh 1,500",
+    "7",
+    "0%",
+    "KSh 85,000",
+    "KSh 32,890",
+    "KSh 262",
+    "KSh 51,848",
+    "KSh 70,000",
+    "KSh 2,000",
+    "KSh 5,000",
+    "KSh 1,615",
+    "18",
+    "1%",
+    "6%",
+    "KSh -23,375",
+    "-71%",
+    "KSh -85,000",
+    "-100%",
+    "KSh -233",
+    "-89%",
+    "KSh -61,392",
+    "-118%",
+    "KSh 6,920",
+    "73%",
+    "KSh +210",
+    "3%",
+    "3",
+    "16%",
+    "KSh -500",
+    "-25%",
+    "1",
+    "KSh 895",
+    "9%",
+    "KSh +35",
+    "4%",
+    "KSh 200",
+    "2%",
+    "2",
+    "KSh 4,100",
+    "KSh 2,820",
+    "KSh 70,895",
+    "KSh 859",
+    "Monday",
+    "Jumatatu",
+    "KSh 2,620",
+    "Tuesday",
+    "Jumanne",
+    "KSh 100",
+    "Wednesday",
+    "Jumatano",
+    "Thursday",
+    "Alhamisi",
+    "Friday",
+    "Ijumaa",
+    "KSh 1,580",
+    "Saturday",
+    "Jumamosi",
+    "Sunday",
+    "Jumapili",
+    "0",
+    "KSh 1,359",
+    "KSh 6,695",
+    "30%",
+    "KSh 4,520",
+    "4",
+    "KSh 1,480",
+    "KSh 773",
+    "KSh 1,460",
+    "KSh 2,610",
+    "KSh 6,000",
+    "down",
+    "food_groceries.supermarket",
+    "Supermarket",
+    "Supamaketi",
+    "QUICKMART LTD",
+    "2026-10-10",
+    "UBER KENYA",
+    "weekly",
+    "NAIVAS LTD KILIMANI",
+    "housing_rent.rent",
+    "Rent",
+    "Kodi ya nyumba",
+    "KSh -18,000",
+    "family_friends.sent_to_people",
+    "Sent to people",
+    "Pesa ulizotuma kwa watu",
+    "KSh -3,000"
+  ]
+}

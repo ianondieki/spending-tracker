@@ -39,8 +39,19 @@ export function taxonomyCategoryRows(): CategoryRow[] {
   }));
 }
 
-/** Refines the engine's provider-default category with the taxonomy's merchant seeds. */
+/**
+ * What the demo persona taught the app (the product learns these from the user's own edits; the verified merchant
+ * table in @hesabu/taxonomy must not carry fictional pay bills). Keyed by counterparty name, source `user`.
+ */
+export const DEMO_CATEGORY_OVERRIDES: Readonly<Record<string, string>> = {
+  'MAKAO PROPERTIES': 'housing_rent.rent',
+  'MONTHLY LEDGER FEE': 'fees',
+};
+
+/** Refines the engine's provider-default category with the taxonomy's merchant seeds, then the persona's own rules. */
 export function categorise(tx: Transaction): Transaction {
+  const taught = tx.counterparty.name ? DEMO_CATEGORY_OVERRIDES[tx.counterparty.name.toUpperCase()] : undefined;
+  if (taught) return { ...tx, category_id: taught, category_source: 'user', category_confidence: 1 };
   const resolved = resolveCategory({
     type: tx.type,
     direction: tx.direction,
