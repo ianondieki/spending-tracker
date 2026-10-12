@@ -6,3 +6,4 @@ export * from './money.js';
 export * from './period.js';
 export * from './facts.js';
 export * from './fixtures.js';
+export * from './schedule.js';

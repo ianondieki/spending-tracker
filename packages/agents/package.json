@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "eslint .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "try:model": "node --experimental-strip-types scripts/try-real-model.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

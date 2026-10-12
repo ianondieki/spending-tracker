@@ -1,25 +1,12 @@
-import { ANALYTICS_VERSION } from '@hesabu/analytics';
-
 export const WORKER_TIME_ZONE = 'Africa/Nairobi';
 
-export interface WorkerRunResult {
-  readonly startedAt: string;
-  readonly timeZone: string;
-  readonly analyticsVersion: string;
-  readonly jobsRun: number;
-}
-
-export type Logger = (message: string) => void;
-
-/**
- * Placeholder run: logs and returns. Lane B replaces this with the scheduler and the report
- * workflow (collect → insight-select → write → check → render → deliver).
- */
-export async function run(log: Logger = console.log): Promise<WorkerRunResult> {
-  const startedAt = new Date().toISOString();
-  log(
-    `hesabu worker: starting at ${startedAt} (tz=${WORKER_TIME_ZONE}, analytics ${ANALYTICS_VERSION})`,
-  );
-  log('hesabu worker: no jobs scheduled yet; exiting');
-  return { startedAt, timeZone: WORKER_TIME_ZONE, analyticsVersion: ANALYTICS_VERSION, jobsRun: 0 };
-}
+export { readWorkerConfig, type WorkerConfig } from './config.js';
+export { FsStorage, MemoryStorage, S3Storage, type Storage } from './adapters/storage.js';
+export { FakeEmailSender, ResendEmailSender, type EmailSender } from './adapters/email.js';
+export { CloudApiWhatsAppSender, FakeWhatsAppSender, type WhatsAppSender } from './adapters/whatsapp.js';
+export { PackageRenderer, StubRenderer, type RenderedReport, type Renderer } from './adapters/renderer.js';
+export { createSignedReportLink } from './links.js';
+export { dueReports, periodForSlot, schedulerTick } from './scheduler.js';
+export { collectionWindow, runReportJob, type WorkflowDeps, type WorkflowResult } from './workflow.js';
+export { runDeliveryJob, type DeliveryDeps, type DeliveryOutcome } from './deliver.js';
+export { buildWorker, type WorkerHandle } from './boot.js';
