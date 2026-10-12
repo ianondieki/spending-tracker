@@ -16,10 +16,13 @@
     "yyyy-MM-dd 'at' HH:mm:ss"
   ],
   "amount_prefixes": [
+    "Kshs.",
     "Kshs",
+    "Ksh.",
+    "KSh",
     "Ksh",
     "KES",
-    "KSh"
+    "KES."
   ],
   "families": [
     {

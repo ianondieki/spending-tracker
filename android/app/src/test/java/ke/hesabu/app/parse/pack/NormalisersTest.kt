@@ -7,7 +7,7 @@ import org.junit.Test
 /** PROVIDER-PACKS.md §4. */
 class NormalisersTest {
 
-    private val prefixes = listOf("Ksh", "KES", "KSh", "Kshs")
+    private val prefixes = listOf("Ksh", "KES", "KSh", "Kshs", "Ksh.")
 
     @Test
     fun amountStripsPrefixesCommasAndSpaces() {
@@ -37,6 +37,8 @@ class NormalisersTest {
         assertEquals("2099-01-01T01:00:00+03:00", Normalisers.datetime("1/1/99 at 1:00 AM", formats))
         assertNull(Normalisers.datetime("31/02/26 at 2:45 PM", formats))
         assertNull(Normalisers.datetime("yesterday", formats))
+        assertEquals("2026-10-12T14:45:00+03:00", Normalisers.datetime("12/10/26  at 2:45 p.m.", formats))
+        assertNull(Normalisers.datetime("12/10/26 at 2:45", formats)) // 12-hour clock needs AM or PM
     }
 
     @Test
@@ -56,13 +58,16 @@ class NormalisersTest {
         assertEquals("07XXXXX678", Normalisers.phone("+254712345678"))
         assertEquals("07XXXXX678", Normalisers.phone("254 712 345678"))
         assertEquals("01XXXXX678", Normalisers.phone("0112345678"))
-        assertEquals("XXXXX", Normalisers.phone("12345"))
+        assertEquals("12345", Normalisers.phone("12345")) // five or fewer stay as they are
+        assertEquals("07XXXXX617", Normalisers.phone("07XXXXX617")) // already redacted
+        assertEquals("07XXXXX123", Normalisers.phone("0710***123")) // provider-masked
         assertNull(Normalisers.phone("no digits"))
     }
 
     @Test
     fun codeAndDigits() {
         assertEquals("QJK3X8Y2M1", Normalisers.code(" qjk3x8y2m1 "))
+        assertNull(Normalisers.code("QJK-3X8"))
         assertEquals("247247", Normalisers.digits("Paybill 247247."))
         assertNull(Normalisers.digits("none"))
     }
@@ -70,8 +75,10 @@ class NormalisersTest {
     @Test
     fun accountRefMasksOnlyWhenItLooksLikeAPhoneOrId() {
         assertEquals("07XXXXX678", Normalisers.accountRef("0712345678"))
-        assertEquals("12XXXXXX901", Normalisers.accountRef("12345678901"))
+        assertEquals("XXXXXXXX901", Normalisers.accountRef("12345678901"))
+        assertEquals("XXXXX653", Normalisers.accountRef("XXXXX653"))
         assertEquals("HSE-4B", Normalisers.accountRef("HSE-4B"))
         assertEquals("1234", Normalisers.accountRef("1234"))
+        assertEquals("AC XXX456 ok", Normalisers.accountRef("AC 123456 ok"))
     }
 }

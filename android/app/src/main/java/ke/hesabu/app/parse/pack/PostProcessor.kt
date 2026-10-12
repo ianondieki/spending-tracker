@@ -1,10 +1,11 @@
 package ke.hesabu.app.parse.pack
 
-import java.util.UUID
+import kotlin.math.abs
 
 /**
- * The cross-pack rules from PROVIDER-PACKS.md, pure and testable: dedupe, transfer matching, balance chain.
- * Works on any ledger row through [LedgerLike] so the database layer and the engine tests share it.
+ * The cross-pack rules from PROVIDER-PACKS.md, pure and testable, mirroring packages/pack-engine/src/postprocess.ts:
+ * dedupe, transfer matching, balance chain. Works on any ledger row through [LedgerLike] so the database layer and
+ * the engine tests share it.
  */
 object PostProcessor {
 
@@ -23,17 +24,15 @@ object PostProcessor {
         val feeCents: Long
         val balanceAfterCents: Long?
         val occurredAtMillis: Long
+        /** Arrival order tie-break for the balance chain. */
+        val receivedAtMillis: Long get() = occurredAtMillis
     }
 
-    /**
-     * `(provider, external_ref, family_id)` when there is an external ref, otherwise the raw hash. The family is part
-     * of the key because M-Pesa reuses one code across related messages (a Fuliza drawdown repeats the code of the
-     * payment it funded; a reversal cites the original).
-     */
+    /** `(provider, external_ref, family_id)` when there is an external ref, otherwise the raw hash. */
     fun dedupeKey(t: LedgerLike): String =
-        if (!t.externalRef.isNullOrBlank()) refKey(t.provider, t.externalRef!!, t.familyId) else "hash:${t.rawHash}"
+        if (!t.externalRef.isNullOrBlank()) refKey(t.provider, t.externalRef!!, t.familyId) else "hash|${t.rawHash}"
 
-    fun refKey(provider: String, externalRef: String, familyId: String) = "ref:$provider:$externalRef:$familyId"
+    fun refKey(provider: String, externalRef: String, familyId: String) = "$provider|$externalRef|$familyId"
 
     data class Deduped<T : LedgerLike>(val kept: List<T>, val droppedCount: Int)
 
@@ -48,63 +47,94 @@ object PostProcessor {
 
     const val TRANSFER_WINDOW_MS: Long = 10 * 60 * 1000
     private val neverPaired = setOf("WITHDRAW", "ATM")
+    private val ownSide = setOf("self", "bank")
 
-    /** Transfer pairs: id → shared pair id. Rows not in the map are not transfers (by this rule). */
-    fun matchTransfers(rows: List<LedgerLike>, pairIdFor: (LedgerLike, LedgerLike) -> String = { a, _ -> UUID.nameUUIDFromBytes(a.id.toByteArray()).toString() }): Map<String, String> {
-        val sorted = rows.filter { it.type !in neverPaired && it.direction != "none" }.sortedBy { it.occurredAtMillis }
-        val paired = HashMap<String, String>()
-        for (i in sorted.indices) {
-            val a = sorted[i]
-            if (a.id in paired) continue
-            for (j in i + 1 until sorted.size) {
-                val b = sorted[j]
-                if (b.occurredAtMillis - a.occurredAtMillis > TRANSFER_WINDOW_MS) break
-                if (b.id in paired) continue
-                if (!isPair(a, b)) continue
-                val pairId = pairIdFor(a, b)
-                paired[a.id] = pairId
-                paired[b.id] = pairId
-                break
+    data class Pair(val pairId: String, val outId: String, val inId: String)
+
+    /**
+     * Pairs an `out` and an `in` from different accounts: equal amount, within 10 minutes either way, and at least one
+     * side carries a transfer hint or has counterparty kind self or bank. Each row joins at most one pair; for each
+     * `out` in time order the closest `in` wins. The pair id derives from the two ids.
+     */
+    fun matchTransfers(rows: List<LedgerLike>): List<Pair> {
+        val sorted = rows.sortedBy { it.occurredAtMillis }
+        val paired = HashSet<String>()
+        val pairs = ArrayList<Pair>()
+        for (a in sorted) {
+            if (a.id in paired || a.direction != "out" || a.type in neverPaired) continue
+            var best: LedgerLike? = null
+            var bestDelta = Long.MAX_VALUE
+            for (b in sorted) {
+                if (b.id in paired || b.direction != "in" || b.type in neverPaired) continue
+                if (b.accountRef == a.accountRef || b.amountCents != a.amountCents) continue
+                val delta = abs(b.occurredAtMillis - a.occurredAtMillis)
+                if (delta > TRANSFER_WINDOW_MS) continue
+                if (!(a.isTransferHint || b.isTransferHint || a.counterpartyKind in ownSide || b.counterpartyKind in ownSide)) continue
+                if (delta < bestDelta) { best = b; bestDelta = delta }
             }
+            val b = best ?: continue
+            val pairId = Ids.transferPairId(a.id, b.id)
+            paired.add(a.id); paired.add(b.id)
+            pairs.add(Pair(pairId, a.id, b.id))
         }
-        return paired
+        return pairs
     }
 
-    private fun isPair(a: LedgerLike, b: LedgerLike): Boolean {
-        if (a.accountRef == b.accountRef) return false
-        if (a.direction == b.direction) return false
-        if (a.amountCents != b.amountCents) return false
-        val hinted = a.isTransferHint || b.isTransferHint ||
-            a.counterpartyKind in selfOrBank || b.counterpartyKind in selfOrBank
-        return hinted
-    }
-
-    private val selfOrBank = setOf("self", "bank")
+    /** id → pair id, for callers that update rows. */
+    fun pairIds(rows: List<LedgerLike>): Map<String, String> =
+        matchTransfers(rows).flatMap { listOf(it.outId to it.pairId, it.inId to it.pairId) }.toMap()
 
     data class BalanceBreak(val accountRef: String, val previousId: String, val id: String, val expectedCents: Long, val actualCents: Long)
 
+    /** Fees whose charge lands on the loan, not on the account the message belongs to. */
+    private val feeNotFromAccount = setOf("FULIZA_DRAWDOWN")
+
     /**
-     * For each account whose rows carry `balance_after`, consecutive rows (by time) must satisfy
-     * prev.balance ± amount ± fee = this.balance, sign by direction. Returns the breaks; advisory only.
+     * Per account, in time order, `prev.balance ± amount ∓ fee` must equal the next balance. A row without a balance
+     * still moves the running balance. Rows sharing an external ref are one event: a balance-less sibling (a Fuliza
+     * drawdown) is applied before the balance-carrying one. Breaks are advisory and never alter a row.
      */
     fun checkBalanceChain(rows: List<LedgerLike>): List<BalanceBreak> {
         val breaks = ArrayList<BalanceBreak>()
-        rows.filter { it.balanceAfterCents != null }
-            .groupBy { it.accountRef }
-            .forEach { (account, list) ->
-                val ordered = list.sortedWith(compareBy({ it.occurredAtMillis }, { it.id }))
-                for (i in 1 until ordered.size) {
-                    val prev = ordered[i - 1]
-                    val cur = ordered[i]
-                    val expected = prev.balanceAfterCents!! + when (cur.direction) {
-                        "in" -> cur.amountCents - cur.feeCents
-                        "out" -> -(cur.amountCents + cur.feeCents)
-                        else -> -cur.feeCents
+        rows.groupBy { it.accountRef }.forEach { (account, list) ->
+            var running: Long? = null
+            var prevId: String? = null
+            for (t in orderForChain(list)) {
+                if (running != null) {
+                    running = applyDelta(running, t)
+                    val actual = t.balanceAfterCents
+                    if (actual != null && running != actual) breaks.add(BalanceBreak(account, prevId!!, t.id, running, actual))
+                }
+                if (t.balanceAfterCents != null) { running = t.balanceAfterCents; prevId = t.id }
+            }
+        }
+        return breaks
+    }
+
+    private fun applyDelta(balance: Long, t: LedgerLike): Long {
+        val fee = if (t.type in feeNotFromAccount) 0L else t.feeCents
+        return when (t.direction) {
+            "in" -> balance + t.amountCents - fee
+            "out" -> balance - t.amountCents - fee
+            else -> balance
+        }
+    }
+
+    private fun orderForChain(list: List<LedgerLike>): List<LedgerLike> {
+        val sorted = list.sortedWith(compareBy({ it.occurredAtMillis }, { it.receivedAtMillis }, { it.id }))
+        val result = ArrayList<LedgerLike>()
+        val placed = HashSet<String>()
+        for (t in sorted) {
+            if (t.id in placed) continue
+            if (t.externalRef != null && t.balanceAfterCents != null) {
+                for (s in sorted) {
+                    if (s.id !in placed && s.id != t.id && s.externalRef == t.externalRef && s.balanceAfterCents == null) {
+                        result.add(s); placed.add(s.id)
                     }
-                    val actual = cur.balanceAfterCents!!
-                    if (expected != actual) breaks.add(BalanceBreak(account, prev.id, cur.id, expected, actual))
                 }
             }
-        return breaks
+            result.add(t); placed.add(t.id)
+        }
+        return result
     }
 }

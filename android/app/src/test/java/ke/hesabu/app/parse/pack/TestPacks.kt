@@ -20,7 +20,7 @@ object TestPacks {
       "pack_id": "test_pack", "version": "1.2.3", "provider": "mpesa", "institution": "Test",
       "sender_ids": [" TESTPAY ", "TPAY"], "account_ref_template": "mpesa:{sim_msisdn_masked}", "currency": "KES",
       "datetime_formats": ["d/M/yy 'at' h:mm a", "yyyy-MM-dd HH:mm"],
-      "amount_prefixes": ["Kshs", "Ksh", "KES"],
+      "amount_prefixes": ["Kshs", "Ksh.", "Ksh", "KES"],
       "families": [
         {
           "family_id": "balance", "description": "ignore", "type": "BALANCE_QUERY", "direction": "none", "counterparty_kind": "self",

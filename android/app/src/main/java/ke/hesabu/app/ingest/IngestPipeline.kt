@@ -131,7 +131,7 @@ class IngestPipeline(
         val cat = categoriser.resolve(tx)
         val t = now()
         return TransactionEntity(
-            id = newId(),
+            id = tx.id,
             accountRef = tx.accountRef,
             provider = tx.provider,
             externalRef = tx.externalRef,
@@ -196,7 +196,7 @@ class IngestPipeline(
         val from = newRows.minOf { it.occurredAtMillis } - PostProcessor.TRANSFER_WINDOW_MS
         val to = newRows.maxOf { it.occurredAtMillis } + PostProcessor.TRANSFER_WINDOW_MS
         val window = db.transactionDao().between(from, to + 1).filter { it.transferPairId == null && !it.userEdited }
-        val pairs = PostProcessor.matchTransfers(window) { a, _ -> a.id }
+        val pairs = PostProcessor.pairIds(window)
         if (pairs.isEmpty()) return 0
         val t = now()
         val updated = window.filter { it.id in pairs }.map { it.copy(isTransfer = true, transferPairId = pairs[it.id], updatedAtMillis = t, syncedAtMillis = null) }
