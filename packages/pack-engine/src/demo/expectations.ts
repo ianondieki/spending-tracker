@@ -12,17 +12,41 @@ export interface DemoExpectations {
   readonly duplicates_dropped: number;
   readonly transactions_after_dedupe: number;
   readonly per_family: Record<string, number>;
-  readonly transfer_pairs: { out_family: string; in_family: string; amount_cents: number; occurred_at: string }[];
+  readonly transfer_pairs: {
+    out_family: string;
+    in_family: string;
+    amount_cents: number;
+    occurred_at: string;
+  }[];
   readonly balance_chain: { checked: number; breaks: number };
-  readonly per_account: Record<string, { transactions: number; in_cents: number; out_cents: number; fees_cents: number; last_balance_cents: number | null }>;
+  readonly per_account: Record<
+    string,
+    {
+      transactions: number;
+      in_cents: number;
+      out_cents: number;
+      fees_cents: number;
+      last_balance_cents: number | null;
+    }
+  >;
 }
 
 export function expectationsFor(result: CorpusRunResult): DemoExpectations {
   const byId = new Map(result.post.transactions.map((t) => [t.id, t]));
   const perAccount: DemoExpectations['per_account'] = {};
-  const sorted = [...result.post.transactions].sort((a, b) => Date.parse(a.occurred_at) - Date.parse(b.occurred_at) || Date.parse(a.received_at) - Date.parse(b.received_at));
+  const sorted = [...result.post.transactions].sort(
+    (a, b) =>
+      Date.parse(a.occurred_at) - Date.parse(b.occurred_at) ||
+      Date.parse(a.received_at) - Date.parse(b.received_at),
+  );
   for (const t of sorted) {
-    const acc = (perAccount[t.account_ref] ??= { transactions: 0, in_cents: 0, out_cents: 0, fees_cents: 0, last_balance_cents: null });
+    const acc = (perAccount[t.account_ref] ??= {
+      transactions: 0,
+      in_cents: 0,
+      out_cents: 0,
+      fees_cents: 0,
+      last_balance_cents: null,
+    });
     acc.transactions += 1;
     if (t.direction === 'in') acc.in_cents += t.amount_cents;
     if (t.direction === 'out') acc.out_cents += t.amount_cents;
@@ -39,9 +63,17 @@ export function expectationsFor(result: CorpusRunResult): DemoExpectations {
     per_family: Object.fromEntries([...result.per_family.entries()].sort()),
     transfer_pairs: result.post.transfer_pairs.map((p) => {
       const out = byId.get(p.out_id)!;
-      return { out_family: out.parser.family_id, in_family: byId.get(p.in_id)!.parser.family_id, amount_cents: out.amount_cents, occurred_at: out.occurred_at };
+      return {
+        out_family: out.parser.family_id,
+        in_family: byId.get(p.in_id)!.parser.family_id,
+        amount_cents: out.amount_cents,
+        occurred_at: out.occurred_at,
+      };
     }),
-    balance_chain: { checked: result.post.balance.checked, breaks: result.post.balance.breaks.length },
+    balance_chain: {
+      checked: result.post.balance.checked,
+      breaks: result.post.balance.breaks.length,
+    },
     per_account: perAccount,
   };
 }

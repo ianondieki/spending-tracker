@@ -21,6 +21,8 @@ export interface EngineOptions {
 }
 
 const DEFAULT_CONFIDENCE = 0.95;
+/** A concatenated SMS is at most ~1,500 characters; anything longer is not a money message and is never matched (bounded regex work on untrusted text). */
+export const MAX_BODY_LENGTH = 4000;
 
 /** The body as both engines must see it before matching: U+00A0 (no-break space) becomes a plain space, because Java's \\s excludes it and JavaScript's includes it. */
 export function matchableBody(body: string): string {
@@ -31,8 +33,14 @@ export function senderMatches(pack: CompiledPack, sender: string): boolean {
   return pack.senderIds.has(sender.trim().toLowerCase());
 }
 
-export function parseMessage(pack: CompiledPack, message: RawMessage, options: EngineOptions = {}): ParseOutcome {
+export function parseMessage(
+  pack: CompiledPack,
+  message: RawMessage,
+  options: EngineOptions = {},
+): ParseOutcome {
   if (!senderMatches(pack, message.sender)) return { kind: 'not_ours' };
+  const rawHashEarly = message.body.length > MAX_BODY_LENGTH ? sha256Hex(message.body) : null;
+  if (rawHashEarly) return { kind: 'unknown', sender: message.sender, raw_hash: rawHashEarly };
   const body = matchableBody(message.body);
   const lower = body.toLowerCase();
   const rawHash = sha256Hex(message.body);
@@ -45,7 +53,8 @@ export function parseMessage(pack: CompiledPack, message: RawMessage, options: E
     const fields = extractFields(pack, compiled, m.groups ?? {});
     if (!fields) continue; // a required group failed to normalise: try the next family
     const { family } = compiled;
-    if (family.ignore) return { kind: 'ignored', family_id: family.family_id, fields, raw_hash: rawHash };
+    if (family.ignore)
+      return { kind: 'ignored', family_id: family.family_id, fields, raw_hash: rawHash };
     const transaction = buildTransaction(pack, compiled, fields, message, rawHash, options);
     if (!transaction) continue;
     return {
@@ -145,7 +154,10 @@ function assign(out: ExtractedFields, spec: FieldSpec, value: string | number): 
   }
 }
 
-export function renderAccountRef(template: string, variables: Readonly<Record<string, string>>): string {
+export function renderAccountRef(
+  template: string,
+  variables: Readonly<Record<string, string>>,
+): string {
   return template.replace(/\{([a-z0-9_]+)\}/g, (_, name: string) => {
     const value = variables[name];
     if (value === undefined) throw new Error(`account_ref_template needs variable "${name}"`);
@@ -194,7 +206,11 @@ function buildTransaction(
     parse_confidence: family.confidence ?? DEFAULT_CONFIDENCE,
     source: 'sms',
     raw_hash: rawHash,
-    parser: { pack_id: pack.pack.pack_id, pack_version: pack.pack.version, family_id: family.family_id },
+    parser: {
+      pack_id: pack.pack.pack_id,
+      pack_version: pack.pack.version,
+      family_id: family.family_id,
+    },
     user_edited: false,
     note: fields.note,
     tags: [],
@@ -203,7 +219,11 @@ function buildTransaction(
 }
 
 /** Runs one message through several packs; the first pack whose sender list contains the sender decides. */
-export function parseWithPacks(packs: readonly CompiledPack[], message: RawMessage, options?: EngineOptions): ParseOutcome {
+export function parseWithPacks(
+  packs: readonly CompiledPack[],
+  message: RawMessage,
+  options?: EngineOptions,
+): ParseOutcome {
   for (const pack of packs) {
     if (senderMatches(pack, message.sender)) return parseMessage(pack, message, options);
   }

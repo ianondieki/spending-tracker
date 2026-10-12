@@ -43,7 +43,9 @@ export interface CompiledPack {
   readonly families: readonly CompiledFamily[];
 }
 
-let validator: ((data: unknown) => boolean) & { errors?: { instancePath: string; message?: string }[] | null };
+let validator: ((data: unknown) => boolean) & {
+  errors?: { instancePath: string; message?: string }[] | null;
+};
 
 function schemaValidator() {
   if (!validator) {
@@ -59,7 +61,8 @@ export function compilePack(data: unknown): CompiledPack {
   const validate = schemaValidator();
   const problems: string[] = [];
   if (!validate(data)) {
-    for (const err of validate.errors ?? []) problems.push(`schema: ${err.instancePath || '/'} ${err.message ?? ''}`);
+    for (const err of validate.errors ?? [])
+      problems.push(`schema: ${err.instancePath || '/'} ${err.message ?? ''}`);
     throw new PackLoadError(packIdOf(data), problems);
   }
   const pack = data as ProviderPack;
@@ -85,12 +88,17 @@ export function compilePack(data: unknown): CompiledPack {
       continue;
     }
     for (const group of Object.keys(family.fields)) {
-      if (!groupNames.includes(group)) problems.push(`${where}: fields maps group "${group}" that the pattern does not declare`);
+      if (!groupNames.includes(group))
+        problems.push(`${where}: fields maps group "${group}" that the pattern does not declare`);
     }
     const targets = Object.values(family.fields).map((f) => f.to);
     const dupTargets = targets.filter((t, i) => targets.indexOf(t) !== i);
-    if (dupTargets.length) problems.push(`${where}: two groups map to the same field ${[...new Set(dupTargets)].join(', ')}`);
-    if (!family.ignore && !targets.includes('amount')) problems.push(`${where}: a non-ignore family must map an amount`);
+    if (dupTargets.length)
+      problems.push(
+        `${where}: two groups map to the same field ${[...new Set(dupTargets)].join(', ')}`,
+      );
+    if (!family.ignore && !targets.includes('amount'))
+      problems.push(`${where}: a non-ignore family must map an amount`);
     try {
       const prefilter = family.prefilter ?? {};
       compiled.push({
@@ -131,7 +139,11 @@ export function loadAllPacks(dir: string = PACKS_DIR): CompiledPack[] {
 }
 
 function packIdOf(data: unknown): string | null {
-  if (data && typeof data === 'object' && typeof (data as { pack_id?: unknown }).pack_id === 'string') {
+  if (
+    data &&
+    typeof data === 'object' &&
+    typeof (data as { pack_id?: unknown }).pack_id === 'string'
+  ) {
     return (data as { pack_id: string }).pack_id;
   }
   return null;

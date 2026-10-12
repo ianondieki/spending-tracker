@@ -57,9 +57,13 @@ describe('demo inbox', () => {
       expect(out.account_ref).not.toBe(inn.account_ref);
       expect(out.amount_cents).toBe(inn.amount_cents);
     }
-    const unpaired = result.post.transactions.filter((t) => !t.is_transfer && ['BANK_TO_MPESA', 'MPESA_TO_BANK'].includes(t.type));
+    const unpaired = result.post.transactions.filter(
+      (t) => !t.is_transfer && ['BANK_TO_MPESA', 'MPESA_TO_BANK'].includes(t.type),
+    );
     expect(unpaired).toEqual([]);
-    expect(result.post.transactions.filter((t) => t.type === 'WITHDRAW' && t.is_transfer)).toEqual([]);
+    expect(result.post.transactions.filter((t) => t.type === 'WITHDRAW' && t.is_transfer)).toEqual(
+      [],
+    );
   });
 
   it('keeps every balance chain unbroken, including through the Fuliza episode', () => {
@@ -70,11 +74,33 @@ describe('demo inbox', () => {
   });
 
   it('includes every scene the kickoff asks for', () => {
-    for (const family of ['demo_credit', 'demo_debit_to_mpesa', 'bank_to_mpesa', 'paybill', 'buy_goods', 'withdraw', 'airtime_self', 'fuliza_drawdown', 'fuliza_repay', 'send_money', 'receive_money', 'mshwari_deposit', 'mpesa_to_bank']) {
+    for (const family of [
+      'demo_credit',
+      'demo_debit_to_mpesa',
+      'bank_to_mpesa',
+      'paybill',
+      'buy_goods',
+      'withdraw',
+      'airtime_self',
+      'fuliza_drawdown',
+      'fuliza_repay',
+      'send_money',
+      'receive_money',
+      'mshwari_deposit',
+      'mpesa_to_bank',
+    ]) {
       expect(result.per_family.get(family), family).toBeGreaterThan(0);
     }
     const names = new Set(result.post.transactions.map((t) => t.counterparty.name));
-    for (const n of ['KPLC PREPAID', 'NAIVAS LTD KILIMANI', 'UBER KENYA', 'NETFLIX', 'MAKAO PROPERTIES', 'ACME LOGISTICS LTD SALARY']) expect(names.has(n), n).toBe(true);
+    for (const n of [
+      'KPLC PREPAID',
+      'NAIVAS LTD KILIMANI',
+      'UBER KENYA',
+      'NETFLIX',
+      'MAKAO PROPERTIES',
+      'ACME LOGISTICS LTD SALARY',
+    ])
+      expect(names.has(n), n).toBe(true);
   });
 
   it('matches the committed expectations file that the Kotlin engine asserts against', () => {
@@ -84,7 +110,8 @@ describe('demo inbox', () => {
 
   it('never leaks a real-looking full phone number into a transaction', () => {
     for (const t of result.post.transactions) {
-      if (t.counterparty.ref_masked) expect(t.counterparty.ref_masked).toMatch(/^\d{2}X+\d{3}$|^[\dX]{1,6}$/);
+      if (t.counterparty.ref_masked)
+        expect(t.counterparty.ref_masked).toMatch(/^\d{2}X+\d{3}$|^[\dX]{1,6}$/);
     }
   });
 });

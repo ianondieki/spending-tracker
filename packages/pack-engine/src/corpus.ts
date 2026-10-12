@@ -69,7 +69,11 @@ export interface CorpusRunResult {
   readonly post: PostProcessResult;
 }
 
-export function runCorpus(packs: readonly CompiledPack[], lines: readonly CorpusLine[], options?: EngineOptions): CorpusRunResult {
+export function runCorpus(
+  packs: readonly CompiledPack[],
+  lines: readonly CorpusLine[],
+  options?: EngineOptions,
+): CorpusRunResult {
   const perFamily = new Map<string, number>();
   const unknown: UnknownMessage[] = [];
   const items: ParsedTransaction[] = [];
@@ -92,11 +96,24 @@ export function runCorpus(packs: readonly CompiledPack[], lines: readonly Corpus
       case 'parsed':
         parsed += 1;
         perFamily.set(outcome.family_id, (perFamily.get(outcome.family_id) ?? 0) + 1);
-        items.push({ transaction: outcome.transaction, family_id: outcome.family_id, is_transfer_hint: outcome.is_transfer_hint });
+        items.push({
+          transaction: outcome.transaction,
+          family_id: outcome.family_id,
+          is_transfer_hint: outcome.is_transfer_hint,
+        });
         break;
     }
   });
-  return { total: lines.length, not_ours: notOurs, parsed, ignored, unknown, per_family: perFamily, items, post: postProcess(items) };
+  return {
+    total: lines.length,
+    not_ours: notOurs,
+    parsed,
+    ignored,
+    unknown,
+    per_family: perFamily,
+    items,
+    post: postProcess(items),
+  };
 }
 
 /** Which of the loaded packs claims a corpus line's sender, if any. */

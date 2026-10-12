@@ -21,7 +21,13 @@ interface Args {
 }
 
 function parseArgs(argv: string[]): Args {
-  const args: Args = { command: argv[0] ?? 'help', packs: [], corpora: [], vars: { sim_msisdn_masked: '07XXXXX000', acct_mask: '***000' }, json: false };
+  const args: Args = {
+    command: argv[0] ?? 'help',
+    packs: [],
+    corpora: [],
+    vars: { sim_msisdn_masked: '07XXXXX000', acct_mask: '***000' },
+    json: false,
+  };
   for (let i = 1; i < argv.length; i += 1) {
     const a = argv[i]!;
     const next = () => {
@@ -57,7 +63,8 @@ export function main(argv: string[] = process.argv.slice(2)): number {
     switch (args.command) {
       case 'validate': {
         const packs = loadPacks(args.packs);
-        for (const p of packs) console.log(`${p.pack.pack_id} ${p.pack.version}: ${p.families.length} families OK`);
+        for (const p of packs)
+          console.log(`${p.pack.pack_id} ${p.pack.version}: ${p.families.length} families OK`);
         return 0;
       }
       case 'examples': {
@@ -87,7 +94,11 @@ export function main(argv: string[] = process.argv.slice(2)): number {
                 not_ours: result.not_ours,
                 parsed: result.parsed,
                 ignored: result.ignored,
-                unknown: result.unknown.map((u) => ({ index: u.index, sender: u.line.sender, body: u.line.body })),
+                unknown: result.unknown.map((u) => ({
+                  index: u.index,
+                  sender: u.line.sender,
+                  body: u.line.body,
+                })),
                 per_family: Object.fromEntries(result.per_family),
                 duplicates: result.post.duplicates,
                 transfer_pairs: result.post.transfer_pairs,
@@ -100,21 +111,32 @@ export function main(argv: string[] = process.argv.slice(2)): number {
           );
           return result.unknown.length ? 1 : 0;
         }
-        console.log(`messages: ${result.total}  parsed: ${result.parsed}  ignored: ${result.ignored}  unknown: ${result.unknown.length}  not ours: ${result.not_ours}`);
+        console.log(
+          `messages: ${result.total}  parsed: ${result.parsed}  ignored: ${result.ignored}  unknown: ${result.unknown.length}  not ours: ${result.not_ours}`,
+        );
         console.log('per family:');
-        for (const [family, count] of [...result.per_family.entries()].sort((a, b) => b[1] - a[1])) console.log(`  ${String(count).padStart(5)}  ${family}`);
+        for (const [family, count] of [...result.per_family.entries()].sort((a, b) => b[1] - a[1]))
+          console.log(`  ${String(count).padStart(5)}  ${family}`);
         console.log(`duplicates dropped: ${result.post.duplicates}`);
         console.log(`transfer pairs: ${result.post.transfer_pairs.length}`);
-        console.log(`balance chain: ${result.post.balance.checked} checked, ${result.post.balance.breaks.length} breaks`);
-        for (const b of result.post.balance.breaks) console.log(`  break ${b.account_ref} tx ${b.transaction_id}: expected ${b.expected_cents} got ${b.actual_cents}`);
+        console.log(
+          `balance chain: ${result.post.balance.checked} checked, ${result.post.balance.breaks.length} breaks`,
+        );
+        for (const b of result.post.balance.breaks)
+          console.log(
+            `  break ${b.account_ref} tx ${b.transaction_id}: expected ${b.expected_cents} got ${b.actual_cents}`,
+          );
         if (result.unknown.length) {
           console.log('unknown messages:');
-          for (const u of result.unknown) console.log(`  [${u.index}] ${u.line.sender}: ${u.line.body}`);
+          for (const u of result.unknown)
+            console.log(`  [${u.index}] ${u.line.sender}: ${u.line.body}`);
         }
         return result.unknown.length ? 1 : 0;
       }
       default:
-        console.log('usage: pack-engine <validate|examples|run> [--pack file]… [--corpus jsonl]… [--var k=v] [--json]');
+        console.log(
+          'usage: pack-engine <validate|examples|run> [--pack file]… [--corpus jsonl]… [--var k=v] [--json]',
+        );
         return args.command === 'help' ? 0 : 2;
     }
   } catch (e) {

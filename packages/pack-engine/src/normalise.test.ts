@@ -1,9 +1,22 @@
 import { describe, expect, it } from 'vitest';
 
-import { maskAccountRef, normaliseAmount, normaliseCode, normaliseDatetime, normaliseDigits, normalisePhone, normaliseText } from './normalise.js';
+import {
+  maskAccountRef,
+  normaliseAmount,
+  normaliseCode,
+  normaliseDatetime,
+  normaliseDigits,
+  normalisePhone,
+  normaliseText,
+} from './normalise.js';
 
 const PREFIXES = ['Ksh.', 'Ksh', 'KES', 'KSh', 'Kshs'];
-const FORMATS = ["d/M/yy 'at' h:mm a", 'd/M/yy h:mm a', "yyyy-MM-dd 'at' HH:mm", 'dd MMM yyyy HH:mm'];
+const FORMATS = [
+  "d/M/yy 'at' h:mm a",
+  'd/M/yy h:mm a',
+  "yyyy-MM-dd 'at' HH:mm",
+  'dd MMM yyyy HH:mm',
+];
 
 describe('amount', () => {
   it.each([
@@ -46,12 +59,17 @@ describe('datetime', () => {
     expect(normaliseDatetime(raw, FORMATS)).toBe(iso);
   });
 
-  it.each(['31/2/26 at 1:00 PM', '29/02/23 at 1:00 PM', '13/13/26 at 1:00 PM', '1/1/26 at 13:00 PM', '1/1/26 at 1:60 PM', '1/1/26', 'yesterday'])(
-    'rejects %s',
-    (raw) => {
-      expect(normaliseDatetime(raw, FORMATS)).toBeNull();
-    },
-  );
+  it.each([
+    '31/2/26 at 1:00 PM',
+    '29/02/23 at 1:00 PM',
+    '13/13/26 at 1:00 PM',
+    '1/1/26 at 13:00 PM',
+    '1/1/26 at 1:60 PM',
+    '1/1/26',
+    'yesterday',
+  ])('rejects %s', (raw) => {
+    expect(normaliseDatetime(raw, FORMATS)).toBeNull();
+  });
 });
 
 describe('phone, code, text, digits', () => {

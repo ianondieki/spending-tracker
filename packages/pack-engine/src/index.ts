@@ -7,7 +7,12 @@
 export const PACK_FORMAT_VERSION = 1 as const;
 
 export type * from './types.js';
-export { PortableRegexError, validatePortableRegex, compilePortableRegex, GROUP_NAME } from './regex.js';
+export {
+  PortableRegexError,
+  validatePortableRegex,
+  compilePortableRegex,
+  GROUP_NAME,
+} from './regex.js';
 export {
   normaliseAmount,
   normaliseDatetime,
@@ -31,7 +36,15 @@ export {
   type CompiledPack,
   type CompiledFamily,
 } from './loader.js';
-export { parseMessage, parseWithPacks, senderMatches, renderAccountRef, matchableBody, type EngineOptions } from './engine.js';
+export {
+  parseMessage,
+  parseWithPacks,
+  senderMatches,
+  renderAccountRef,
+  matchableBody,
+  MAX_BODY_LENGTH,
+  type EngineOptions,
+} from './engine.js';
 export {
   dedupe,
   dedupeKey,

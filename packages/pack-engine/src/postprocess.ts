@@ -12,7 +12,9 @@ export interface DedupeResult {
 
 /** Dedupe key: `(provider, external_ref, family_id)` when a ref exists, else `raw_hash`. Duplicates are dropped and counted. */
 export function dedupeKey(t: Transaction): string {
-  return t.external_ref ? `${t.provider}|${t.external_ref}|${t.parser.family_id}` : `hash|${t.raw_hash}`;
+  return t.external_ref
+    ? `${t.provider}|${t.external_ref}|${t.parser.family_id}`
+    : `hash|${t.raw_hash}`;
 }
 
 export function dedupe(items: readonly ParsedTransaction[]): DedupeResult {
@@ -163,7 +165,10 @@ function applyDelta(balance: number, t: Transaction): number {
 /** Time order, with balance-less transactions that share a code moved ahead of their balance-carrying sibling. */
 function orderForChain(list: readonly Transaction[]): Transaction[] {
   const sorted = [...list].sort(
-    (a, b) => time(a) - time(b) || Date.parse(a.received_at) - Date.parse(b.received_at) || a.id.localeCompare(b.id),
+    (a, b) =>
+      time(a) - time(b) ||
+      Date.parse(a.received_at) - Date.parse(b.received_at) ||
+      a.id.localeCompare(b.id),
   );
   const result: Transaction[] = [];
   const placed = new Set<string>();

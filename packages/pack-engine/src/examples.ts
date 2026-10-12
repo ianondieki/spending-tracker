@@ -16,7 +16,10 @@ export interface ExampleFailure {
   readonly problem: string;
 }
 
-export function flattenForExpect(outcome: ParseOutcome, pack: CompiledPack): Record<string, unknown> {
+export function flattenForExpect(
+  outcome: ParseOutcome,
+  pack: CompiledPack,
+): Record<string, unknown> {
   if (outcome.kind === 'not_ours' || outcome.kind === 'unknown') return {};
   const f: ExtractedFields = outcome.fields;
   const family = pack.families.find((c) => c.family.family_id === outcome.family_id)!.family;
@@ -53,24 +56,35 @@ export function runExamples(pack: CompiledPack): ExampleFailure[] {
   const sender = pack.pack.sender_ids[0]!;
   pack.families.forEach((compiled) => {
     compiled.family.examples.forEach((example, example_index) => {
-      const fail = (problem: string) => failures.push({ family_id: compiled.family.family_id, example_index, problem });
-      const outcome = parseMessage(pack, { sender, body: example.body, received_at: EXAMPLE_RECEIVED_AT }, { variables: EXAMPLE_VARIABLES });
+      const fail = (problem: string) =>
+        failures.push({ family_id: compiled.family.family_id, example_index, problem });
+      const outcome = parseMessage(
+        pack,
+        { sender, body: example.body, received_at: EXAMPLE_RECEIVED_AT },
+        { variables: EXAMPLE_VARIABLES },
+      );
       if (outcome.kind === 'unknown' || outcome.kind === 'not_ours') {
         fail(`no family matched (${outcome.kind})`);
         return;
       }
       if (outcome.family_id !== compiled.family.family_id) {
-        fail(`matched family "${outcome.family_id}" instead (families are ordered; move the more specific one first)`);
+        fail(
+          `matched family "${outcome.family_id}" instead (families are ordered; move the more specific one first)`,
+        );
         return;
       }
       const actual = flattenForExpect(outcome, pack);
       for (const [key, expected] of Object.entries(example.expect)) {
         if (!(key in actual)) {
-          fail(`expect.${key} is not a comparable field (known: ${Object.keys(actual).join(', ')})`);
+          fail(
+            `expect.${key} is not a comparable field (known: ${Object.keys(actual).join(', ')})`,
+          );
           continue;
         }
         if (JSON.stringify(actual[key]) !== JSON.stringify(expected)) {
-          fail(`expect.${key}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual[key])}`);
+          fail(
+            `expect.${key}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual[key])}`,
+          );
         }
       }
     });

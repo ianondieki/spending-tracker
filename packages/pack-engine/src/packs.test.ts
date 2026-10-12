@@ -29,10 +29,13 @@ describe('provider packs', () => {
 
       it('marks no example verified without a real export in corpus/', () => {
         // Until a `source: sms-backup-xml` file exists for the provider, every example must stay verified: false.
-        const realExports = corpusFilesFor(pack.pack.provider).filter((f) => readJsonl(f).some((l) => l.source === 'sms-backup-xml'));
+        const realExports = corpusFilesFor(pack.pack.provider).filter((f) =>
+          readJsonl(f).some((l) => l.source === 'sms-backup-xml'),
+        );
         if (realExports.length === 0) {
           for (const c of pack.families) {
-            for (const ex of c.family.examples) expect(ex.verified, `${c.family.family_id}: ${ex.body.slice(0, 40)}`).toBe(false);
+            for (const ex of c.family.examples)
+              expect(ex.verified, `${c.family.family_id}: ${ex.body.slice(0, 40)}`).toBe(false);
           }
         }
       });
@@ -43,7 +46,10 @@ describe('provider packs', () => {
             if (spec.normalise !== 'amount') continue;
             const idx = c.family.pattern.indexOf(`(?<${group}>`);
             const before = c.family.pattern.slice(Math.max(0, idx - 60), idx);
-            expect(/[A-Za-z]{3,}/.test(before), `${c.family.family_id}: group ${group} has no label before it`).toBe(true);
+            expect(
+              /[A-Za-z]{3,}/.test(before),
+              `${c.family.family_id}: group ${group} has no label before it`,
+            ).toBe(true);
           }
         }
       });
@@ -52,21 +58,29 @@ describe('provider packs', () => {
         const bodies = new Set<string>();
         for (const c of pack.families) {
           for (const ex of c.family.examples) {
-            expect(bodies.has(ex.body), `duplicate example body in ${c.family.family_id}`).toBe(false);
+            expect(bodies.has(ex.body), `duplicate example body in ${c.family.family_id}`).toBe(
+              false,
+            );
             bodies.add(ex.body);
           }
         }
       });
 
       it('compiles every pattern under the portable subset', () => {
-        for (const c of pack.families) expect(() => compilePortableRegex(c.family.pattern)).not.toThrow();
+        for (const c of pack.families)
+          expect(() => compilePortableRegex(c.family.pattern)).not.toThrow();
       });
     });
   }
 });
 
 function corpusFilesFor(provider: string): string[] {
-  const dirs = provider === 'bank' || provider === 'card' ? ['banks'] : provider === 'airtel_money' ? ['airtel-money'] : [provider];
+  const dirs =
+    provider === 'bank' || provider === 'card'
+      ? ['banks']
+      : provider === 'airtel_money'
+        ? ['airtel-money']
+        : [provider];
   const files: string[] = [];
   for (const d of dirs) {
     const dir = path.join(CORPUS_DIR, d);
@@ -102,7 +116,10 @@ describe('corpus', () => {
       const missing = existsSync(missingPath) ? readFileSync(missingPath, 'utf8') : '';
       const offenders = result.unknown.filter((u) => !isAllowedUnknown(missing, u));
       expect(
-        offenders.map((u) => `line ${u.index + 1} (${u.line.family_guess ?? '?'}; sha ${(u.line.sha256 ?? u.raw_hash).slice(0, 12)}): ${u.line.body}`),
+        offenders.map(
+          (u) =>
+            `line ${u.index + 1} (${u.line.family_guess ?? '?'}; sha ${(u.line.sha256 ?? u.raw_hash).slice(0, 12)}): ${u.line.body}`,
+        ),
       ).toEqual([]);
     });
   }

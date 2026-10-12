@@ -4,7 +4,9 @@ import { checkBalanceChain, dedupe, matchTransfers, postProcess } from './postpr
 import type { ParsedTransaction, Transaction } from './types.js';
 
 let seq = 0;
-function tx(over: Partial<Transaction> & { amount_cents: number; direction: Transaction['direction'] }): Transaction {
+function tx(
+  over: Partial<Transaction> & { amount_cents: number; direction: Transaction['direction'] },
+): Transaction {
   seq += 1;
   return {
     id: `00000000-0000-4000-8000-${String(seq).padStart(12, '0')}`,
@@ -16,7 +18,14 @@ function tx(over: Partial<Transaction> & { amount_cents: number; direction: Tran
     balance_after_cents: null,
     occurred_at: '2026-01-15T09:00:00+03:00',
     received_at: '2026-01-15T09:00:00+03:00',
-    counterparty: { name: null, kind: 'unknown', ref_masked: null, paybill: null, till: null, account_ref: null },
+    counterparty: {
+      name: null,
+      kind: 'unknown',
+      ref_masked: null,
+      paybill: null,
+      till: null,
+      account_ref: null,
+    },
     category_id: null,
     category_source: 'none',
     category_confidence: 0,
@@ -42,7 +51,12 @@ const item = (transaction: Transaction, is_transfer_hint = false): ParsedTransac
 describe('dedupe', () => {
   it('drops a repeat of the same code and family, keeps a Fuliza drawdown that reuses the code', () => {
     const pay = tx({ amount_cents: 2446000, direction: 'out', external_ref: 'IB225E1D06' });
-    const again = tx({ amount_cents: 2446000, direction: 'out', external_ref: 'IB225E1D06', raw_hash: 'other-delivery' });
+    const again = tx({
+      amount_cents: 2446000,
+      direction: 'out',
+      external_ref: 'IB225E1D06',
+      raw_hash: 'other-delivery',
+    });
     const fuliza = tx({
       amount_cents: 496716,
       direction: 'in',
@@ -64,8 +78,21 @@ describe('dedupe', () => {
 
 describe('transfer matching', () => {
   it('pairs a bank debit with a bank-to-M-PESA credit within 10 minutes', () => {
-    const bankOut = tx({ amount_cents: 500000, direction: 'out', account_ref: 'bank:demo:***001', provider: 'bank', type: 'DEBIT', occurred_at: '2026-01-15T09:00:00+03:00' });
-    const mpesaIn = tx({ amount_cents: 500000, direction: 'in', type: 'BANK_TO_MPESA', counterparty: { ...bankOut.counterparty, kind: 'bank' }, occurred_at: '2026-01-15T09:04:00+03:00' });
+    const bankOut = tx({
+      amount_cents: 500000,
+      direction: 'out',
+      account_ref: 'bank:demo:***001',
+      provider: 'bank',
+      type: 'DEBIT',
+      occurred_at: '2026-01-15T09:00:00+03:00',
+    });
+    const mpesaIn = tx({
+      amount_cents: 500000,
+      direction: 'in',
+      type: 'BANK_TO_MPESA',
+      counterparty: { ...bankOut.counterparty, kind: 'bank' },
+      occurred_at: '2026-01-15T09:04:00+03:00',
+    });
     const pairs = matchTransfers([item(mpesaIn, true), item(bankOut)]);
     expect(pairs).toHaveLength(1);
     expect(bankOut.is_transfer).toBe(true);
@@ -78,7 +105,12 @@ describe('transfer matching', () => {
     expect(matchTransfers([item(out1, true), item(inSame, true)])).toHaveLength(0);
     const inOther = tx({ ...base, direction: 'in', account_ref: 'b', amount_cents: 1001 });
     expect(matchTransfers([item(out1, true), item(inOther, true)])).toHaveLength(0);
-    const late = tx({ ...base, direction: 'in', account_ref: 'b', occurred_at: '2026-01-15T09:11:00+03:00' });
+    const late = tx({
+      ...base,
+      direction: 'in',
+      account_ref: 'b',
+      occurred_at: '2026-01-15T09:11:00+03:00',
+    });
     expect(matchTransfers([item(out1, true), item(late, true)])).toHaveLength(0);
     const noHint = tx({ ...base, direction: 'in', account_ref: 'b' });
     expect(matchTransfers([item(out1), item(noHint)])).toHaveLength(0);
@@ -86,9 +118,24 @@ describe('transfer matching', () => {
     expect(matchTransfers([item(withdraw, true), item(noHint, true)])).toHaveLength(0);
   });
   it('each transaction joins at most one pair and the closest in time wins', () => {
-    const out1 = tx({ amount_cents: 1000, direction: 'out', account_ref: 'a', occurred_at: '2026-01-15T09:00:00+03:00' });
-    const far = tx({ amount_cents: 1000, direction: 'in', account_ref: 'b', occurred_at: '2026-01-15T09:08:00+03:00' });
-    const near = tx({ amount_cents: 1000, direction: 'in', account_ref: 'b', occurred_at: '2026-01-15T09:01:00+03:00' });
+    const out1 = tx({
+      amount_cents: 1000,
+      direction: 'out',
+      account_ref: 'a',
+      occurred_at: '2026-01-15T09:00:00+03:00',
+    });
+    const far = tx({
+      amount_cents: 1000,
+      direction: 'in',
+      account_ref: 'b',
+      occurred_at: '2026-01-15T09:08:00+03:00',
+    });
+    const near = tx({
+      amount_cents: 1000,
+      direction: 'in',
+      account_ref: 'b',
+      occurred_at: '2026-01-15T09:01:00+03:00',
+    });
     const pairs = matchTransfers([item(out1, true), item(far, true), item(near, true)]);
     expect(pairs).toHaveLength(1);
     expect(pairs[0]!.in_id).toBe(near.id);
@@ -98,25 +145,77 @@ describe('transfer matching', () => {
 
 describe('balance chain', () => {
   it('passes a consistent chain and flags a break', () => {
-    const a = tx({ amount_cents: 100000, direction: 'in', balance_after_cents: 100000, occurred_at: '2026-01-15T09:00:00+03:00' });
-    const b = tx({ amount_cents: 20000, direction: 'out', fee_cents: 700, balance_after_cents: 79300, occurred_at: '2026-01-15T09:10:00+03:00' });
-    const c = tx({ amount_cents: 5000, direction: 'out', balance_after_cents: 70000, occurred_at: '2026-01-15T09:20:00+03:00' });
+    const a = tx({
+      amount_cents: 100000,
+      direction: 'in',
+      balance_after_cents: 100000,
+      occurred_at: '2026-01-15T09:00:00+03:00',
+    });
+    const b = tx({
+      amount_cents: 20000,
+      direction: 'out',
+      fee_cents: 700,
+      balance_after_cents: 79300,
+      occurred_at: '2026-01-15T09:10:00+03:00',
+    });
+    const c = tx({
+      amount_cents: 5000,
+      direction: 'out',
+      balance_after_cents: 70000,
+      occurred_at: '2026-01-15T09:20:00+03:00',
+    });
     const r = checkBalanceChain([item(c), item(a), item(b)]);
     expect(r.checked).toBe(2);
     expect(r.breaks).toHaveLength(1);
-    expect(r.breaks[0]).toMatchObject({ transaction_id: c.id, expected_cents: 74300, actual_cents: 70000, previous_transaction_id: b.id });
+    expect(r.breaks[0]).toMatchObject({
+      transaction_id: c.id,
+      expected_cents: 74300,
+      actual_cents: 70000,
+      previous_transaction_id: b.id,
+    });
   });
   it('applies a Fuliza drawdown (same code, no balance, fee on the loan) before the payment it funded', () => {
-    const before = tx({ amount_cents: 100000, direction: 'in', balance_after_cents: 1949284, occurred_at: '2026-01-15T08:00:00+03:00' });
-    const pay = tx({ amount_cents: 2446000, direction: 'out', fee_cents: 6700, external_ref: 'IB225E1D06', balance_after_cents: 0, occurred_at: '2026-01-15T12:34:00+03:00' });
-    const fuliza = tx({ amount_cents: 503416, direction: 'in', fee_cents: 5034, external_ref: 'IB225E1D06', type: 'FULIZA_DRAWDOWN', occurred_at: '2026-01-15T12:34:05+03:00', received_at: '2026-01-15T12:34:05+03:00' });
+    const before = tx({
+      amount_cents: 100000,
+      direction: 'in',
+      balance_after_cents: 1949284,
+      occurred_at: '2026-01-15T08:00:00+03:00',
+    });
+    const pay = tx({
+      amount_cents: 2446000,
+      direction: 'out',
+      fee_cents: 6700,
+      external_ref: 'IB225E1D06',
+      balance_after_cents: 0,
+      occurred_at: '2026-01-15T12:34:00+03:00',
+    });
+    const fuliza = tx({
+      amount_cents: 503416,
+      direction: 'in',
+      fee_cents: 5034,
+      external_ref: 'IB225E1D06',
+      type: 'FULIZA_DRAWDOWN',
+      occurred_at: '2026-01-15T12:34:05+03:00',
+      received_at: '2026-01-15T12:34:05+03:00',
+    });
     const r = checkBalanceChain([item(before), item(pay), item(fuliza)]);
     expect(r.breaks).toEqual([]);
     expect(r.checked).toBe(1);
   });
   it('keeps accounts separate', () => {
-    const a = tx({ amount_cents: 100, direction: 'in', balance_after_cents: 100, account_ref: 'a' });
-    const b = tx({ amount_cents: 100, direction: 'in', balance_after_cents: 999, account_ref: 'b', occurred_at: '2026-01-15T09:01:00+03:00' });
+    const a = tx({
+      amount_cents: 100,
+      direction: 'in',
+      balance_after_cents: 100,
+      account_ref: 'a',
+    });
+    const b = tx({
+      amount_cents: 100,
+      direction: 'in',
+      balance_after_cents: 999,
+      account_ref: 'b',
+      occurred_at: '2026-01-15T09:01:00+03:00',
+    });
     expect(checkBalanceChain([item(a), item(b)]).breaks).toEqual([]);
   });
 });

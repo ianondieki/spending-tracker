@@ -93,7 +93,21 @@ const TOKEN_REGEX: Record<Token, string> = {
   mm: '(\\d{2})',
   a: '(AM|PM|A\\.M\\.|P\\.M\\.)',
 };
-const TOKENS: readonly Token[] = ['yyyy', 'MMM', 'MM', 'HH', 'hh', 'mm', 'dd', 'yy', 'd', 'M', 'H', 'h', 'a'];
+const TOKENS: readonly Token[] = [
+  'yyyy',
+  'MMM',
+  'MM',
+  'HH',
+  'hh',
+  'mm',
+  'dd',
+  'yy',
+  'd',
+  'M',
+  'H',
+  'h',
+  'a',
+];
 
 interface CompiledFormat {
   readonly regex: RegExp;
@@ -133,7 +147,8 @@ export function compileDatetimeFormat(format: string): CompiledFormat {
       i += token.length;
       continue;
     }
-    if (/[A-Za-z]/.test(c)) throw new Error(`unknown token "${c}" in datetime format "${format}"; quote literals`);
+    if (/[A-Za-z]/.test(c))
+      throw new Error(`unknown token "${c}" in datetime format "${format}"; quote literals`);
     out += escapeLiteral(c);
     i += 1;
   }

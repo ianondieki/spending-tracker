@@ -87,9 +87,46 @@ function tier(amount: number, table: readonly (readonly [number, number])[]): nu
   for (const [upTo, fee] of table) if (amount <= cents(upTo)) return cents(fee);
   return cents(table[table.length - 1]![1]);
 }
-const SEND = [[100, 0], [500, 7], [1000, 13], [1500, 23], [2500, 33], [3500, 53], [5000, 57], [7500, 78], [10000, 90], [15000, 100], [20000, 105], [250000, 108]] as const;
-const WITHDRAW = [[100, 11], [2500, 29], [3500, 52], [5000, 69], [7500, 87], [10000, 115], [15000, 167], [20000, 185], [250000, 300]] as const;
-const PAYBILL = [[100, 0], [500, 5], [1000, 10], [1500, 15], [2500, 20], [3500, 25], [5000, 34], [7500, 42], [10000, 48], [15000, 57], [20000, 62], [25000, 67], [250000, 72]] as const;
+const SEND = [
+  [100, 0],
+  [500, 7],
+  [1000, 13],
+  [1500, 23],
+  [2500, 33],
+  [3500, 53],
+  [5000, 57],
+  [7500, 78],
+  [10000, 90],
+  [15000, 100],
+  [20000, 105],
+  [250000, 108],
+] as const;
+const WITHDRAW = [
+  [100, 11],
+  [2500, 29],
+  [3500, 52],
+  [5000, 69],
+  [7500, 87],
+  [10000, 115],
+  [15000, 167],
+  [20000, 185],
+  [250000, 300],
+] as const;
+const PAYBILL = [
+  [100, 0],
+  [500, 5],
+  [1000, 10],
+  [1500, 15],
+  [2500, 20],
+  [3500, 25],
+  [5000, 34],
+  [7500, 42],
+  [10000, 48],
+  [15000, 57],
+  [20000, 62],
+  [25000, 67],
+  [250000, 72],
+] as const;
 
 // --- code generator ---------------------------------------------------------------------------------------------
 
@@ -97,7 +134,8 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 function code(seq: number, prefix = 'D'): string {
   const hex = sha256Hex(`hesabu-demo-code-${seq}`);
   let out = prefix;
-  for (let i = 0; out.length < 10; i += 2) out += ALPHABET[parseInt(hex.slice(i, i + 2), 16) % ALPHABET.length];
+  for (let i = 0; out.length < 10; i += 2)
+    out += ALPHABET[parseInt(hex.slice(i, i + 2), 16) % ALPHABET.length];
   return out;
 }
 
@@ -114,8 +152,24 @@ class Inbox {
   private bankSeq = 1233;
   private dailySent = new Map<string, number>();
 
-  private push(sender: string, provider: string, family: string, body: string, received_at: string): void {
-    this.lines.push({ sender, provider, body, received_at, family_guess: family, synthetic: true, redacted: false, source: 'synthetic-demo', sha256: sha256Hex(body) });
+  private push(
+    sender: string,
+    provider: string,
+    family: string,
+    body: string,
+    received_at: string,
+  ): void {
+    this.lines.push({
+      sender,
+      provider,
+      body,
+      received_at,
+      family_guess: family,
+      synthetic: true,
+      redacted: false,
+      source: 'synthetic-demo',
+      sha256: sha256Hex(body),
+    });
   }
   private nextCode(): string {
     this.seq += 1;
@@ -133,13 +187,21 @@ class Inbox {
   }
 
   /** Pays `amount + fee` from M-PESA, drawing Fuliza for the shortfall exactly as Safaricom does (same code, second SMS). */
-  private spend(amount: number, fee: number, txCode: string, s: Stamp, build: (balance: string) => [string, string]): void {
+  private spend(
+    amount: number,
+    fee: number,
+    txCode: string,
+    s: Stamp,
+    build: (balance: string) => [string, string],
+  ): void {
     const total = amount + fee;
     let fulizaDraw = 0;
     if (this.mpesa < total) {
       fulizaDraw = total - this.mpesa;
       if (fulizaDraw > this.fulizaLimit - this.fulizaOutstanding) {
-        throw new Error(`demo persona exceeded the Fuliza limit on ${iso(s)} (balance ${ksh(this.mpesa)}, needs ${ksh(total)}); adjust the schedule`);
+        throw new Error(
+          `demo persona exceeded the Fuliza limit on ${iso(s)} (balance ${ksh(this.mpesa)}, needs ${ksh(total)}); adjust the schedule`,
+        );
       }
       this.mpesa += fulizaDraw;
     }
@@ -288,32 +350,55 @@ class Inbox {
   duplicateLast(): void {
     const last = this.lines[this.lines.length - 1]!;
     const t = new Date(Date.parse(last.received_at) + 2000 + 3 * 3600 * 1000); // shift to wall-clock Nairobi
-    this.lines.push({ ...last, received_at: iso({ y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate(), hh: t.getUTCHours(), mm: t.getUTCMinutes(), ss: t.getUTCSeconds() }) });
+    this.lines.push({
+      ...last,
+      received_at: iso({
+        y: t.getUTCFullYear(),
+        m: t.getUTCMonth() + 1,
+        d: t.getUTCDate(),
+        hh: t.getUTCHours(),
+        mm: t.getUTCMinutes(),
+        ss: t.getUTCSeconds(),
+      }),
+    });
   }
 }
 
 export interface DemoSummary {
   readonly lines: number;
-  readonly final_balances_cents: { mpesa: number; bank: number; mshwari: number; fuliza_outstanding: number };
+  readonly final_balances_cents: {
+    mpesa: number;
+    bank: number;
+    mshwari: number;
+    fuliza_outstanding: number;
+  };
 }
 
 export function generateDemoInbox(): { lines: DemoLine[]; summary: DemoSummary } {
   const ib = new Inbox();
   const events: { day: number; hh: number; mm: number; run: (s: Stamp) => void }[] = [];
-  const on = (day: number, hh: number, mm: number, run: (s: Stamp) => void) => events.push({ day, hh, mm, run });
+  const on = (day: number, hh: number, mm: number, run: (s: Stamp) => void) =>
+    events.push({ day, hh, mm, run });
 
   for (let w = 0; w < DEMO_WEEKS; w += 1) {
     const mon = w * 7;
     on(mon, 18, 40, (s) => ib.buyGoods(s, cents(1850 + w * 110), 'NAIVAS LTD KILIMANI'));
     on(mon + 1, 7, 30, (s) => ib.airtime(s, cents(100)));
-    on(mon + 2, 7, 5, (s) => ib.withdraw(s, cents(w % 3 === 0 ? 2000 : 1500), '138642', 'KASARANI AGENCIES LTD'));
+    on(mon + 2, 7, 5, (s) =>
+      ib.withdraw(s, cents(w % 3 === 0 ? 2000 : 1500), '138642', 'KASARANI AGENCIES LTD'),
+    );
     on(mon + 3, 21, 15, (s) => ib.buyGoods(s, cents(650 + w * 35), 'UBER KENYA'));
     on(mon + 4, 7, 32, (s) => ib.airtime(s, cents(100)));
     on(mon + 4, 19, 5, (s) => ib.buyGoods(s, cents(1200 + w * 40), 'NAIVAS LTD KILIMANI'));
     on(mon + 5, 11, 20, (s) => ib.buyGoods(s, cents(2400 + w * 60), 'QUICKMART LTD'));
   }
   // KPLC tokens every second week.
-  for (const [day, amount] of [[dayOf(2026, 8, 20), 1500], [dayOf(2026, 9, 3), 1500], [dayOf(2026, 9, 17), 1500], [dayOf(2026, 10, 1), 2000]] as const) {
+  for (const [day, amount] of [
+    [dayOf(2026, 8, 20), 1500],
+    [dayOf(2026, 9, 3), 1500],
+    [dayOf(2026, 9, 17), 1500],
+    [dayOf(2026, 10, 1), 2000],
+  ] as const) {
     on(day, 20, 10, (s) => ib.payBill(s, cents(amount), 'KPLC PREPAID', '37194821'));
   }
   // Month end: salary, most of it to M-PESA, then mum, M-Shwari and rent.
@@ -336,7 +421,9 @@ export function generateDemoInbox(): { lines: DemoLine[]; summary: DemoSummary }
   });
   on(dayOf(2026, 9, 24), 6, 2, (s) => ib.payBill(s, cents(1100), 'NETFLIX', 'WANJIRU'));
   // A friend pays back lunch money; savings moved back to the bank.
-  on(dayOf(2026, 9, 12), 13, 45, (s) => ib.receiveFromPerson(s, cents(1500), 'PETER OTIENO', '0711223344'));
+  on(dayOf(2026, 9, 12), 13, 45, (s) =>
+    ib.receiveFromPerson(s, cents(1500), 'PETER OTIENO', '0711223344'),
+  );
   on(dayOf(2026, 9, 30), 9, 30, (s) => ib.mpesaToBank(s, cents(10000)));
 
   events.sort((a, b) => a.day - b.day || a.hh - b.hh || a.mm - b.mm);
@@ -346,7 +433,12 @@ export function generateDemoInbox(): { lines: DemoLine[]; summary: DemoSummary }
     lines: ib.lines,
     summary: {
       lines: ib.lines.length,
-      final_balances_cents: { mpesa: ib.mpesa, bank: ib.bank, mshwari: ib.mshwari, fuliza_outstanding: ib.fulizaOutstanding },
+      final_balances_cents: {
+        mpesa: ib.mpesa,
+        bank: ib.bank,
+        mshwari: ib.mshwari,
+        fuliza_outstanding: ib.fulizaOutstanding,
+      },
     },
   };
 }

@@ -4,11 +4,11 @@ import { PortableRegexError, validatePortableRegex } from './regex.js';
 
 describe('portable regex subset', () => {
   it('accepts the constructs PROVIDER-PACKS.md allows and returns group names in order', () => {
-    expect(validatePortableRegex(String.raw`^(?<code>[A-Z0-9]{10}) Confirmed\.\s*(?:Ksh)?(?<amount>[\d,]+\.\d{2})(?: sent| paid)? to (?<name>.+?)$`)).toEqual([
-      'code',
-      'amount',
-      'name',
-    ]);
+    expect(
+      validatePortableRegex(
+        String.raw`^(?<code>[A-Z0-9]{10}) Confirmed\.\s*(?:Ksh)?(?<amount>[\d,]+\.\d{2})(?: sent| paid)? to (?<name>.+?)$`,
+      ),
+    ).toEqual(['code', 'amount', 'name']);
     expect(validatePortableRegex(String.raw`a{2,}?b*?c+?[^.]\(\)\{\}\/\-`)).toEqual([]);
   });
 

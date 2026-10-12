@@ -42,7 +42,9 @@ export function validatePortableRegex(pattern: string): string[] {
       if (next === undefined) fail('trailing backslash');
       if (/[A-Za-z0-9]/.test(next!)) {
         if (!ALLOWED_LETTER_ESCAPES.has(next!)) {
-          fail(`escape \\${next} is not portable (allowed: \\d \\D \\s \\S \\w \\W \\t \\n \\r and escaped punctuation)`);
+          fail(
+            `escape \\${next} is not portable (allowed: \\d \\D \\s \\S \\w \\W \\t \\n \\r and escaped punctuation)`,
+          );
         }
       }
       i += 2;
@@ -72,7 +74,8 @@ export function validatePortableRegex(pattern: string): string[] {
           continue;
         }
         if (tail.startsWith('<=') || tail.startsWith('<!')) fail('lookbehind is not portable');
-        if (tail.startsWith('=') || tail.startsWith('!')) fail('lookahead is outside the portable subset');
+        if (tail.startsWith('=') || tail.startsWith('!'))
+          fail('lookahead is outside the portable subset');
         if (tail.startsWith('<')) {
           const close = tail.indexOf('>');
           if (close < 0) fail('unterminated group name');

@@ -6,7 +6,8 @@
 
 export type Provider = 'mpesa' | 'airtel_money' | 'tkash' | 'bank' | 'card' | 'wallet';
 export type Direction = 'in' | 'out' | 'none';
-export type CounterpartyKind = 'person' | 'merchant' | 'paybill' | 'till' | 'agent' | 'bank' | 'self' | 'unknown';
+export type CounterpartyKind =
+  'person' | 'merchant' | 'paybill' | 'till' | 'agent' | 'bank' | 'self' | 'unknown';
 
 export type FieldTarget =
   | 'external_ref'
@@ -142,7 +143,13 @@ export type ParseOutcome =
   | { kind: 'not_ours' }
   | { kind: 'unknown'; sender: string; raw_hash: string }
   | { kind: 'ignored'; family_id: string; fields: ExtractedFields; raw_hash: string }
-  | { kind: 'parsed'; family_id: string; fields: ExtractedFields; transaction: Transaction; is_transfer_hint: boolean };
+  | {
+      kind: 'parsed';
+      family_id: string;
+      fields: ExtractedFields;
+      transaction: Transaction;
+      is_transfer_hint: boolean;
+    };
 
 export interface ParsedTransaction {
   readonly transaction: Transaction;
