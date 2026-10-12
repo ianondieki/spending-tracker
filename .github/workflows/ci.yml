@@ -62,6 +62,19 @@ jobs:
             echo "android/gradlew not found; skipping the Android build"
           fi
       - if: steps.detect.outputs.present == 'true'
+        uses: pnpm/action-setup@v4
+      - if: steps.detect.outputs.present == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - if: steps.detect.outputs.present == 'true'
+        name: Build the taxonomy package the app bundles as assets
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @hesabu/taxonomy build
+          ls packages/taxonomy/dist/*.json
+      - if: steps.detect.outputs.present == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
