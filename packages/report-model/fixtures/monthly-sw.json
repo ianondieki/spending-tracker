@@ -1,0 +1,3580 @@
+{
+  "facts": {
+    "version": "1",
+    "generated_at": "2026-10-01T07:30:00+03:00",
+    "user": {
+      "locale": "sw",
+      "week_start": "monday",
+      "display_name": "Ian"
+    },
+    "period": {
+      "kind": "month",
+      "start": "2026-09-01T00:00:00+03:00",
+      "end": "2026-09-30T23:59:59+03:00",
+      "label_en": "September 2026",
+      "label_sw": "Septemba 2026",
+      "days": 30,
+      "days_elapsed": 30,
+      "timezone": "Africa/Nairobi"
+    },
+    "previous_period": {
+      "kind": "month",
+      "start": "2026-08-01T00:00:00+03:00",
+      "end": "2026-08-31T23:59:59+03:00",
+      "label_en": "August 2026",
+      "label_sw": "Agosti 2026",
+      "days": 31,
+      "days_elapsed": 31,
+      "timezone": "Africa/Nairobi"
+    },
+    "totals": {
+      "in": {
+        "cents": 10435000,
+        "display": "KSh 104,350"
+      },
+      "out": {
+        "cents": 9519000,
+        "display": "KSh 95,190"
+      },
+      "fees": {
+        "cents": 148600,
+        "display": "KSh 1,486"
+      },
+      "net": {
+        "cents": 767400,
+        "display": "KSh 7,674"
+      },
+      "transfers": {
+        "cents": 6700000,
+        "display": "KSh 67,000"
+      },
+      "cash_withdrawn": {
+        "cents": 700000,
+        "display": "KSh 7,000"
+      },
+      "savings_out": {
+        "cents": 2000000,
+        "display": "KSh 20,000"
+      },
+      "loan_repayments": {
+        "cents": 540000,
+        "display": "KSh 5,400"
+      },
+      "transaction_count": {
+        "value": 135,
+        "display": "135"
+      },
+      "fee_ratio": {
+        "value": 2,
+        "display": "2%"
+      },
+      "savings_rate": {
+        "value": 19,
+        "display": "19%"
+      }
+    },
+    "previous_totals": {
+      "in": {
+        "cents": 10120000,
+        "display": "KSh 101,200"
+      },
+      "out": {
+        "cents": 8894000,
+        "display": "KSh 88,940"
+      },
+      "fees": {
+        "cents": 112000,
+        "display": "KSh 1,120"
+      },
+      "net": {
+        "cents": 1114000,
+        "display": "KSh 11,140"
+      },
+      "transfers": {
+        "cents": 6200000,
+        "display": "KSh 62,000"
+      },
+      "cash_withdrawn": {
+        "cents": 800000,
+        "display": "KSh 8,000"
+      },
+      "savings_out": {
+        "cents": 1700000,
+        "display": "KSh 17,000"
+      },
+      "loan_repayments": {
+        "cents": 220000,
+        "display": "KSh 2,200"
+      },
+      "transaction_count": {
+        "value": 149,
+        "display": "149"
+      },
+      "fee_ratio": {
+        "value": 1,
+        "display": "1%"
+      },
+      "savings_rate": {
+        "value": 17,
+        "display": "17%"
+      }
+    },
+    "deltas": {
+      "out": {
+        "cents": 625000,
+        "display": "KSh +6,250",
+        "pct": {
+          "value": 7,
+          "display": "7%"
+        },
+        "direction": "up"
+      },
+      "in": {
+        "cents": 315000,
+        "display": "KSh +3,150",
+        "pct": {
+          "value": 3,
+          "display": "3%"
+        },
+        "direction": "up"
+      },
+      "fees": {
+        "cents": 36600,
+        "display": "KSh +366",
+        "pct": {
+          "value": 33,
+          "display": "33%"
+        },
+        "direction": "up"
+      },
+      "net": {
+        "cents": -346600,
+        "display": "KSh -3,466",
+        "pct": {
+          "value": -31,
+          "display": "-31%"
+        },
+        "direction": "down"
+      }
+    },
+    "categories": [
+      {
+        "category_id": "rent",
+        "name_en": "Rent and housing",
+        "name_sw": "Kodi na nyumba",
+        "out": {
+          "cents": 2200000,
+          "display": "KSh 22,000"
+        },
+        "share": {
+          "value": 23,
+          "display": "23%"
+        },
+        "delta": {
+          "cents": 0,
+          "display": "KSh 0",
+          "pct": {
+            "value": 0,
+            "display": "0%"
+          },
+          "direction": "flat"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "top_merchant": "Mwangi Properties",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "rent",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "groceries",
+        "name_en": "Groceries",
+        "name_sw": "Mboga na chakula",
+        "out": {
+          "cents": 1824000,
+          "display": "KSh 18,240"
+        },
+        "share": {
+          "value": 19,
+          "display": "19%"
+        },
+        "delta": {
+          "cents": 134000,
+          "display": "KSh +1,340",
+          "pct": {
+            "value": 8,
+            "display": "8%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 21,
+          "display": "21"
+        },
+        "top_merchant": "Naivas Westlands",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "groceries",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "family",
+        "name_en": "Family and friends",
+        "name_sw": "Familia na marafiki",
+        "out": {
+          "cents": 1200000,
+          "display": "KSh 12,000"
+        },
+        "share": {
+          "value": 13,
+          "display": "13%"
+        },
+        "delta": {
+          "cents": 250000,
+          "display": "KSh +2,500",
+          "pct": {
+            "value": 26,
+            "display": "26%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        },
+        "top_merchant": "Mum",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "family",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "transport",
+        "name_en": "Transport",
+        "name_sw": "Usafiri",
+        "out": {
+          "cents": 1146000,
+          "display": "KSh 11,460"
+        },
+        "share": {
+          "value": 12,
+          "display": "12%"
+        },
+        "delta": {
+          "cents": 126000,
+          "display": "KSh +1,260",
+          "pct": {
+            "value": 12,
+            "display": "12%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 34,
+          "display": "34"
+        },
+        "top_merchant": "Total Energies Parklands",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "transport",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "utilities",
+        "name_en": "Utilities",
+        "name_sw": "Umeme na maji",
+        "out": {
+          "cents": 819900,
+          "display": "KSh 8,199"
+        },
+        "share": {
+          "value": 9,
+          "display": "9%"
+        },
+        "delta": {
+          "cents": 109900,
+          "display": "KSh +1,099",
+          "pct": {
+            "value": 15,
+            "display": "15%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        },
+        "top_merchant": "KPLC prepaid",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "utilities",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "eating_out",
+        "name_en": "Eating out",
+        "name_sw": "Kula nje",
+        "out": {
+          "cents": 731000,
+          "display": "KSh 7,310"
+        },
+        "share": {
+          "value": 8,
+          "display": "8%"
+        },
+        "delta": {
+          "cents": 47000,
+          "display": "KSh +470",
+          "pct": {
+            "value": 7,
+            "display": "7%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 13,
+          "display": "13"
+        },
+        "top_merchant": "Java House Sarit",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "eating_out",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "other",
+        "name_en": "Other",
+        "name_sw": "Mengineyo",
+        "out": {
+          "cents": 549100,
+          "display": "KSh 5,491"
+        },
+        "share": {
+          "value": 6,
+          "display": "6%"
+        },
+        "delta": {
+          "cents": -270900,
+          "display": "KSh -2,709",
+          "pct": {
+            "value": -33,
+            "display": "-33%"
+          },
+          "direction": "down"
+        },
+        "count": {
+          "value": 9,
+          "display": "9"
+        },
+        "top_merchant": null,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "other",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "health",
+        "name_en": "Health",
+        "name_sw": "Afya",
+        "out": {
+          "cents": 420000,
+          "display": "KSh 4,200"
+        },
+        "share": {
+          "value": 4,
+          "display": "4%"
+        },
+        "delta": {
+          "cents": 240000,
+          "display": "KSh +2,400",
+          "pct": {
+            "value": 133,
+            "display": "133%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        },
+        "top_merchant": "Goodlife Pharmacy",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "health",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "airtime",
+        "name_en": "Airtime and data",
+        "name_sw": "Airtime na data",
+        "out": {
+          "cents": 365000,
+          "display": "KSh 3,650"
+        },
+        "share": {
+          "value": 4,
+          "display": "4%"
+        },
+        "delta": {
+          "cents": -25000,
+          "display": "KSh -250",
+          "pct": {
+            "value": -6,
+            "display": "-6%"
+          },
+          "direction": "down"
+        },
+        "count": {
+          "value": 19,
+          "display": "19"
+        },
+        "top_merchant": "Safaricom",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "airtime",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "category_id": "entertainment",
+        "name_en": "Entertainment",
+        "name_sw": "Burudani",
+        "out": {
+          "cents": 264000,
+          "display": "KSh 2,640"
+        },
+        "share": {
+          "value": 3,
+          "display": "3%"
+        },
+        "delta": {
+          "cents": 14000,
+          "display": "KSh +140",
+          "pct": {
+            "value": 6,
+            "display": "6%"
+          },
+          "direction": "up"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        },
+        "top_merchant": "Netflix",
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "entertainment",
+            "direction": "out"
+          }
+        }
+      }
+    ],
+    "merchants": [
+      {
+        "name": "Mwangi Properties",
+        "category_id": "rent",
+        "out": {
+          "cents": 2200000,
+          "display": "KSh 22,000"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Mwangi Properties",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Naivas Westlands",
+        "category_id": "groceries",
+        "out": {
+          "cents": 986000,
+          "display": "KSh 9,860"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Naivas Westlands",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Total Energies Parklands",
+        "category_id": "transport",
+        "out": {
+          "cents": 540000,
+          "display": "KSh 5,400"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Total Energies Parklands",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Matatu and boda (cash)",
+        "category_id": "transport",
+        "out": {
+          "cents": 516000,
+          "display": "KSh 5,160"
+        },
+        "count": {
+          "value": 29,
+          "display": "29"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Matatu and boda (cash)",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Mama Mboga Kangemi",
+        "category_id": "groceries",
+        "out": {
+          "cents": 418000,
+          "display": "KSh 4,180"
+        },
+        "count": {
+          "value": 10,
+          "display": "10"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Mama Mboga Kangemi",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "KPLC prepaid",
+        "category_id": "utilities",
+        "out": {
+          "cents": 400000,
+          "display": "KSh 4,000"
+        },
+        "count": {
+          "value": 2,
+          "display": "2"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "KPLC prepaid",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Safaricom",
+        "category_id": "airtime",
+        "out": {
+          "cents": 365000,
+          "display": "KSh 3,650"
+        },
+        "count": {
+          "value": 19,
+          "display": "19"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Safaricom",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Carrefour Two Rivers",
+        "category_id": "groceries",
+        "out": {
+          "cents": 310000,
+          "display": "KSh 3,100"
+        },
+        "count": {
+          "value": 2,
+          "display": "2"
+        },
+        "is_new": true,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Carrefour Two Rivers",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Safaricom Home Fibre",
+        "category_id": "utilities",
+        "out": {
+          "cents": 299900,
+          "display": "KSh 2,999"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Safaricom Home Fibre",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Java House Sarit",
+        "category_id": "eating_out",
+        "out": {
+          "cents": 298000,
+          "display": "KSh 2,980"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Java House Sarit",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Goodlife Pharmacy",
+        "category_id": "health",
+        "out": {
+          "cents": 245000,
+          "display": "KSh 2,450"
+        },
+        "count": {
+          "value": 2,
+          "display": "2"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Goodlife Pharmacy",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Aga Khan University Hospital",
+        "category_id": "health",
+        "out": {
+          "cents": 175000,
+          "display": "KSh 1,750"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "is_new": true,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Aga Khan University Hospital",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Artcaffe Westgate",
+        "category_id": "eating_out",
+        "out": {
+          "cents": 164000,
+          "display": "KSh 1,640"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Artcaffe Westgate",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Nairobi Water",
+        "category_id": "utilities",
+        "out": {
+          "cents": 120000,
+          "display": "KSh 1,200"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Nairobi Water",
+            "direction": "out"
+          }
+        }
+      },
+      {
+        "name": "Netflix",
+        "category_id": "entertainment",
+        "out": {
+          "cents": 110000,
+          "display": "KSh 1,100"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "is_new": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Netflix",
+            "direction": "out"
+          }
+        }
+      }
+    ],
+    "people": [
+      {
+        "name": "Mum",
+        "ref_masked": "0722***118",
+        "sent": {
+          "cents": 900000,
+          "display": "KSh 9,000"
+        },
+        "received": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "counterparty_ref": "0722***118"
+          }
+        }
+      },
+      {
+        "name": "Brian Otieno",
+        "ref_masked": "0790***771",
+        "sent": {
+          "cents": 300000,
+          "display": "KSh 3,000"
+        },
+        "received": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "counterparty_ref": "0790***771"
+          }
+        }
+      },
+      {
+        "name": "Jane Wanjiru",
+        "ref_masked": "0711***402",
+        "sent": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "received": {
+          "cents": 350000,
+          "display": "KSh 3,500"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "counterparty_ref": "0711***402"
+          }
+        }
+      }
+    ],
+    "accounts": [
+      {
+        "account_ref": "mpesa:0712***456",
+        "label": "M-Pesa",
+        "provider": "Safaricom",
+        "balance": {
+          "cents": 789000,
+          "display": "KSh 7,890"
+        },
+        "balance_at": "2026-09-30T21:48:00+03:00",
+        "in": {
+          "cents": 5935000,
+          "display": "KSh 59,350"
+        },
+        "out": {
+          "cents": 8323000,
+          "display": "KSh 83,230"
+        },
+        "fees": {
+          "cents": 128600,
+          "display": "KSh 1,286"
+        },
+        "balance_series": [
+          {
+            "at": "2026-09-01T23:59:59+03:00",
+            "cents": 2860700
+          },
+          {
+            "at": "2026-09-02T23:59:59+03:00",
+            "cents": 2624700
+          },
+          {
+            "at": "2026-09-03T23:59:59+03:00",
+            "cents": 2437700
+          },
+          {
+            "at": "2026-09-04T23:59:59+03:00",
+            "cents": 2628400
+          },
+          {
+            "at": "2026-09-05T23:59:59+03:00",
+            "cents": 2608400
+          },
+          {
+            "at": "2026-09-06T23:59:59+03:00",
+            "cents": 2250400
+          },
+          {
+            "at": "2026-09-07T23:59:59+03:00",
+            "cents": 2019100
+          },
+          {
+            "at": "2026-09-08T23:59:59+03:00",
+            "cents": 1851100
+          },
+          {
+            "at": "2026-09-09T23:59:59+03:00",
+            "cents": 1591100
+          },
+          {
+            "at": "2026-09-10T23:59:59+03:00",
+            "cents": 1551800
+          },
+          {
+            "at": "2026-09-11T23:59:59+03:00",
+            "cents": 1366800
+          },
+          {
+            "at": "2026-09-12T23:59:59+03:00",
+            "cents": 1383800
+          },
+          {
+            "at": "2026-09-13T23:59:59+03:00",
+            "cents": 1516500
+          },
+          {
+            "at": "2026-09-14T23:59:59+03:00",
+            "cents": 1333500
+          },
+          {
+            "at": "2026-09-15T23:59:59+03:00",
+            "cents": 1438500
+          },
+          {
+            "at": "2026-09-16T23:59:59+03:00",
+            "cents": 1301200
+          },
+          {
+            "at": "2026-09-17T23:59:59+03:00",
+            "cents": 1149200
+          },
+          {
+            "at": "2026-09-18T23:59:59+03:00",
+            "cents": 935200
+          },
+          {
+            "at": "2026-09-19T23:59:59+03:00",
+            "cents": 760900
+          },
+          {
+            "at": "2026-09-20T23:59:59+03:00",
+            "cents": 482900
+          },
+          {
+            "at": "2026-09-21T23:59:59+03:00",
+            "cents": 3900
+          },
+          {
+            "at": "2026-09-22T23:59:59+03:00",
+            "cents": 627600
+          },
+          {
+            "at": "2026-09-23T23:59:59+03:00",
+            "cents": 461600
+          },
+          {
+            "at": "2026-09-24T23:59:59+03:00",
+            "cents": 129600
+          },
+          {
+            "at": "2026-09-25T23:59:59+03:00",
+            "cents": -86700
+          },
+          {
+            "at": "2026-09-26T23:59:59+03:00",
+            "cents": -142700
+          },
+          {
+            "at": "2026-09-27T23:59:59+03:00",
+            "cents": -384700
+          },
+          {
+            "at": "2026-09-28T23:59:59+03:00",
+            "cents": 1331000
+          },
+          {
+            "at": "2026-09-29T23:59:59+03:00",
+            "cents": 1112000
+          },
+          {
+            "at": "2026-09-30T23:59:59+03:00",
+            "cents": 789000
+          }
+        ]
+      },
+      {
+        "account_ref": "kcb:***890",
+        "label": "KCB current",
+        "provider": "KCB",
+        "balance": {
+          "cents": 4844000,
+          "display": "KSh 48,440"
+        },
+        "balance_at": "2026-09-28T09:12:00+03:00",
+        "in": {
+          "cents": 8500000,
+          "display": "KSh 85,000"
+        },
+        "out": {
+          "cents": 7896000,
+          "display": "KSh 78,960"
+        },
+        "fees": {
+          "cents": 20000,
+          "display": "KSh 200"
+        },
+        "balance_series": [
+          {
+            "at": "2026-09-01T23:59:59+03:00",
+            "cents": 2260000
+          },
+          {
+            "at": "2026-09-02T23:59:59+03:00",
+            "cents": 1860000
+          },
+          {
+            "at": "2026-09-03T23:59:59+03:00",
+            "cents": 1860000
+          },
+          {
+            "at": "2026-09-04T23:59:59+03:00",
+            "cents": 1860000
+          },
+          {
+            "at": "2026-09-05T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-06T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-07T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-08T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-09T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-10T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-11T23:59:59+03:00",
+            "cents": 1650000
+          },
+          {
+            "at": "2026-09-12T23:59:59+03:00",
+            "cents": 1460000
+          },
+          {
+            "at": "2026-09-13T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-14T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-15T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-16T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-17T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-18T23:59:59+03:00",
+            "cents": 1150000
+          },
+          {
+            "at": "2026-09-19T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-20T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-21T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-22T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-23T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-24T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-25T23:59:59+03:00",
+            "cents": 970000
+          },
+          {
+            "at": "2026-09-26T23:59:59+03:00",
+            "cents": 776000
+          },
+          {
+            "at": "2026-09-27T23:59:59+03:00",
+            "cents": 776000
+          },
+          {
+            "at": "2026-09-28T23:59:59+03:00",
+            "cents": 4844000
+          },
+          {
+            "at": "2026-09-29T23:59:59+03:00",
+            "cents": 4844000
+          },
+          {
+            "at": "2026-09-30T23:59:59+03:00",
+            "cents": 4844000
+          }
+        ]
+      },
+      {
+        "account_ref": "mshwari:0712***456",
+        "label": "M-Shwari",
+        "provider": "Safaricom",
+        "balance": {
+          "cents": 4300000,
+          "display": "KSh 43,000"
+        },
+        "balance_at": "2026-09-28T09:30:00+03:00",
+        "in": {
+          "cents": 2000000,
+          "display": "KSh 20,000"
+        },
+        "out": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "fees": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "balance_series": [
+          {
+            "at": "2026-09-01T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-02T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-03T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-04T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-05T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-06T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-07T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-08T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-09T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-10T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-11T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-12T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-13T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-14T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-15T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-16T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-17T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-18T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-19T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-20T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-21T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-22T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-23T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-24T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-25T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-26T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-27T23:59:59+03:00",
+            "cents": 2300000
+          },
+          {
+            "at": "2026-09-28T23:59:59+03:00",
+            "cents": 4300000
+          },
+          {
+            "at": "2026-09-29T23:59:59+03:00",
+            "cents": 4300000
+          },
+          {
+            "at": "2026-09-30T23:59:59+03:00",
+            "cents": 4300000
+          }
+        ]
+      }
+    ],
+    "daily": [
+      {
+        "date": "2026-09-01",
+        "weekday_en": "Tuesday",
+        "weekday_sw": "Jumanne",
+        "out": {
+          "cents": 2435000,
+          "display": "KSh 24,350"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 6,
+          "display": "6"
+        }
+      },
+      {
+        "date": "2026-09-02",
+        "weekday_en": "Wednesday",
+        "weekday_sw": "Jumatano",
+        "out": {
+          "cents": 232000,
+          "display": "KSh 2,320"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "weekday_en": "Thursday",
+        "weekday_sw": "Alhamisi",
+        "out": {
+          "cents": 183000,
+          "display": "KSh 1,830"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-04",
+        "weekday_en": "Friday",
+        "weekday_sw": "Ijumaa",
+        "out": {
+          "cents": 285000,
+          "display": "KSh 2,850"
+        },
+        "in": {
+          "cents": 480000,
+          "display": "KSh 4,800"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        }
+      },
+      {
+        "date": "2026-09-05",
+        "weekday_en": "Saturday",
+        "weekday_sw": "Jumamosi",
+        "out": {
+          "cents": 226000,
+          "display": "KSh 2,260"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "weekday_en": "Sunday",
+        "weekday_sw": "Jumapili",
+        "out": {
+          "cents": 354000,
+          "display": "KSh 3,540"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 6,
+          "display": "6"
+        }
+      },
+      {
+        "date": "2026-09-07",
+        "weekday_en": "Monday",
+        "weekday_sw": "Jumatatu",
+        "out": {
+          "cents": 227000,
+          "display": "KSh 2,270"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-08",
+        "weekday_en": "Tuesday",
+        "weekday_sw": "Jumanne",
+        "out": {
+          "cents": 164000,
+          "display": "KSh 1,640"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-09",
+        "weekday_en": "Wednesday",
+        "weekday_sw": "Jumatano",
+        "out": {
+          "cents": 256000,
+          "display": "KSh 2,560"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        }
+      },
+      {
+        "date": "2026-09-10",
+        "weekday_en": "Thursday",
+        "weekday_sw": "Alhamisi",
+        "out": {
+          "cents": 160000,
+          "display": "KSh 1,600"
+        },
+        "in": {
+          "cents": 125000,
+          "display": "KSh 1,250"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-11",
+        "weekday_en": "Friday",
+        "weekday_sw": "Ijumaa",
+        "out": {
+          "cents": 181000,
+          "display": "KSh 1,810"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-12",
+        "weekday_en": "Saturday",
+        "weekday_sw": "Jumamosi",
+        "out": {
+          "cents": 169000,
+          "display": "KSh 1,690"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-13",
+        "weekday_en": "Sunday",
+        "weekday_sw": "Jumapili",
+        "out": {
+          "cents": 173000,
+          "display": "KSh 1,730"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-14",
+        "weekday_en": "Monday",
+        "weekday_sw": "Jumatatu",
+        "out": {
+          "cents": 179000,
+          "display": "KSh 1,790"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-15",
+        "weekday_en": "Tuesday",
+        "weekday_sw": "Jumanne",
+        "out": {
+          "cents": 241000,
+          "display": "KSh 2,410"
+        },
+        "in": {
+          "cents": 350000,
+          "display": "KSh 3,500"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        }
+      },
+      {
+        "date": "2026-09-16",
+        "weekday_en": "Wednesday",
+        "weekday_sw": "Jumatano",
+        "out": {
+          "cents": 133000,
+          "display": "KSh 1,330"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-17",
+        "weekday_en": "Thursday",
+        "weekday_sw": "Alhamisi",
+        "out": {
+          "cents": 148000,
+          "display": "KSh 1,480"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-18",
+        "weekday_en": "Friday",
+        "weekday_sw": "Ijumaa",
+        "out": {
+          "cents": 210000,
+          "display": "KSh 2,100"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-19",
+        "weekday_en": "Saturday",
+        "weekday_sw": "Jumamosi",
+        "out": {
+          "cents": 350000,
+          "display": "KSh 3,500"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 6,
+          "display": "6"
+        }
+      },
+      {
+        "date": "2026-09-20",
+        "weekday_en": "Sunday",
+        "weekday_sw": "Jumapili",
+        "out": {
+          "cents": 274000,
+          "display": "KSh 2,740"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        }
+      },
+      {
+        "date": "2026-09-21",
+        "weekday_en": "Monday",
+        "weekday_sw": "Jumatatu",
+        "out": {
+          "cents": 175000,
+          "display": "KSh 1,750"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-22",
+        "weekday_en": "Tuesday",
+        "weekday_sw": "Jumanne",
+        "out": {
+          "cents": 352000,
+          "display": "KSh 3,520"
+        },
+        "in": {
+          "cents": 980000,
+          "display": "KSh 9,800"
+        },
+        "count": {
+          "value": 7,
+          "display": "7"
+        }
+      },
+      {
+        "date": "2026-09-23",
+        "weekday_en": "Wednesday",
+        "weekday_sw": "Jumatano",
+        "out": {
+          "cents": 162000,
+          "display": "KSh 1,620"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 3,
+          "display": "3"
+        }
+      },
+      {
+        "date": "2026-09-24",
+        "weekday_en": "Thursday",
+        "weekday_sw": "Alhamisi",
+        "out": {
+          "cents": 328000,
+          "display": "KSh 3,280"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 6,
+          "display": "6"
+        }
+      },
+      {
+        "date": "2026-09-25",
+        "weekday_en": "Friday",
+        "weekday_sw": "Ijumaa",
+        "out": {
+          "cents": 212000,
+          "display": "KSh 2,120"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-26",
+        "weekday_en": "Saturday",
+        "weekday_sw": "Jumamosi",
+        "out": {
+          "cents": 246000,
+          "display": "KSh 2,460"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 5,
+          "display": "5"
+        }
+      },
+      {
+        "date": "2026-09-27",
+        "weekday_en": "Sunday",
+        "weekday_sw": "Jumapili",
+        "out": {
+          "cents": 238000,
+          "display": "KSh 2,380"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-28",
+        "weekday_en": "Monday",
+        "weekday_sw": "Jumatatu",
+        "out": {
+          "cents": 692000,
+          "display": "KSh 6,920"
+        },
+        "in": {
+          "cents": 8500000,
+          "display": "KSh 85,000"
+        },
+        "count": {
+          "value": 9,
+          "display": "9"
+        }
+      },
+      {
+        "date": "2026-09-29",
+        "weekday_en": "Tuesday",
+        "weekday_sw": "Jumanne",
+        "out": {
+          "cents": 215000,
+          "display": "KSh 2,150"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 4,
+          "display": "4"
+        }
+      },
+      {
+        "date": "2026-09-30",
+        "weekday_en": "Wednesday",
+        "weekday_sw": "Jumatano",
+        "out": {
+          "cents": 319000,
+          "display": "KSh 3,190"
+        },
+        "in": {
+          "cents": 0,
+          "display": "KSh 0"
+        },
+        "count": {
+          "value": 6,
+          "display": "6"
+        }
+      }
+    ],
+    "average_daily_out": {
+      "cents": 317300,
+      "display": "KSh 3,173"
+    },
+    "spendiest_day": {
+      "date": "2026-09-01",
+      "weekday_en": "Tuesday",
+      "weekday_sw": "Jumanne",
+      "out": {
+        "cents": 2435000,
+        "display": "KSh 24,350"
+      },
+      "in": {
+        "cents": 0,
+        "display": "KSh 0"
+      },
+      "count": {
+        "value": 6,
+        "display": "6"
+      }
+    },
+    "weekday_weekend": {
+      "weekday_out": {
+        "cents": 7489000,
+        "display": "KSh 74,890"
+      },
+      "weekend_out": {
+        "cents": 2030000,
+        "display": "KSh 20,300"
+      },
+      "weekend_share": {
+        "value": 21,
+        "display": "21%"
+      }
+    },
+    "time_of_day": [
+      {
+        "bucket": "morning",
+        "out": {
+          "cents": 2134000,
+          "display": "KSh 21,340"
+        },
+        "count": {
+          "value": 28,
+          "display": "28"
+        }
+      },
+      {
+        "bucket": "afternoon",
+        "out": {
+          "cents": 3891000,
+          "display": "KSh 38,910"
+        },
+        "count": {
+          "value": 41,
+          "display": "41"
+        }
+      },
+      {
+        "bucket": "evening",
+        "out": {
+          "cents": 2948000,
+          "display": "KSh 29,480"
+        },
+        "count": {
+          "value": 36,
+          "display": "36"
+        }
+      },
+      {
+        "bucket": "night",
+        "out": {
+          "cents": 546000,
+          "display": "KSh 5,460"
+        },
+        "count": {
+          "value": 7,
+          "display": "7"
+        }
+      }
+    ],
+    "largest": [
+      {
+        "id": "tx_m_001",
+        "occurred_at": "2026-09-01T08:02:00+03:00",
+        "amount": {
+          "cents": 2200000,
+          "display": "KSh 22,000"
+        },
+        "direction": "out",
+        "counterparty": "Mwangi Properties",
+        "category_id": "rent",
+        "type": "bank_transfer"
+      },
+      {
+        "id": "tx_m_128",
+        "occurred_at": "2026-09-28T10:05:00+03:00",
+        "amount": {
+          "cents": 500000,
+          "display": "KSh 5,000"
+        },
+        "direction": "out",
+        "counterparty": "Mum",
+        "category_id": "family",
+        "type": "send_money"
+      },
+      {
+        "id": "tx_m_130",
+        "occurred_at": "2026-09-28T18:40:00+03:00",
+        "amount": {
+          "cents": 412000,
+          "display": "KSh 4,120"
+        },
+        "direction": "out",
+        "counterparty": "Naivas Westlands",
+        "category_id": "groceries",
+        "type": "card"
+      },
+      {
+        "id": "tx_m_066",
+        "occurred_at": "2026-09-15T07:55:00+03:00",
+        "amount": {
+          "cents": 299900,
+          "display": "KSh 2,999"
+        },
+        "direction": "out",
+        "counterparty": "Safaricom Home Fibre",
+        "category_id": "utilities",
+        "type": "paybill"
+      },
+      {
+        "id": "tx_m_021",
+        "occurred_at": "2026-09-05T11:30:00+03:00",
+        "amount": {
+          "cents": 250000,
+          "display": "KSh 2,500"
+        },
+        "direction": "out",
+        "counterparty": "Total Energies Parklands",
+        "category_id": "transport",
+        "type": "buy_goods"
+      }
+    ],
+    "new_merchants": [
+      "Carrefour Two Rivers",
+      "Aga Khan University Hospital"
+    ],
+    "recurring": [
+      {
+        "merchant": "Mwangi Properties",
+        "category_id": "rent",
+        "cadence": "monthly",
+        "typical_amount": {
+          "cents": 2200000,
+          "display": "KSh 22,000"
+        },
+        "last_paid": "2026-09-01",
+        "next_expected": "2026-10-01",
+        "confidence": 0.98,
+        "is_subscription": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Mwangi Properties"
+          }
+        }
+      },
+      {
+        "merchant": "KPLC prepaid",
+        "category_id": "utilities",
+        "cadence": "monthly",
+        "typical_amount": {
+          "cents": 200000,
+          "display": "KSh 2,000"
+        },
+        "last_paid": "2026-09-24",
+        "next_expected": "2026-10-24",
+        "confidence": 0.82,
+        "is_subscription": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "KPLC prepaid"
+          }
+        }
+      },
+      {
+        "merchant": "Safaricom Home Fibre",
+        "category_id": "utilities",
+        "cadence": "monthly",
+        "typical_amount": {
+          "cents": 299900,
+          "display": "KSh 2,999"
+        },
+        "last_paid": "2026-09-15",
+        "next_expected": "2026-10-15",
+        "confidence": 0.95,
+        "is_subscription": true,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Safaricom Home Fibre"
+          }
+        }
+      },
+      {
+        "merchant": "Netflix",
+        "category_id": "entertainment",
+        "cadence": "monthly",
+        "typical_amount": {
+          "cents": 110000,
+          "display": "KSh 1,100"
+        },
+        "last_paid": "2026-09-20",
+        "next_expected": "2026-10-20",
+        "confidence": 0.9,
+        "is_subscription": true,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Netflix"
+          }
+        }
+      },
+      {
+        "merchant": "Nairobi Water",
+        "category_id": "utilities",
+        "cadence": "monthly",
+        "typical_amount": {
+          "cents": 120000,
+          "display": "KSh 1,200"
+        },
+        "last_paid": "2026-09-08",
+        "next_expected": "2026-10-08",
+        "confidence": 0.78,
+        "is_subscription": false,
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Nairobi Water"
+          }
+        }
+      }
+    ],
+    "budgets": [
+      {
+        "category_id": "groceries",
+        "limit": {
+          "cents": 2000000,
+          "display": "KSh 20,000"
+        },
+        "spent": {
+          "cents": 1824000,
+          "display": "KSh 18,240"
+        },
+        "projected": {
+          "cents": 1824000,
+          "display": "KSh 18,240"
+        },
+        "used": {
+          "value": 91,
+          "display": "91%"
+        },
+        "status": "ok"
+      },
+      {
+        "category_id": "transport",
+        "limit": {
+          "cents": 1000000,
+          "display": "KSh 10,000"
+        },
+        "spent": {
+          "cents": 1146000,
+          "display": "KSh 11,460"
+        },
+        "projected": {
+          "cents": 1146000,
+          "display": "KSh 11,460"
+        },
+        "used": {
+          "value": 115,
+          "display": "115%"
+        },
+        "status": "over"
+      },
+      {
+        "category_id": "eating_out",
+        "limit": {
+          "cents": 600000,
+          "display": "KSh 6,000"
+        },
+        "spent": {
+          "cents": 731000,
+          "display": "KSh 7,310"
+        },
+        "projected": {
+          "cents": 731000,
+          "display": "KSh 7,310"
+        },
+        "used": {
+          "value": 122,
+          "display": "122%"
+        },
+        "status": "over"
+      },
+      {
+        "category_id": "family",
+        "limit": {
+          "cents": 1200000,
+          "display": "KSh 12,000"
+        },
+        "spent": {
+          "cents": 1200000,
+          "display": "KSh 12,000"
+        },
+        "projected": {
+          "cents": 1200000,
+          "display": "KSh 12,000"
+        },
+        "used": {
+          "value": 100,
+          "display": "100%"
+        },
+        "status": "watch"
+      }
+    ],
+    "overdraft": {
+      "fuliza_drawdown": {
+        "cents": 390000,
+        "display": "KSh 3,900"
+      },
+      "fuliza_repaid": {
+        "cents": 390000,
+        "display": "KSh 3,900"
+      },
+      "fuliza_cost": {
+        "cents": 23400,
+        "display": "KSh 234"
+      },
+      "days_in_overdraft": {
+        "value": 3,
+        "display": "3"
+      }
+    },
+    "income": [
+      {
+        "source": "Jambo Logistics Ltd",
+        "kind": "salary",
+        "in": {
+          "cents": 8500000,
+          "display": "KSh 85,000"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        }
+      },
+      {
+        "source": "Kamau Hardware",
+        "kind": "business",
+        "in": {
+          "cents": 1460000,
+          "display": "KSh 14,600"
+        },
+        "count": {
+          "value": 2,
+          "display": "2"
+        }
+      },
+      {
+        "source": "Jane Wanjiru",
+        "kind": "person",
+        "in": {
+          "cents": 350000,
+          "display": "KSh 3,500"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        }
+      },
+      {
+        "source": "Jumia",
+        "kind": "refund",
+        "in": {
+          "cents": 125000,
+          "display": "KSh 1,250"
+        },
+        "count": {
+          "value": 1,
+          "display": "1"
+        }
+      }
+    ],
+    "trend_months": [
+      {
+        "month": "2026-04",
+        "label_en": "April",
+        "label_sw": "Aprili",
+        "in": {
+          "cents": 9240000,
+          "display": "KSh 92,400"
+        },
+        "out": {
+          "cents": 8421000,
+          "display": "KSh 84,210"
+        },
+        "fees": {
+          "cents": 105000,
+          "display": "KSh 1,050"
+        },
+        "net": {
+          "cents": 714000,
+          "display": "KSh 7,140"
+        },
+        "is_current": false
+      },
+      {
+        "month": "2026-05",
+        "label_en": "May",
+        "label_sw": "Mei",
+        "in": {
+          "cents": 9500000,
+          "display": "KSh 95,000"
+        },
+        "out": {
+          "cents": 9186000,
+          "display": "KSh 91,860"
+        },
+        "fees": {
+          "cents": 121000,
+          "display": "KSh 1,210"
+        },
+        "net": {
+          "cents": 193000,
+          "display": "KSh 1,930"
+        },
+        "is_current": false
+      },
+      {
+        "month": "2026-06",
+        "label_en": "June",
+        "label_sw": "Juni",
+        "in": {
+          "cents": 9650000,
+          "display": "KSh 96,500"
+        },
+        "out": {
+          "cents": 8630000,
+          "display": "KSh 86,300"
+        },
+        "fees": {
+          "cents": 98000,
+          "display": "KSh 980"
+        },
+        "net": {
+          "cents": 922000,
+          "display": "KSh 9,220"
+        },
+        "is_current": false
+      },
+      {
+        "month": "2026-07",
+        "label_en": "July",
+        "label_sw": "Julai",
+        "in": {
+          "cents": 9820000,
+          "display": "KSh 98,200"
+        },
+        "out": {
+          "cents": 9347000,
+          "display": "KSh 93,470"
+        },
+        "fees": {
+          "cents": 134000,
+          "display": "KSh 1,340"
+        },
+        "net": {
+          "cents": 339000,
+          "display": "KSh 3,390"
+        },
+        "is_current": false
+      },
+      {
+        "month": "2026-08",
+        "label_en": "August",
+        "label_sw": "Agosti",
+        "in": {
+          "cents": 10120000,
+          "display": "KSh 101,200"
+        },
+        "out": {
+          "cents": 8894000,
+          "display": "KSh 88,940"
+        },
+        "fees": {
+          "cents": 112000,
+          "display": "KSh 1,120"
+        },
+        "net": {
+          "cents": 1114000,
+          "display": "KSh 11,140"
+        },
+        "is_current": false
+      },
+      {
+        "month": "2026-09",
+        "label_en": "September",
+        "label_sw": "Septemba",
+        "in": {
+          "cents": 10435000,
+          "display": "KSh 104,350"
+        },
+        "out": {
+          "cents": 9519000,
+          "display": "KSh 95,190"
+        },
+        "fees": {
+          "cents": 148600,
+          "display": "KSh 1,486"
+        },
+        "net": {
+          "cents": 767400,
+          "display": "KSh 7,674"
+        },
+        "is_current": true
+      }
+    ],
+    "ytd": {
+      "in": {
+        "cents": 87040000,
+        "display": "KSh 870,400"
+      },
+      "out": {
+        "cents": 79215000,
+        "display": "KSh 792,150"
+      },
+      "fees": {
+        "cents": 1042000,
+        "display": "KSh 10,420"
+      },
+      "net": {
+        "cents": 6783000,
+        "display": "KSh 67,830"
+      },
+      "transfers": {
+        "cents": 49600000,
+        "display": "KSh 496,000"
+      },
+      "cash_withdrawn": {
+        "cents": 6100000,
+        "display": "KSh 61,000"
+      },
+      "savings_out": {
+        "cents": 13500000,
+        "display": "KSh 135,000"
+      },
+      "loan_repayments": {
+        "cents": 1960000,
+        "display": "KSh 19,600"
+      },
+      "transaction_count": {
+        "value": 1312,
+        "display": "1,312"
+      },
+      "fee_ratio": {
+        "value": 1,
+        "display": "1%"
+      },
+      "savings_rate": {
+        "value": 16,
+        "display": "16%"
+      }
+    },
+    "anomalies": [
+      {
+        "kind": "fee_spike",
+        "transaction_ids": [
+          "tx_m_112",
+          "tx_m_115",
+          "tx_m_119"
+        ],
+        "params": {
+          "kind": "fuliza",
+          "cost": "KSh 234",
+          "days": 3
+        }
+      },
+      {
+        "kind": "unusual_amount",
+        "transaction_ids": [
+          "tx_m_091"
+        ],
+        "params": {
+          "merchant": "Aga Khan University Hospital",
+          "amount": "KSh 1,750",
+          "category": "health"
+        }
+      }
+    ],
+    "late_arrivals": {
+      "value": 2,
+      "display": "2"
+    },
+    "unknown_messages": {
+      "value": 5,
+      "display": "5"
+    },
+    "candidate_insights": [
+      {
+        "id": "ci_m_01",
+        "kind": "spend_vs_last",
+        "severity": "notable",
+        "params": {
+          "out": "KSh 95,190",
+          "delta": "KSh +6,250",
+          "pct": "7%",
+          "direction": "up"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00"
+          }
+        }
+      },
+      {
+        "id": "ci_m_02",
+        "kind": "top_category",
+        "severity": "info",
+        "params": {
+          "category": "Rent and housing",
+          "out": "KSh 22,000",
+          "share": "23%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "rent"
+          }
+        }
+      },
+      {
+        "id": "ci_m_03",
+        "kind": "income_received",
+        "severity": "info",
+        "params": {
+          "in": "KSh 104,350",
+          "salary": "KSh 85,000",
+          "source": "Jambo Logistics Ltd"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "direction": "in"
+          }
+        }
+      },
+      {
+        "id": "ci_m_04",
+        "kind": "savings_rate",
+        "severity": "notable",
+        "params": {
+          "savings": "KSh 20,000",
+          "rate": "19%",
+          "previous_rate": "17%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "account_ref": "mshwari:0712***456"
+          }
+        }
+      },
+      {
+        "id": "ci_m_05",
+        "kind": "fees_total",
+        "severity": "notable",
+        "params": {
+          "fees": "KSh 1,486",
+          "ratio": "2%",
+          "delta": "KSh +366",
+          "pct": "33%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "types": [
+              "fee"
+            ]
+          }
+        }
+      },
+      {
+        "id": "ci_m_06",
+        "kind": "fuliza_usage",
+        "severity": "important",
+        "params": {
+          "drawdown": "KSh 3,900",
+          "cost": "KSh 234",
+          "days": "3"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "types": [
+              "overdraft"
+            ]
+          }
+        }
+      },
+      {
+        "id": "ci_m_07",
+        "kind": "category_rising",
+        "severity": "notable",
+        "params": {
+          "category": "Health",
+          "out": "KSh 4,200",
+          "delta": "KSh +2,400",
+          "pct": "133%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "health"
+          }
+        }
+      },
+      {
+        "id": "ci_m_08",
+        "kind": "category_falling",
+        "severity": "info",
+        "params": {
+          "category": "Other",
+          "out": "KSh 5,491",
+          "delta": "KSh -2,709",
+          "pct": "-33%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "other"
+          }
+        }
+      },
+      {
+        "id": "ci_m_09",
+        "kind": "budget_over",
+        "severity": "important",
+        "params": {
+          "category": "Transport",
+          "limit": "KSh 10,000",
+          "spent": "KSh 11,460",
+          "used": "115%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "transport"
+          }
+        }
+      },
+      {
+        "id": "ci_m_10",
+        "kind": "budget_over",
+        "severity": "notable",
+        "params": {
+          "category": "Eating out",
+          "limit": "KSh 6,000",
+          "spent": "KSh 7,310",
+          "used": "122%"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "category_id": "eating_out"
+          }
+        }
+      },
+      {
+        "id": "ci_m_11",
+        "kind": "sent_to_people",
+        "severity": "info",
+        "params": {
+          "sent": "KSh 12,000",
+          "top": "Mum",
+          "top_sent": "KSh 9,000"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "types": [
+              "send_money"
+            ]
+          }
+        }
+      },
+      {
+        "id": "ci_m_12",
+        "kind": "cash_withdrawn",
+        "severity": "info",
+        "params": {
+          "cash": "KSh 7,000"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "types": [
+              "withdrawal"
+            ]
+          }
+        }
+      },
+      {
+        "id": "ci_m_13",
+        "kind": "recurring_found",
+        "severity": "info",
+        "params": {
+          "count": "5",
+          "next": "Mwangi Properties",
+          "next_date": "2026-10-01",
+          "next_amount": "KSh 22,000"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00"
+          }
+        }
+      },
+      {
+        "id": "ci_m_14",
+        "kind": "new_merchant",
+        "severity": "info",
+        "params": {
+          "merchant": "Carrefour Two Rivers",
+          "out": "KSh 3,100"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "merchant": "Carrefour Two Rivers"
+          }
+        }
+      },
+      {
+        "id": "ci_m_15",
+        "kind": "personal_record",
+        "severity": "info",
+        "params": {
+          "record": "highest_income",
+          "in": "KSh 104,350",
+          "since": "April"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00",
+            "direction": "in"
+          }
+        }
+      },
+      {
+        "id": "ci_m_16",
+        "kind": "weekend_share",
+        "severity": "info",
+        "params": {
+          "share": "21%",
+          "weekend": "KSh 20,300"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00"
+          }
+        }
+      },
+      {
+        "id": "ci_m_17",
+        "kind": "unknown_messages",
+        "severity": "info",
+        "params": {
+          "count": "5"
+        },
+        "drilldown": {
+          "kind": "transactions",
+          "filter": {
+            "from": "2026-09-01T00:00:00+03:00",
+            "to": "2026-09-30T23:59:59+03:00"
+          }
+        }
+      }
+    ],
+    "display_strings": [
+      "September 2026",
+      "Septemba 2026",
+      "August 2026",
+      "Agosti 2026",
+      "KSh 104,350",
+      "KSh 95,190",
+      "KSh 1,486",
+      "KSh 7,674",
+      "KSh 67,000",
+      "KSh 7,000",
+      "KSh 20,000",
+      "KSh 5,400",
+      "135",
+      "2%",
+      "19%",
+      "KSh 101,200",
+      "KSh 88,940",
+      "KSh 1,120",
+      "KSh 11,140",
+      "KSh 62,000",
+      "KSh 8,000",
+      "KSh 17,000",
+      "KSh 2,200",
+      "149",
+      "1%",
+      "17%",
+      "KSh +6,250",
+      "7%",
+      "KSh +3,150",
+      "3%",
+      "KSh +366",
+      "33%",
+      "KSh -3,466",
+      "-31%",
+      "KSh 22,000",
+      "23%",
+      "KSh 0",
+      "0%",
+      "1",
+      "KSh 18,240",
+      "KSh +1,340",
+      "8%",
+      "21",
+      "KSh 12,000",
+      "13%",
+      "KSh +2,500",
+      "26%",
+      "4",
+      "KSh 11,460",
+      "12%",
+      "KSh +1,260",
+      "34",
+      "KSh 8,199",
+      "9%",
+      "KSh +1,099",
+      "15%",
+      "KSh 7,310",
+      "KSh +470",
+      "13",
+      "KSh 5,491",
+      "6%",
+      "KSh -2,709",
+      "-33%",
+      "9",
+      "KSh 4,200",
+      "4%",
+      "KSh +2,400",
+      "133%",
+      "3",
+      "KSh 3,650",
+      "KSh -250",
+      "-6%",
+      "19",
+      "KSh 2,640",
+      "KSh +140",
+      "KSh 9,860",
+      "5",
+      "KSh 5,160",
+      "29",
+      "KSh 4,180",
+      "10",
+      "KSh 4,000",
+      "2",
+      "KSh 3,100",
+      "KSh 2,999",
+      "KSh 2,980",
+      "KSh 2,450",
+      "KSh 1,750",
+      "KSh 1,640",
+      "KSh 1,200",
+      "KSh 1,100",
+      "KSh 9,000",
+      "KSh 3,000",
+      "KSh 3,500",
+      "KSh 7,890",
+      "KSh 59,350",
+      "KSh 83,230",
+      "KSh 1,286",
+      "KSh 48,440",
+      "KSh 85,000",
+      "KSh 78,960",
+      "KSh 200",
+      "KSh 43,000",
+      "KSh 24,350",
+      "6",
+      "KSh 2,320",
+      "KSh 1,830",
+      "KSh 2,850",
+      "KSh 4,800",
+      "KSh 2,260",
+      "KSh 3,540",
+      "KSh 2,270",
+      "KSh 2,560",
+      "KSh 1,600",
+      "KSh 1,250",
+      "KSh 1,810",
+      "KSh 1,690",
+      "KSh 1,730",
+      "KSh 1,790",
+      "KSh 2,410",
+      "KSh 1,330",
+      "KSh 1,480",
+      "KSh 2,100",
+      "KSh 2,740",
+      "KSh 3,520",
+      "KSh 9,800",
+      "7",
+      "KSh 1,620",
+      "KSh 3,280",
+      "KSh 2,120",
+      "KSh 2,460",
+      "KSh 2,380",
+      "KSh 6,920",
+      "KSh 2,150",
+      "KSh 3,190",
+      "KSh 3,173",
+      "KSh 74,890",
+      "KSh 20,300",
+      "21%",
+      "KSh 21,340",
+      "28",
+      "KSh 38,910",
+      "41",
+      "KSh 29,480",
+      "36",
+      "KSh 5,460",
+      "KSh 5,000",
+      "KSh 4,120",
+      "KSh 2,500",
+      "KSh 2,000",
+      "91%",
+      "KSh 10,000",
+      "115%",
+      "KSh 6,000",
+      "122%",
+      "100%",
+      "KSh 3,900",
+      "KSh 234",
+      "KSh 14,600",
+      "April",
+      "Aprili",
+      "KSh 92,400",
+      "KSh 84,210",
+      "KSh 1,050",
+      "KSh 7,140",
+      "May",
+      "Mei",
+      "KSh 95,000",
+      "KSh 91,860",
+      "KSh 1,210",
+      "KSh 1,930",
+      "June",
+      "Juni",
+      "KSh 96,500",
+      "KSh 86,300",
+      "KSh 980",
+      "KSh 9,220",
+      "July",
+      "Julai",
+      "KSh 98,200",
+      "KSh 93,470",
+      "KSh 1,340",
+      "KSh 3,390",
+      "August",
+      "Agosti",
+      "September",
+      "Septemba",
+      "KSh 870,400",
+      "KSh 792,150",
+      "KSh 10,420",
+      "KSh 67,830",
+      "KSh 496,000",
+      "KSh 61,000",
+      "KSh 135,000",
+      "KSh 19,600",
+      "1,312",
+      "16%"
+    ]
+  },
+  "document": {
+    "version": "1",
+    "report_id": "rpt_m_2026-09_sw",
+    "kind": "monthly",
+    "locale": "sw",
+    "period_label": "Septemba 2026",
+    "title": "Septemba yako kwa pesa",
+    "sections": [
+      {
+        "type": "hero",
+        "total_out": "KSh 95,190",
+        "delta": "KSh +6,250",
+        "delta_direction": "up",
+        "verdict": "Ulitumia 7% zaidi ya Agosti na bado ukaweka KSh 20,000 M-Shwari.",
+        "tally": [
+          {
+            "label": "Kodi na nyumba",
+            "value": "KSh 22,000",
+            "cents": 2200000
+          },
+          {
+            "label": "Mboga na chakula",
+            "value": "KSh 18,240",
+            "cents": 1824000
+          },
+          {
+            "label": "Familia na marafiki",
+            "value": "KSh 12,000",
+            "cents": 1200000
+          },
+          {
+            "label": "Usafiri",
+            "value": "KSh 11,460",
+            "cents": 1146000
+          },
+          {
+            "label": "Umeme na maji",
+            "value": "KSh 8,199",
+            "cents": 819900
+          },
+          {
+            "label": "Kula nje",
+            "value": "KSh 7,310",
+            "cents": 731000
+          },
+          {
+            "label": "Mengine yote",
+            "value": "KSh 15,981",
+            "cents": 1598100
+          }
+        ]
+      },
+      {
+        "type": "kpis",
+        "items": [
+          {
+            "label": "Zilizoingia",
+            "value": "KSh 104,350",
+            "delta": "KSh +3,150",
+            "tone": "in"
+          },
+          {
+            "label": "Zilizotoka",
+            "value": "KSh 95,190",
+            "delta": "KSh +6,250",
+            "tone": "out"
+          },
+          {
+            "label": "Ada",
+            "value": "KSh 1,486",
+            "delta": "KSh +366",
+            "tone": "fee"
+          },
+          {
+            "label": "Akiba",
+            "value": "KSh 20,000",
+            "delta": null,
+            "tone": "transfer"
+          }
+        ]
+      },
+      {
+        "type": "chart",
+        "chart_id": "trend",
+        "chart_type": "trend_lines",
+        "title": "Matumizi yamepanda kwa miezi miwili huku mapato yakiongezeka kidogo",
+        "takeaway": "Septemba ilifunga na salio la KSh 7,674, chini ya KSh 11,140 ya Agosti.",
+        "data_ref": "/trend_months",
+        "alt_text": "Mistari mitatu kwa miezi sita, Aprili hadi Septemba, ya zilizoingia, zilizotoka na salio. Mapato yalipanda kutoka KSh 92,400 hadi KSh 104,350. Matumizi yalipanda kutoka KSh 84,210 hadi KSh 95,190. Salio lilikuwa juu zaidi Agosti, KSh 11,140, na KSh 7,674 Septemba, ambayo imeangaziwa."
+      },
+      {
+        "type": "chart",
+        "chart_id": "in_out",
+        "chart_type": "stacked_in_out",
+        "title": "Mapato yalizidi matumizi kwa KSh 7,674 baada ya ada",
+        "takeaway": null,
+        "data_ref": "/totals",
+        "alt_text": "Miraba miwili inalinganisha Septemba na Agosti. Septemba: KSh 104,350 ziliingia, KSh 95,190 zilitoka, salio KSh 7,674. Agosti: KSh 101,200 ziliingia, KSh 88,940 zilitoka, salio KSh 11,140."
+      },
+      {
+        "type": "chart",
+        "chart_id": "waterfall",
+        "chart_type": "waterfall",
+        "title": "Kodi na mboga zilichukua 23% na 19% ya mwezi",
+        "takeaway": null,
+        "data_ref": "/totals",
+        "alt_text": "Maporomoko kutoka mapato ya KSh 104,350 kupitia kodi KSh 22,000, mboga na chakula KSh 18,240, familia na marafiki KSh 12,000, usafiri KSh 11,460, umeme na maji KSh 8,199, kategoria nyingine na ada KSh 1,486, hadi salio la KSh 7,674."
+      },
+      {
+        "type": "chart",
+        "chart_id": "categories",
+        "chart_type": "donut",
+        "title": "Kodi ni 23% ya matumizi; afya iliongezeka zaidi ya maradufu",
+        "takeaway": "Afya ilipanda 133% hadi KSh 4,200 baada ya kwenda hospitali. Mengineyo yalipungua KSh -2,709.",
+        "data_ref": "/categories",
+        "alt_text": "Donati ya matumizi ya KSh 95,190 kwa kategoria. Kodi na nyumba KSh 22,000 (23%), mboga na chakula KSh 18,240 (19%), familia na marafiki KSh 12,000 (13%), usafiri KSh 11,460 (12%), umeme na maji KSh 8,199 (9%), kula nje KSh 7,310 (8%), kategoria nne zilizobaki ndizo zinakamilisha."
+      },
+      {
+        "type": "table",
+        "title": "Pesa zilienda wapi",
+        "columns": [
+          "Kategoria",
+          "Zilizotumika",
+          "Sehemu",
+          "Ikilinganishwa na Agosti"
+        ],
+        "rows": [
+          [
+            "Kodi na nyumba",
+            "KSh 22,000",
+            "23%",
+            "KSh 0"
+          ],
+          [
+            "Mboga na chakula",
+            "KSh 18,240",
+            "19%",
+            "KSh +1,340"
+          ],
+          [
+            "Familia na marafiki",
+            "KSh 12,000",
+            "13%",
+            "KSh +2,500"
+          ],
+          [
+            "Usafiri",
+            "KSh 11,460",
+            "12%",
+            "KSh +1,260"
+          ],
+          [
+            "Umeme na maji",
+            "KSh 8,199",
+            "9%",
+            "KSh +1,099"
+          ],
+          [
+            "Kula nje",
+            "KSh 7,310",
+            "8%",
+            "KSh +470"
+          ],
+          [
+            "Mengineyo",
+            "KSh 5,491",
+            "6%",
+            "KSh -2,709"
+          ],
+          [
+            "Afya",
+            "KSh 4,200",
+            "4%",
+            "KSh +2,400"
+          ],
+          [
+            "Airtime na data",
+            "KSh 3,650",
+            "4%",
+            "KSh -250"
+          ],
+          [
+            "Burudani",
+            "KSh 2,640",
+            "3%",
+            "KSh +140"
+          ]
+        ],
+        "numeric_columns": [
+          1,
+          2,
+          3
+        ],
+        "total_row": [
+          "Jumla",
+          "KSh 95,190",
+          "",
+          "KSh +6,250"
+        ]
+      },
+      {
+        "type": "chart",
+        "chart_id": "daily",
+        "chart_type": "daily_bars",
+        "title": "Siku ya kodi ndiyo ulitumia zaidi, KSh 24,350; siku nyingi zilikaa karibu na KSh 3,173",
+        "takeaway": null,
+        "data_ref": "/daily",
+        "alt_text": "Miraba thelathini, mmoja kwa kila siku ya Septemba, na mstari wa wastani wa KSh 3,173. Tarehe 1 inajitokeza kwa KSh 24,350 kwa sababu ya kodi, na tarehe 28 kwa KSh 6,920 siku ya mshahara."
+      },
+      {
+        "type": "chart",
+        "chart_id": "heatmap",
+        "chart_type": "calendar_heatmap",
+        "title": "Wikendi zilikuwa nzito kidogo kuliko siku za kazi",
+        "takeaway": "Wikendi zilichukua 21% ya matumizi, KSh 20,300 kwa siku nane.",
+        "data_ref": "/daily",
+        "alt_text": "Kalenda ya Septemba iliyotiwa kivuli kulingana na matumizi ya kila siku. Nyeusi zaidi tarehe 1 (KSh 24,350) na tarehe 28 (KSh 6,920); Jumamosi na Jumapili nyeusi kidogo kuliko siku za kazi zilizo karibu."
+      },
+      {
+        "type": "chart",
+        "chart_id": "merchants",
+        "chart_type": "top_bars",
+        "title": "Baada ya kodi, Naivas ndiyo duka kubwa zaidi, KSh 9,860",
+        "takeaway": "Mpya mwezi huu: Carrefour Two Rivers na Aga Khan University Hospital.",
+        "data_ref": "/merchants",
+        "alt_text": "Miraba ya kulala ya maduka nane ya juu. Mwangi Properties KSh 22,000, Naivas Westlands KSh 9,860, Total Energies Parklands KSh 5,400, Matatu and boda (cash) KSh 5,160, Mama Mboga Kangemi KSh 4,180, KPLC prepaid KSh 4,000, Safaricom KSh 3,650, Carrefour Two Rivers KSh 3,100 (mpya)."
+      },
+      {
+        "type": "table",
+        "title": "Watu",
+        "columns": [
+          "Mtu",
+          "Ulizotuma",
+          "Ulizopokea"
+        ],
+        "rows": [
+          [
+            "Mum",
+            "KSh 9,000",
+            "KSh 0"
+          ],
+          [
+            "Brian Otieno",
+            "KSh 3,000",
+            "KSh 0"
+          ],
+          [
+            "Jane Wanjiru",
+            "KSh 0",
+            "KSh 3,500"
+          ]
+        ],
+        "numeric_columns": [
+          1,
+          2
+        ],
+        "total_row": null
+      },
+      {
+        "type": "table",
+        "title": "Mapato kwa chanzo",
+        "columns": [
+          "Chanzo",
+          "Ulizopokea",
+          "Malipo"
+        ],
+        "rows": [
+          [
+            "Jambo Logistics Ltd",
+            "KSh 85,000",
+            "1"
+          ],
+          [
+            "Kamau Hardware",
+            "KSh 14,600",
+            "2"
+          ],
+          [
+            "Jane Wanjiru",
+            "KSh 3,500",
+            "1"
+          ],
+          [
+            "Jumia",
+            "KSh 1,250",
+            "1"
+          ]
+        ],
+        "numeric_columns": [
+          1,
+          2
+        ],
+        "total_row": [
+          "Jumla",
+          "KSh 104,350",
+          ""
+        ]
+      },
+      {
+        "type": "chart",
+        "chart_id": "fees",
+        "chart_type": "fee_meter",
+        "title": "Ada zilikuwa 2% ya matumizi, juu kwa 33% kuliko Agosti",
+        "takeaway": null,
+        "data_ref": "/totals/fees",
+        "alt_text": "Mstari mfupi wenye mistari: ada za KSh 1,486 ni 2% ya KSh 95,190 zilizotumika."
+      },
+      {
+        "type": "callout",
+        "tone": "fee",
+        "body": "Ada zilifikia KSh 1,486, KSh +366 zaidi ya Agosti. Fuliza ilichukua KSh 234 kwa siku 3 kabla ya mshahara."
+      },
+      {
+        "type": "table",
+        "title": "Zilizohamishwa, si matumizi",
+        "columns": [
+          "Hatua",
+          "Kiasi"
+        ],
+        "rows": [
+          [
+            "Kwenda M-Shwari",
+            "KSh 20,000"
+          ],
+          [
+            "Pesa taslimu ulizotoa",
+            "KSh 7,000"
+          ],
+          [
+            "Mikopo uliyolipa",
+            "KSh 5,400"
+          ],
+          [
+            "Zote zilizohamishwa kati ya akaunti zako, pamoja na uhamisho wa mshahara kutoka KCB hadi M-Pesa",
+            "KSh 67,000"
+          ]
+        ],
+        "numeric_columns": [
+          1
+        ],
+        "total_row": null
+      },
+      {
+        "type": "callout",
+        "tone": "neutral",
+        "body": "Uliweka akiba 19% ya zilizoingia, juu kutoka 17% Agosti. M-Shwari sasa ina KSh 43,000."
+      },
+      {
+        "type": "chart",
+        "chart_id": "budgets",
+        "chart_type": "budget_bullets",
+        "title": "Usafiri na kula nje zilipita bajeti; mboga zilishikilia",
+        "takeaway": null,
+        "data_ref": "/budgets",
+        "alt_text": "Miraba minne ya bajeti kwa Septemba. Mboga na chakula KSh 18,240 kati ya KSh 20,000. Usafiri KSh 11,460 kati ya KSh 10,000, imepita. Kula nje KSh 7,310 kati ya KSh 6,000, imepita. Familia na marafiki KSh 12,000 kati ya KSh 12,000, sawa kabisa na kikomo."
+      },
+      {
+        "type": "table",
+        "title": "Bili zinazotarajiwa Oktoba",
+        "columns": [
+          "Malipo",
+          "Kwa kawaida",
+          "Inatarajiwa"
+        ],
+        "rows": [
+          [
+            "Mwangi Properties (kodi)",
+            "KSh 22,000",
+            "1 Oktoba"
+          ],
+          [
+            "Nairobi Water",
+            "KSh 1,200",
+            "8 Oktoba"
+          ],
+          [
+            "Safaricom Home Fibre",
+            "KSh 2,999",
+            "15 Oktoba"
+          ],
+          [
+            "Netflix",
+            "KSh 1,100",
+            "20 Oktoba"
+          ],
+          [
+            "KPLC prepaid",
+            "KSh 2,000",
+            "24 Oktoba"
+          ]
+        ],
+        "numeric_columns": [
+          1
+        ],
+        "total_row": null
+      },
+      {
+        "type": "chart",
+        "chart_id": "balance_mpesa",
+        "chart_type": "balance_sparkline",
+        "title": "M-Pesa iliingia Fuliza kwa siku 3 kabla ya mshahara",
+        "takeaway": null,
+        "data_ref": "/accounts/0/balance_series",
+        "alt_text": "Salio la M-Pesa kwa Septemba nzima, likishuka mwezi mzima hadi chini ya sifuri karibu na tarehe 25 na kurudi KSh 7,890 baada ya uhamisho wa mshahara tarehe 28."
+      },
+      {
+        "type": "chart",
+        "chart_id": "balance_kcb",
+        "chart_type": "balance_sparkline",
+        "title": "KCB ilifunga mwezi na KSh 48,440",
+        "takeaway": null,
+        "data_ref": "/accounts/1/balance_series",
+        "alt_text": "Salio la KCB kwa Septemba nzima, likishuka na kodi na malipo ya kadi na kuruka hadi KSh 48,440 tarehe 28 mshahara wa KSh 85,000 ulipoingia."
+      },
+      {
+        "type": "table",
+        "title": "Unapotumia pesa",
+        "columns": [
+          "Wakati",
+          "Zilizotumika",
+          "Malipo"
+        ],
+        "rows": [
+          [
+            "Asubuhi",
+            "KSh 21,340",
+            "28"
+          ],
+          [
+            "Mchana",
+            "KSh 38,910",
+            "41"
+          ],
+          [
+            "Jioni",
+            "KSh 29,480",
+            "36"
+          ],
+          [
+            "Usiku",
+            "KSh 5,460",
+            "7"
+          ]
+        ],
+        "numeric_columns": [
+          1,
+          2
+        ],
+        "total_row": null
+      },
+      {
+        "type": "insights",
+        "title": "Yafaa kujua",
+        "items": [
+          {
+            "insight_id": "ci_m_15",
+            "headline": "Mwezi wenye mapato ya juu zaidi tangu Aprili",
+            "body": "Ziliingia KSh 104,350, pamoja na KSh 85,000 kutoka Jambo Logistics Ltd na KSh 14,600 kutoka Kamau Hardware.",
+            "drilldown": null
+          },
+          {
+            "insight_id": "ci_m_06",
+            "headline": "Fuliza iligharimu KSh 234 wiki ya mwisho",
+            "body": "Ulichukua KSh 3,900 kwa siku 3 na ukalipa siku ya mshahara. Kuhamisha sehemu ya mshahara mapema kungeepusha gharama hiyo.",
+            "drilldown": null
+          },
+          {
+            "insight_id": "ci_m_07",
+            "headline": "Matumizi ya afya yalipanda hadi KSh 4,200",
+            "body": "Ziara ya Aga Khan University Hospital na mara mbili za duka la dawa. Hesabu iliweka hospitali chini ya afya; badilisha ikiwa si sahihi.",
+            "drilldown": null
+          },
+          {
+            "insight_id": "ci_m_09",
+            "headline": "Usafiri ulimaliza 115% ya bajeti yake",
+            "body": "KSh 11,460 dhidi ya KSh 10,000. Mafuta Total Energies yalikuwa KSh 5,400 kati yake.",
+            "drilldown": null
+          },
+          {
+            "insight_id": "ci_m_11",
+            "headline": "KSh 67,000 zilihamishwa kati ya akaunti zako",
+            "body": "Hakuna inayohesabiwa kama matumizi. KSh 20,000 zilienda M-Shwari na KSh 7,000 zilitoka taslimu.",
+            "drilldown": null
+          },
+          {
+            "insight_id": "ci_m_14",
+            "headline": "Sehemu mpya: Carrefour Two Rivers",
+            "body": "KSh 3,100 kwa ziara mbili, chini ya mboga na chakula.",
+            "drilldown": null
+          }
+        ]
+      },
+      {
+        "type": "list",
+        "title": "Pesa zingeweza kwenda vipi tofauti",
+        "items": [
+          "Kuhamisha KSh 20,000 M-Shwari siku ya mshahara, kabla ya kodi, kungeweka M-Pesa nje ya Fuliza.",
+          "Kula nje kulikuwa KSh 7,310. Ziara mbili chache za Java House kwa mwezi ni takriban KSh 2,980.",
+          "Usafiri wa KSh 11,460 ulikuwa kategoria ya tatu kwa ukubwa baada ya kodi na mboga."
+        ]
+      },
+      {
+        "type": "kpis",
+        "items": [
+          {
+            "label": "Zilizoingia mwaka huu",
+            "value": "KSh 870,400",
+            "delta": null,
+            "tone": "in"
+          },
+          {
+            "label": "Zilizotoka mwaka huu",
+            "value": "KSh 792,150",
+            "delta": null,
+            "tone": "out"
+          },
+          {
+            "label": "Ada mwaka huu",
+            "value": "KSh 10,420",
+            "delta": null,
+            "tone": "fee"
+          },
+          {
+            "label": "Akiba mwaka huu",
+            "value": "KSh 135,000",
+            "delta": null,
+            "tone": "transfer"
+          }
+        ]
+      },
+      {
+        "type": "watch",
+        "title": "Mambo matatu ya kuangalia Oktoba",
+        "items": [
+          "Kodi ya KSh 22,000 inatarajiwa tarehe 1 Oktoba.",
+          "Usafiri na kula nje zote zilipita bajeti; Oktoba inaanza kutoka sifuri.",
+          "Jumbe 5 hazikusomeka. Fundisha Hesabu zilikuwa nini."
+        ]
+      },
+      {
+        "type": "footer",
+        "accounts_covered": [
+          "M-Pesa 0712***456",
+          "KCB current ***890",
+          "M-Shwari"
+        ],
+        "computed_note": "Kila nambari imehesabiwa kutoka kwa jumbe zako za pesa. Hakuna makadirio.",
+        "unknown_count": "5"
+      }
+    ],
+    "whatsapp": {
+      "caption": "*Hesabu, Septemba 2026*\n\nUlitumia *KSh 95,190*, KSh +6,250 (7%) ikilinganishwa na Agosti.\nZiliingia KSh 104,350. Ada KSh 1,486. Salio KSh 7,674.\n\nKodi 23%, mboga 19%. Afya iliongezeka zaidi ya maradufu hadi KSh 4,200.\nAkiba KSh 20,000, 19% ya mapato. Fuliza iligharimu KSh 234.\n\n_Ripoti kamili, maelezo ya kila nambari na PDF ziko kwenye kiungo hapa chini._",
+      "hero_chart_ids": [
+        "categories"
+      ]
+    },
+    "email": {
+      "subject": "Septemba yako kwa pesa: KSh 95,190 zilitumika, KSh 20,000 akiba",
+      "preheader": "Kodi 23%, afya juu 133%, ada KSh 1,486. Bili zinazotarajiwa Oktoba."
+    },
+    "meta": {
+      "generated_at": "2026-10-01T07:30:00+03:00",
+      "facts_version": "1",
+      "writer": "fallback",
+      "model": null,
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cost_usd": 0,
+      "fact_check": {
+        "passed": true,
+        "violations": [],
+        "attempts": 1
+      }
+    }
+  }
+}
