@@ -45,7 +45,15 @@ android {
     testOptions {
         // Robolectric needs the merged resources and manifest on the unit-test classpath.
         unitTests.isIncludeAndroidResources = true
+        unitTests.all { test ->
+            // Tests that check parity with the frozen contracts (tokens, packs) read them straight from the repo.
+            test.systemProperty("hesabu.contractsDir", contractsDir.absolutePath)
+            test.systemProperty("hesabu.repoDir", contractsDir.parentFile.absolutePath)
+            test.maxHeapSize = "2g"
+        }
     }
+
+    sourceSets["main"].assets.srcDir(layout.buildDirectory.dir("generated/hesabuAssets"))
 
     packaging {
         resources.excludes += setOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/INDEX.LIST", "META-INF/io.netty.versions.properties")
@@ -96,6 +104,7 @@ dependencies {
 
     // Unit tests (JVM)
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.robolectric)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.test.ext.junit)
@@ -106,3 +115,29 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
+
+/** The frozen sprint contracts, one level above android/. Provider packs are copied from here into the APK. */
+val contractsDir: File = rootProject.file("../contracts")
+val generatedAssets: File = layout.buildDirectory.dir("generated/hesabuAssets").get().asFile
+
+/**
+ * Copies contracts/provider-packs/*.json into assets/provider-packs/ and packages/taxonomy/dist/*.json into
+ * assets/taxonomy/ at build time, so the app always ships the packs and taxonomy from the integration branch.
+ * Both sources may be absent early in the sprint; the task then produces an empty directory and the engine
+ * falls back to the inline packs under src/main/assets.
+ */
+val copyContractAssets by tasks.registering(Sync::class) {
+    description = "Copies provider packs and the taxonomy from the monorepo into the app's assets"
+    from(contractsDir.resolve("provider-packs")) { include("*.json"); into("provider-packs") }
+    from(rootProject.file("../packages/taxonomy/dist")) { include("*.json"); into("taxonomy") }
+    from(rootProject.file("../corpus/demo")) { include("demo-inbox.jsonl"); into("demo") }
+    into(generatedAssets)
+    includeEmptyDirs = false
+}
+
+// Every variant's asset merge (and the unit-test resource step) sees the copied contracts first.
+tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
+tasks.matching { it.name.startsWith("generate") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
+tasks.matching { it.name.startsWith("package") && it.name.endsWith("Assets") }.configureEach { dependsOn(copyContractAssets) }
+tasks.matching { it.name.startsWith("lintVital") || it.name.startsWith("lintAnalyze") || it.name == "lint" }.configureEach { dependsOn(copyContractAssets) }
+tasks.withType<Test>().configureEach { dependsOn(copyContractAssets) }
