@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { DEVICE_TOKEN_TTL_SECONDS, hashDeviceId, hashToken, signDeviceToken, signReportLinkToken, verifyDeviceToken, verifyReportLinkToken } from './tokens.js';
+import { S3Storage } from './storage.js';
+import { DEVICE_TOKEN_TTL_SECONDS, hashDeviceId, hashToken, signArtefactToken, signDeviceToken, signReportLinkToken, verifyArtefactToken, verifyDeviceToken, verifyReportLinkToken } from './tokens.js';
 
 const secret = 'test-secret-with-enough-length-0123';
 
@@ -39,5 +40,26 @@ describe('report link tokens', () => {
     expect(verifyReportLinkToken(dead, secret)).toBeNull();
     expect(hashToken(live)).toMatch(/^[a-f0-9]{64}$/);
     expect(hashToken(live)).not.toBe(hashToken(dead));
+  });
+});
+
+describe('artefact access (M6)', () => {
+  it('artefact tokens are short-lived and bound to one key', () => {
+    const t = signArtefactToken({ key: 'reports/u/r/hero.png', exp: 2_000_000_000 }, secret);
+    expect(verifyArtefactToken(t, secret, new Date(1_000_000_000_000))).toEqual({ key: 'reports/u/r/hero.png', exp: 2_000_000_000 });
+    expect(verifyArtefactToken(t, secret, new Date(2_000_000_000_000))).toBeNull();
+    const [, sig] = t.split('.') as [string, string];
+    const other = `${Buffer.from(JSON.stringify({ key: 'reports/u/r/report.pdf', exp: 2_000_000_000 })).toString('base64url')}.${sig}`;
+    expect(verifyArtefactToken(other, secret)).toBeNull();
+    // Not interchangeable with report-link tokens signed by the same secret.
+    expect(verifyArtefactToken(signReportLinkToken({ report_id: 'reports/u/r/hero.png', exp: 2_000_000_000 }, secret), secret)).toBeNull();
+  });
+
+  it('S3 storage presigns 15-minute reads offline and never returns a bare bucket URL', async () => {
+    const s3 = new S3Storage({ endpoint: 'http://localhost:9000', bucket: 'hesabu', accessKey: 'a', secretKey: 'b', region: 'us-east-1' });
+    const url = await s3.signedGetUrl('reports/u/r/hero.png', 900);
+    expect(url).toMatch(/^http:\/\/localhost:9000\/hesabu\/reports\/u\/r\/hero\.png\?/);
+    expect(url).toContain('X-Amz-Signature=');
+    expect(url).toContain('X-Amz-Expires=900');
   });
 });

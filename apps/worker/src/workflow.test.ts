@@ -92,8 +92,10 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(result!.facts.totals.out.cents).toBeGreaterThan(0);
     expect(result!.facts.candidate_insights.length).toBeGreaterThan(3);
     expect(result!.deliveriesQueued).toEqual(['email', 'whatsapp']);
-    expect(result!.report.artefacts.hero_png_url).toMatch(/hero\.png$/);
-    expect(result!.report.artefacts.pdf_url).toMatch(/report\.pdf$/);
+    expect(result!.report.artefacts.hero_png_key).toMatch(/hero\.png$/);
+    expect(result!.report.artefacts.pdf_key).toMatch(/report\.pdf$/);
+    expect(JSON.stringify(result!.report.artefacts)).not.toMatch(/_url":"http[^"]*(png|pdf)"/); // M6: no permanent artefact URLs
+    expect(result!.report.artefacts.stubbed).toBe(true); // the StubRenderer's placeholders are flagged
     expect(result!.report.artefacts.web_url).toMatch(/^https:\/\/hesabu\.test\/r\//);
     expect(result!.report.cost_usd).toBe(0);
 
@@ -184,6 +186,7 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
         expect(Object.keys(result!.report.artefacts.chart_keys ?? {}).length).toBeGreaterThan(3);
         const html = new TextDecoder().decode(await storage.get(result!.report.artefacts.html_key!));
         expect(html).toContain(result!.document.title);
+        expect(result!.report.artefacts.stubbed).toBe(false);
       }
     } finally {
       await renderer.close();

@@ -4,6 +4,8 @@ import { signReportLinkToken, hashToken, type Db } from '@hesabu/db';
 import { canReachDatabase, openTestDb } from '@hesabu/db/test-db';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
+import { MemoryStorage } from '@hesabu/db';
+
 import { createApp, type ApiApp } from './app.js';
 import { InMemoryQueue } from './queue.js';
 
@@ -67,6 +69,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
   let db: Db;
   let app: ApiApp;
   let queue: InMemoryQueue;
+  const storage = new MemoryStorage();
   let token: string;
   let userId: string;
 
@@ -77,7 +80,7 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
   beforeAll(async () => {
     db = await openTestDb();
     queue = new InMemoryQueue();
-    app = createApp({ db, queue, env, now: () => FIXED_NOW, extractor: { enabled: true, extract: async (items) => ({ proposals: items.map((_, index) => ({ index, type: 'OTHER' })) }) } });
+    app = createApp({ db, queue, env, now: () => FIXED_NOW, storage, extractor: { enabled: true, extract: async (items) => ({ proposals: items.map((_, index) => ({ index, type: 'OTHER' })) }) } });
     const res = await json('/v1/devices/register', { device_id: 'dev-1', platform: 'android', app_version: '1.0.0' }, '');
     expect(res.status).toBe(200);
     const body = (await res.json()) as { device_token: string; user_id: string };
@@ -380,6 +383,34 @@ describe.skipIf(!reachable)('api (Postgres)', () => {
     expect(await tenant.hasConsent('email_delivery')).toBe(false);
     const miss = await app.request('/webhooks/email', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ type: 'email.delivered', data: { email_id: 'nope' } }) });
     expect(await miss.json()).toEqual({ ok: true, handled: false });
+  });
+
+  it('M6: artefact URLs are minted per request, expire in 15 minutes and never leak a permanent location', async () => {
+    const tenant = db.forUser(userId);
+    const report = (await tenant.listReports('weekly'))[0]!;
+    const heroKey = `reports/${userId}/${report.id}/hero.png`;
+    const pdfKey = `reports/${userId}/${report.id}/report.pdf`;
+    await storage.put(heroKey, new Uint8Array([137, 80, 78, 71]), 'image/png');
+    await storage.put(pdfKey, new TextEncoder().encode('%PDF-1.4 demo'), 'application/pdf');
+    await tenant.updateReport(report.id, { artefacts: { ...report.artefacts, hero_png_key: heroKey, pdf_key: pdfKey } });
+    const summary = (await (await get(`/v1/reports/${report.id}`)).json()) as { summary: { artefacts: { hero_png_url: string; pdf_url: string } } };
+    const heroUrl = summary.summary.artefacts.hero_png_url;
+    expect(heroUrl).toMatch(/^http:\/\/localhost:8787\/v1\/public\/artefacts\//);
+    expect(heroUrl).not.toContain(heroKey);
+    const path = heroUrl.replace('http://localhost:8787', '');
+    const served = await app.request(path);
+    expect(served.status).toBe(200);
+    expect(served.headers.get('content-type')).toBe('image/png');
+    expect(new Uint8Array(await served.arrayBuffer())).toEqual(new Uint8Array([137, 80, 78, 71]));
+    expect((await app.request(path.slice(0, -2) + 'xx')).status).toBe(404);
+    const later = createApp({ db, env, storage, now: () => new Date(FIXED_NOW.getTime() + 16 * 60 * 1000) });
+    expect((await later.request(path)).status).toBe(404);
+    // The public resolver mints the same way, and the stored row holds keys only.
+    const stored = await tenant.getReport(report.id);
+    expect(JSON.stringify(stored?.artefacts)).not.toContain('http');
+    const noStorage = createApp({ db, env, now: () => FIXED_NOW });
+    const bare = (await (await noStorage.request(`/v1/reports/${report.id}`, { headers: { authorization: `Bearer ${token}` } })).json()) as { summary: { artefacts: { hero_png_url: string | null } } };
+    expect(bare.summary.artefacts.hero_png_url).toBeNull();
   });
 
   it('M5: bounds body size, string lengths, report age and request rates', async () => {

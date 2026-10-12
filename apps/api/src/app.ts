@@ -1,7 +1,10 @@
 import { nextReportAt, resolvePeriod, SyncRequestSchema } from '@hesabu/analytics';
 import { randomBytes } from 'node:crypto';
 
-import { AddressTakenError, DeviceRevokedError, hashToken, signDeviceToken, verifyDeviceToken, verifyReportLinkToken, type Db, type TenantDb } from '@hesabu/db';
+import {
+  AddressTakenError, ARTEFACT_KEY_PATTERN, ARTEFACT_URL_TTL_SECONDS, contentTypeFor, DeviceRevokedError, hashToken,
+  signArtefactToken, signDeviceToken, verifyArtefactToken, verifyDeviceToken, verifyReportLinkToken, type Db, type Storage, type TenantDb,
+} from '@hesabu/db';
 import { Hono, type Context } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import type { ZodType } from 'zod';
@@ -32,6 +35,8 @@ export interface AppDeps {
   readonly now?: () => Date;
   /** Injected limiter (tests); defaults to a fresh in-memory one per app. */
   readonly limiter?: RateLimiter;
+  /** Artefact storage; without it no artefact URLs are minted (null) and the artefact route is 404. */
+  readonly storage?: Storage;
 }
 
 export interface AppVars {
@@ -69,7 +74,40 @@ export function createApp(deps: AppDeps): ApiApp {
   const queue = deps.queue ?? new InMemoryQueue();
   const now = deps.now ?? (() => new Date());
   const limiter = deps.limiter ?? new RateLimiter(now);
+  const storage = deps.storage ?? null;
   const app = new Hono<{ Variables: AppVars }>();
+
+  /**
+   * Short-lived artefact URLs (M6): a presigned S3 GET, or, for storage that cannot presign, this API's own signed
+   * route. Nothing permanent is ever stored or returned; the same report summary minted twice yields two URLs that
+   * both die after 15 minutes.
+   */
+  const mint = async (key: string | null | undefined): Promise<string | null> => {
+    if (!key || !storage || !config.reportLinkSecret || !ARTEFACT_KEY_PATTERN.test(key)) return null;
+    const presigned = await storage.signedGetUrl(key, ARTEFACT_URL_TTL_SECONDS);
+    if (presigned) return presigned;
+    const exp = Math.floor(now().getTime() / 1000) + ARTEFACT_URL_TTL_SECONDS;
+    return `${config.apiBaseUrl}/v1/public/artefacts/${signArtefactToken({ key, exp }, config.reportLinkSecret)}`;
+  };
+  const summaryOf = async (tenant: TenantDb, report: Awaited<ReturnType<TenantDb['getReport']>> & object) =>
+    toSummary(report, await tenant.listDeliveries(report.id), mint);
+
+  app.get('/v1/public/artefacts/:token', async (c) => {
+    const store = storage;
+    const claims = config.reportLinkSecret && store ? verifyArtefactToken(c.req.param('token'), config.reportLinkSecret, now()) : null;
+    if (!claims || !store || !ARTEFACT_KEY_PATTERN.test(claims.key)) return c.json(errorBody('not_found', 'expired or unknown'), 404);
+    let bytes: Uint8Array;
+    try {
+      bytes = await store.get(claims.key);
+    } catch {
+      return c.json(errorBody('not_found', 'expired or unknown'), 404);
+    }
+    return c.body(Buffer.from(bytes), 200, {
+      'content-type': contentTypeFor(claims.key),
+      'cache-control': 'private, max-age=600',
+      'x-content-type-options': 'nosniff',
+    });
+  });
 
   app.use('/v1/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json(errorBody('too_large', 'request body exceeds 1 MB'), 413) }));
   app.use('/webhooks/*', bodyLimit({ maxSize: MAX_BODY_BYTES, onError: (c) => c.json(errorBody('too_large', 'request body exceeds 1 MB'), 413) }));
@@ -202,7 +240,7 @@ export function createApp(deps: AppDeps): ApiApp {
     const tenant = c.get('tenant');
     const reports = await tenant.listReports(kind.data);
     const out = [];
-    for (const r of reports) out.push(toSummary(r, await tenant.listDeliveries(r.id)));
+    for (const r of reports) out.push(await summaryOf(tenant, r));
     return c.json(out);
   });
 
@@ -242,14 +280,14 @@ export function createApp(deps: AppDeps): ApiApp {
         await queue.enqueueDeliver({ user_id: tenant.userId, report_id: report.id, channels });
       }
     }
-    return c.json(toSummary(report, await tenant.listDeliveries(report.id)), 202);
+    return c.json(await summaryOf(tenant, report), 202);
   });
 
   app.get('/v1/reports/:report_id', async (c) => {
     const tenant = c.get('tenant');
     const report = await tenant.getReport(c.req.param('report_id'));
     if (!report) return c.json(errorBody('not_found', 'no such report'), 404);
-    return c.json({ summary: toSummary(report, await tenant.listDeliveries(report.id)), document: report.document_json, facts: report.facts_json });
+    return c.json({ summary: await summaryOf(tenant, report), document: report.document_json, facts: report.facts_json });
   });
 
   app.post('/v1/reports/:report_id/deliver', async (c) => {
@@ -263,7 +301,7 @@ export function createApp(deps: AppDeps): ApiApp {
     for (const ch of channels) await tenant.ensureDelivery(report.id, ch);
     await queue.enqueueDeliver({ user_id: tenant.userId, report_id: report.id, channels });
     await tenant.audit(`device:${c.get('deviceId')}`, 'report.deliver.requested', { channels });
-    return c.json(toSummary(report, await tenant.listDeliveries(report.id)), 202);
+    return c.json(await summaryOf(tenant, report), 202);
   });
 
   // ----- unknown-message extraction (consent-gated) -----
@@ -283,11 +321,8 @@ export function createApp(deps: AppDeps): ApiApp {
   app.get('/v1/public/reports/:token', async (c) => {
     const report = await resolveLink(c.req.param('token'));
     if (!report) return c.json(errorBody('not_found', 'expired or unknown'), 404);
-    return c.json({
-      document: report.document_json,
-      facts: report.facts_json,
-      artefacts: { hero_png_url: report.artefacts.hero_png_url ?? null, pdf_url: report.artefacts.pdf_url ?? null },
-    });
+    const [hero_png_url, pdf_url] = await Promise.all([mint(report.artefacts.hero_png_key), mint(report.artefacts.pdf_key)]);
+    return c.json({ document: report.document_json, facts: report.facts_json, artefacts: { hero_png_url, pdf_url } });
   });
 
   app.get('/r/:token', async (c) => {

@@ -43,7 +43,7 @@ try {
   const report = await tenant.getReport(row.id);
   if (!report) throw new Error('report vanished');
   const document = ReportDocumentSchema.parse(report.document_json);
-  const storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir, config.appBaseUrl);
+  const storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir);
   const a = report.artefacts;
   const hero = await storage.get(a.hero_png_key!);
   const pdf = await storage.get(a.pdf_key!);

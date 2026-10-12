@@ -28,7 +28,7 @@ export async function buildWorker(env: Env = process.env, log: (line: string) =>
   const boss = new PgBoss({ connectionString: getDatabaseUrl(env), schema: 'pgboss' });
   boss.on('error', (err: Error) => console.error('pg-boss', err.message));
 
-  const storage: Storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir, config.appBaseUrl);
+  const storage: Storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir);
   const email: EmailSender | null = config.resend ? new ResendEmailSender(config.resend.apiKey, config.resend.from) : config.isProduction ? null : new FakeEmailSender();
   const whatsapp: WhatsAppSender | null = config.whatsapp
     ? new CloudApiWhatsAppSender(config.whatsapp.token, config.whatsapp.phoneNumberId, config.whatsapp.apiVersion)

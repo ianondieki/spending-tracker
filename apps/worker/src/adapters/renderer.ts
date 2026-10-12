@@ -21,6 +21,8 @@ export interface RenderedReport {
   emailHtml: string;
   emailText: string;
   webHtml: string;
+  /** True when the binaries are placeholders (no browser); such a report must never be delivered (m11). */
+  stubbed?: boolean;
 }
 
 export interface Renderer {
@@ -73,7 +75,7 @@ export class StubRenderer implements Renderer {
     const webHtml = `<!doctype html><html lang="${doc.locale}"><head><meta charset="utf-8"><title>${title}</title></head><body><h1>${title}</h1><p>${escapeHtml(doc.period_label)}</p></body></html>`;
     const emailHtml = `<!doctype html><html lang="${doc.locale}"><body><img src="cid:hero" alt="${title}"><h1>${title}</h1>${imgs}<p><a href="${escapeHtml(opts.reportUrl)}">${title}</a></p></body></html>`;
     const emailText = `${doc.title}\n${doc.period_label}\n${doc.whatsapp.caption}\n${opts.reportUrl}\n`;
-    return { heroPng: ONE_PIXEL_PNG, chartPngs, pdf: minimalPdf(doc.title), emailHtml, emailText, webHtml };
+    return { heroPng: ONE_PIXEL_PNG, chartPngs, pdf: minimalPdf(doc.title), emailHtml, emailText, webHtml, stubbed: true };
   }
 }
 
@@ -84,7 +86,7 @@ export class PackageRenderer implements Renderer {
   async render(doc: ReportDocument, facts: FactsSheet, opts: RenderOptions): Promise<RenderedReport> {
     const mod = await import('@hesabu/renderer');
     const out = await mod.renderReport(doc as never, facts as never, opts);
-    return { heroPng: out.heroPng, chartPngs: out.chartPngs, pdf: out.pdf, emailHtml: out.emailHtml, emailText: out.emailText, webHtml: out.webHtml };
+    return { heroPng: out.heroPng, chartPngs: out.chartPngs, pdf: out.pdf, emailHtml: out.emailHtml, emailText: out.emailText, webHtml: out.webHtml, stubbed: out.stubbed };
   }
 
   async close(): Promise<void> {

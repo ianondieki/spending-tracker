@@ -93,3 +93,29 @@ export function verifyReportLinkToken(token: string, secret: string | undefined,
 export function hashToken(token: string): string {
   return createHash('sha256').update(token).digest('hex');
 }
+
+export interface ArtefactClaims {
+  readonly key: string;
+  readonly exp: number; // epoch seconds
+}
+
+/** Short-lived artefact token for the API's own artefact route (storage that cannot presign). Signed with REPORT_LINK_SECRET. */
+export function signArtefactToken(claims: ArtefactClaims, secret: string | undefined): string {
+  const s = requireSecret(secret, 'REPORT_LINK_SECRET');
+  const payload = b64u(JSON.stringify(claims));
+  return `${payload}.${sign(`artefact:${payload}`, s)}`;
+}
+
+export function verifyArtefactToken(token: string, secret: string | undefined, now: Date = new Date()): ArtefactClaims | null {
+  const s = requireSecret(secret, 'REPORT_LINK_SECRET');
+  const [payload, signature] = token.split('.');
+  if (!payload || !signature || !verifySignature(`artefact:${payload}`, signature, s)) return null;
+  try {
+    const claims = JSON.parse(fromB64u(payload).toString('utf8')) as Partial<ArtefactClaims>;
+    if (typeof claims.key !== 'string' || typeof claims.exp !== 'number') return null;
+    if (claims.exp * 1000 <= now.getTime()) return null;
+    return { key: claims.key, exp: claims.exp };
+  } catch {
+    return null;
+  }
+}

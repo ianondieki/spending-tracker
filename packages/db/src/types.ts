@@ -73,9 +73,10 @@ export interface ReportArtefacts {
   pdf_key?: string | null;
   html_key?: string | null;
   chart_keys?: Record<string, string>;
-  hero_png_url?: string | null;
-  pdf_url?: string | null;
+  /** The signed /r/<token> web link (expires with the report link). */
   web_url?: string | null;
+  /** Placeholder binaries from a browser-less renderer; never delivered. */
+  stubbed?: boolean;
 }
 
 export interface ReportRow {
