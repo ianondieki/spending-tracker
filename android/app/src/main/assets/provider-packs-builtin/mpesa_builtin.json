@@ -1,0 +1,750 @@
+{
+  "pack_id": "mpesa_builtin",
+  "version": "0.1.0",
+  "provider": "mpesa",
+  "institution": "Safaricom",
+  "sender_ids": [
+    "MPESA"
+  ],
+  "account_ref_template": "mpesa:{sim_msisdn_masked}",
+  "currency": "KES",
+  "datetime_formats": [
+    "d/M/yy 'at' h:mm a",
+    "d/M/yyyy 'at' h:mm a"
+  ],
+  "amount_prefixes": [
+    "Kshs",
+    "Ksh",
+    "KES",
+    "KSh"
+  ],
+  "families": [
+    {
+      "family_id": "balance_query",
+      "description": "Balance enquiry; no money moved",
+      "type": "BALANCE_QUERY",
+      "direction": "none",
+      "counterparty_kind": "self",
+      "ignore": true,
+      "prefilter": {
+        "all_of": [
+          "balance was"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*Your M-PESA balance was (?<balance>Ksh[\\d,]+\\.\\d{2}) on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        }
+      },
+      "confidence": 0.99,
+      "examples": [
+        {
+          "body": "QJK3X8Y2N0 Confirmed. Your M-PESA balance was Ksh3,450.00 on 12/10/26 at 3:00 PM. Transaction cost, Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "amount_cents": 0
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "failed",
+      "description": "Failed transaction notice; no money moved",
+      "type": "FAILED",
+      "direction": "none",
+      "counterparty_kind": "unknown",
+      "ignore": true,
+      "prefilter": {
+        "all_of": [
+          "failed."
+        ]
+      },
+      "pattern": "^Failed\\. ",
+      "fields": {},
+      "confidence": 0.99,
+      "examples": [
+        {
+          "body": "Failed. M-PESA cannot complete this transaction. Insufficient funds in your M-PESA account.",
+          "verified": false,
+          "expect": {
+            "amount_cents": 0
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "fuliza_drawdown",
+      "description": "Fuliza overdraft used to complete a payment",
+      "type": "FULIZA_DRAWDOWN",
+      "direction": "in",
+      "counterparty_kind": "self",
+      "prefilter": {
+        "all_of": [
+          "fuliza m-pesa amount is"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*Fuliza M-PESA amount is (?<amount>Ksh[\\d,]+\\.\\d{2})\\. Interest charged (?<fee>Ksh[\\d,]+\\.\\d{2})\\.",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount"
+        }
+      },
+      "defaults": {
+        "counterparty_name": "Fuliza",
+        "category_id": "loans"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M9 Confirmed. Fuliza M-PESA amount is Ksh300.00. Interest charged Ksh3.00. Total Fuliza M-PESA outstanding amount is Ksh303.00 due on 20/10/26. To check your Fuliza M-PESA limit dial *234#.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M9",
+            "amount_cents": 30000,
+            "fee_cents": 300,
+            "balance_after_cents": null
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "fuliza_repay",
+      "description": "Fuliza overdraft repaid from the M-PESA balance",
+      "type": "FULIZA_REPAY",
+      "direction": "out",
+      "counterparty_kind": "self",
+      "prefilter": {
+        "all_of": [
+          "pay your outstanding fuliza"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) from your M-PESA has been used to (?:fully|partially) pay your outstanding Fuliza M-PESA\\..*?M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        }
+      },
+      "defaults": {
+        "counterparty_name": "Fuliza",
+        "category_id": "loans"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2N2 Confirmed. Ksh303.00 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh2,000.00. M-PESA balance is Ksh1,347.00. Transaction cost, Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2N2",
+            "amount_cents": 30300,
+            "fee_cents": 0,
+            "balance_after_cents": 134700
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "mshwari_deposit",
+      "description": "Move money from M-PESA to M-Shwari",
+      "type": "MSHWARI_DEPOSIT",
+      "direction": "out",
+      "counterparty_kind": "self",
+      "is_transfer_hint": true,
+      "prefilter": {
+        "all_of": [
+          "transferred to m-shwari"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) transferred to M-Shwari account on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\. M-Shwari balance is Ksh[\\d,]+\\.\\d{2}\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        }
+      },
+      "defaults": {
+        "counterparty_name": "M-Shwari"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M8 Confirmed.Ksh1,000.00 transferred to M-Shwari account on 12/10/26 at 6:00 PM. M-PESA balance is Ksh5,550.00. M-Shwari balance is Ksh12,000.00. Transaction cost Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M8",
+            "amount_cents": 100000,
+            "fee_cents": 0,
+            "balance_after_cents": 555000,
+            "occurred_at": "2026-10-12T18:00:00+03:00"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "mshwari_withdraw",
+      "description": "Move money from M-Shwari back to M-PESA",
+      "type": "MSHWARI_WITHDRAW",
+      "direction": "in",
+      "counterparty_kind": "self",
+      "is_transfer_hint": true,
+      "prefilter": {
+        "all_of": [
+          "transferred from m-shwari"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) transferred from M-Shwari account on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\. M-Shwari balance is Ksh[\\d,]+\\.\\d{2}\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        }
+      },
+      "defaults": {
+        "counterparty_name": "M-Shwari"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2N3 Confirmed.Ksh500.00 transferred from M-Shwari account on 12/10/26 at 6:10 PM. M-PESA balance is Ksh6,050.00. M-Shwari balance is Ksh11,500.00. Transaction cost Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2N3",
+            "amount_cents": 50000,
+            "fee_cents": 0,
+            "balance_after_cents": 605000,
+            "occurred_at": "2026-10-12T18:10:00+03:00"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "reversal",
+      "description": "A transaction reversed and credited back",
+      "type": "REVERSAL",
+      "direction": "in",
+      "counterparty_kind": "self",
+      "prefilter": {
+        "all_of": [
+          "reversal of transaction"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*Reversal of transaction (?<orig>[A-Z0-9]{10}) has been successfully reversed and (?<amount>Ksh[\\d,]+\\.\\d{2}) is credited to your M-PESA account on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "orig": {
+          "to": "note",
+          "normalise": "code"
+        }
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2N1 Confirmed. Reversal of transaction QJK3X8Y2M1 has been successfully reversed and Ksh1,200.00 is credited to your M-PESA account on 12/10/26 at 4:00 PM. New M-PESA balance is Ksh4,650.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2N1",
+            "amount_cents": 120000,
+            "fee_cents": 0,
+            "balance_after_cents": 465000,
+            "occurred_at": "2026-10-12T16:00:00+03:00"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "airtime",
+      "description": "Airtime bought for this line",
+      "type": "AIRTIME",
+      "direction": "out",
+      "counterparty_kind": "merchant",
+      "prefilter": {
+        "all_of": [
+          "of airtime"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*You bought (?<amount>Ksh[\\d,]+\\.\\d{2}) of airtime on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        }
+      },
+      "defaults": {
+        "counterparty_name": "Safaricom airtime",
+        "category_id": "airtime_data"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M7 Confirmed.You bought Ksh100.00 of airtime on 12/10/26 at 8:00 AM.New M-PESA balance is Ksh6,550.00. Transaction cost, Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M7",
+            "amount_cents": 10000,
+            "fee_cents": 0,
+            "balance_after_cents": 655000,
+            "occurred_at": "2026-10-12T08:00:00+03:00",
+            "counterparty_name": "Safaricom airtime"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "paybill",
+      "description": "Pay Bill to a business with an account number",
+      "type": "PAYBILL",
+      "direction": "out",
+      "counterparty_kind": "paybill",
+      "prefilter": {
+        "all_of": [
+          "sent to",
+          "for account"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) sent to (?<name>.+?) for account (?<acct>\\S.*?) on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.?\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "acct": {
+          "to": "account_ref",
+          "normalise": "text"
+        }
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M3 Confirmed. Ksh1,850.00 sent to KPLC PREPAID for account 12345678901 on 12/10/26 at 7:02 PM. New M-PESA balance is Ksh4,100.00. Transaction cost, Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M3",
+            "amount_cents": 185000,
+            "fee_cents": 0,
+            "balance_after_cents": 410000,
+            "occurred_at": "2026-10-12T19:02:00+03:00",
+            "counterparty_name": "KPLC PREPAID"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "send_money",
+      "description": "Send Money to a person",
+      "type": "SEND_MONEY",
+      "direction": "out",
+      "counterparty_kind": "person",
+      "prefilter": {
+        "all_of": [
+          "sent to"
+        ],
+        "none_of": [
+          "for account"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) sent to (?<name>.+?) (?<phone>0\\d{3} ?\\d{6}|\\+?254 ?\\d{3} ?\\d{6}) on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "phone": {
+          "to": "counterparty_ref",
+          "normalise": "phone"
+        }
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M1 Confirmed. Ksh1,200.00 sent to JANE WANJIKU 0712 345678 on 12/10/26 at 2:45 PM. New M-PESA balance is Ksh3,450.00. Transaction cost, Ksh23.00. Amount you can transact within the day is 499,800.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M1",
+            "amount_cents": 120000,
+            "fee_cents": 2300,
+            "balance_after_cents": 345000,
+            "occurred_at": "2026-10-12T14:45:00+03:00",
+            "counterparty_name": "JANE WANJIKU"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "receive_money",
+      "description": "Money received from a person or business",
+      "type": "RECEIVE_MONEY",
+      "direction": "in",
+      "counterparty_kind": "person",
+      "prefilter": {
+        "all_of": [
+          "you have received"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*You have received (?<amount>Ksh[\\d,]+\\.\\d{2}) from (?<name>.+?)(?: (?<phone>0\\d{3} ?\\d{6}|\\+?254 ?\\d{3} ?\\d{6}))? on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.?\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "phone": {
+          "to": "counterparty_ref",
+          "normalise": "phone",
+          "optional": true
+        }
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M2 Confirmed.You have received Ksh2,500.00 from JOHN KAMAU 0722 123456 on 12/10/26 at 9:15 AM. New M-PESA balance is Ksh5,950.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M2",
+            "amount_cents": 250000,
+            "fee_cents": 0,
+            "balance_after_cents": 595000,
+            "occurred_at": "2026-10-12T09:15:00+03:00",
+            "counterparty_name": "JOHN KAMAU"
+          }
+        },
+        {
+          "body": "QJK3X8Y2N4 Confirmed.You have received Ksh10,000.00 from EQUITY BANK 247247 on 1/10/26 at 8:30 AM New M-PESA balance is Ksh15,950.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2N4",
+            "amount_cents": 1000000,
+            "fee_cents": 0,
+            "balance_after_cents": 1595000,
+            "occurred_at": "2026-10-01T08:30:00+03:00",
+            "counterparty_name": "EQUITY BANK 247247"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "buy_goods",
+      "description": "Buy Goods at a till (also Pochi la Biashara)",
+      "type": "BUY_GOODS",
+      "direction": "out",
+      "counterparty_kind": "merchant",
+      "prefilter": {
+        "all_of": [
+          "paid to"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*(?<amount>Ksh[\\d,]+\\.\\d{2}) paid to (?<name>.+?)\\.? on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\.\\s*New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        }
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M4 Confirmed. Ksh450.00 paid to NAIVAS SUPERMARKET. on 12/10/26 at 1:20 PM.New M-PESA balance is Ksh3,650.00. Transaction cost, Ksh0.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M4",
+            "amount_cents": 45000,
+            "fee_cents": 0,
+            "balance_after_cents": 365000,
+            "occurred_at": "2026-10-12T13:20:00+03:00",
+            "counterparty_name": "NAIVAS SUPERMARKET"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "withdraw",
+      "description": "Cash withdrawn at an agent",
+      "type": "WITHDRAW",
+      "direction": "out",
+      "counterparty_kind": "agent",
+      "prefilter": {
+        "all_of": [
+          "withdraw"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\s*Withdraw (?<amount>Ksh[\\d,]+\\.\\d{2}) from (?<agent>\\d+) - (?<name>.+?) New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        },
+        "agent": {
+          "to": "till",
+          "normalise": "digits"
+        }
+      },
+      "defaults": {
+        "category_id": "cash"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M5 Confirmed.on 12/10/26 at 5:30 PMWithdraw Ksh2,000.00 from 123456 - KAMAU AGENCIES NAIROBI New M-PESA balance is Ksh1,650.00. Transaction cost, Ksh29.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M5",
+            "amount_cents": 200000,
+            "fee_cents": 2900,
+            "balance_after_cents": 165000,
+            "occurred_at": "2026-10-12T17:30:00+03:00",
+            "counterparty_name": "KAMAU AGENCIES NAIROBI"
+          }
+        }
+      ]
+    },
+    {
+      "family_id": "deposit",
+      "description": "Cash deposited at an agent",
+      "type": "DEPOSIT",
+      "direction": "in",
+      "counterparty_kind": "agent",
+      "prefilter": {
+        "all_of": [
+          "cash to"
+        ]
+      },
+      "pattern": "^(?<ref>[A-Z0-9]{10}) Confirmed\\.\\s*on (?<dt>\\d{1,2}/\\d{1,2}/\\d{2,4} at \\d{1,2}:\\d{2} [AP]M)\\s*Give (?<amount>Ksh[\\d,]+\\.\\d{2}) cash to (?<name>.+?) New M-PESA balance is (?<balance>Ksh[\\d,]+\\.\\d{2})\\.(?:\\s*Transaction cost,? ?(?<fee>Ksh[\\d,]+\\.\\d{2})\\.?)?",
+      "fields": {
+        "ref": {
+          "to": "external_ref",
+          "normalise": "code"
+        },
+        "amount": {
+          "to": "amount",
+          "normalise": "amount"
+        },
+        "dt": {
+          "to": "occurred_at",
+          "normalise": "datetime"
+        },
+        "balance": {
+          "to": "balance_after",
+          "normalise": "amount"
+        },
+        "fee": {
+          "to": "fee",
+          "normalise": "amount",
+          "optional": true
+        },
+        "name": {
+          "to": "counterparty_name",
+          "normalise": "text"
+        }
+      },
+      "defaults": {
+        "category_id": "cash"
+      },
+      "confidence": 0.95,
+      "examples": [
+        {
+          "body": "QJK3X8Y2M6 Confirmed.on 12/10/26 at 10:05 AM Give Ksh5,000.00 cash to KAMAU AGENCIES New M-PESA balance is Ksh6,650.00.",
+          "verified": false,
+          "expect": {
+            "external_ref": "QJK3X8Y2M6",
+            "amount_cents": 500000,
+            "fee_cents": 0,
+            "balance_after_cents": 665000,
+            "occurred_at": "2026-10-12T10:05:00+03:00",
+            "counterparty_name": "KAMAU AGENCIES"
+          }
+        }
+      ]
+    }
+  ]
+}
