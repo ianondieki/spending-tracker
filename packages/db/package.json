@@ -20,5 +20,8 @@
     "test": "vitest run",
     "lint": "eslint .",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "postgres": "^3.4.9"
   }
 }

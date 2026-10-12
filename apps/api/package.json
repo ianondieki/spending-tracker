@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@hono/node-server": "^2.1.4",
-    "hono": "^4.13.13"
+    "hono": "^4.13.13",
+    "zod": "^4.6.6"
   },
   "devDependencies": {
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
     "tsx": "^4.23.15"
   }
 }

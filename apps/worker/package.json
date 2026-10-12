@@ -14,7 +14,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@hesabu/analytics": "workspace:*"
+    "@hesabu/analytics": "workspace:*",
+    "pg-boss": "^12.37.1"
   },
   "devDependencies": {
     "tsx": "^4.23.15"

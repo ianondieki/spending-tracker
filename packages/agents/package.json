@@ -20,5 +20,9 @@
     "test": "vitest run",
     "lint": "eslint .",
     "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.133.0",
+    "zod": "^4.6.6"
   }
 }
