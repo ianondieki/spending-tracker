@@ -26,7 +26,7 @@ export const MAX_BODY_LENGTH = 4000;
 
 /** The body as both engines must see it before matching: U+00A0 (no-break space) becomes a plain space, because Java's \\s excludes it and JavaScript's includes it. */
 export function matchableBody(body: string): string {
-  return body.replace(/ /g, ' ');
+  return body.replace(/\u00a0/g, ' ');
 }
 
 export function senderMatches(pack: CompiledPack, sender: string): boolean {

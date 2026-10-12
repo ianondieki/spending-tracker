@@ -101,7 +101,10 @@ function walk(dir: string, out: string[]): void {
 describe('corpus', () => {
   const allFiles: string[] = [];
   walk(CORPUS_DIR, allFiles);
-  const corpusFiles = allFiles.filter((f) => !f.includes(`${path.sep}demo${path.sep}`));
+  const corpusFiles = allFiles.filter(
+    (f) =>
+      !f.includes(`${path.sep}demo${path.sep}`) && !f.includes(`${path.sep}expected${path.sep}`),
+  );
   it('has corpus files', () => {
     expect(corpusFiles.length).toBeGreaterThan(0);
   });
