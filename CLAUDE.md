@@ -6,6 +6,13 @@ Android phone, keeps a categorised ledger, and sends designed weekly and monthly
 specification is `prompts/MASTER-BUILD-PROMPT.md`; this file is the short, always-loaded version. Development branch:
 `claude/beautiful-pascal-w5oxu3`. The human merges at gates.
 
+## Sprint mode (active until `docs/sprint/DONE.md` exists)
+
+The 24-hour sprint in `prompts/24H-SPRINT.md` is running. Phases and gates are suspended. If you are a lane session,
+your instructions are your kickoff prompt plus `docs/sprint/lanes.md`; `contracts/` is frozen. The orchestrator
+session merges lane branches into `claude/beautiful-pascal-w5oxu3`. The rest of this file still applies, except the
+"one phase per session" rule and the gate stops.
+
 ## Session rules
 
 - One build phase per session, in order, as defined in `prompts/MASTER-BUILD-PROMPT.md` §16 and started with the

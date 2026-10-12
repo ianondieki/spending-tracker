@@ -1,0 +1,164 @@
+openapi: 3.1.0
+info:
+  title: Hesabu API (sprint v1)
+  version: 1.0.0
+  description: >
+    Minimal API for the 24-hour sprint. Single-user device-token auth (phone OTP comes later).
+    Schemas referenced from contracts/*.schema.json are authoritative.
+servers:
+  - url: http://localhost:8787
+security:
+  - deviceToken: []
+components:
+  securitySchemes:
+    deviceToken: { type: http, scheme: bearer }
+  schemas:
+    Error: { type: object, properties: { code: { type: string }, message: { type: string } }, required: [code, message] }
+    Preferences:
+      type: object
+      properties:
+        email: { type: [string, "null"], format: email }
+        whatsapp_e164: { type: [string, "null"] }
+        locale: { type: string, enum: [en, sw] }
+        week_start: { type: string, enum: [monday, sunday] }
+        weekly_at: { type: string, description: "Day and time, e.g. SUN 19:30" }
+        monthly_at: { type: string, description: "e.g. 1 07:30" }
+        channels: { type: array, items: { type: string, enum: [email, whatsapp, share] } }
+        theme: { type: string, enum: [light, dark, system] }
+    ReportSummary:
+      type: object
+      properties:
+        report_id: { type: string }
+        kind: { type: string, enum: [weekly, monthly] }
+        period_start: { type: string, format: date-time }
+        period_end: { type: string, format: date-time }
+        status: { type: string, enum: [queued, collecting, writing, checking, rendering, delivering, done, failed] }
+        writer: { type: string, enum: [model, fallback, pending] }
+        artefacts:
+          type: object
+          properties:
+            hero_png_url: { type: [string, "null"] }
+            pdf_url: { type: [string, "null"] }
+            web_url: { type: [string, "null"] }
+        deliveries:
+          type: array
+          items:
+            type: object
+            properties:
+              channel: { type: string, enum: [email, whatsapp, share] }
+              status: { type: string, enum: [pending, sent, delivered, read, failed, skipped] }
+              provider_message_id: { type: [string, "null"] }
+              last_error: { type: [string, "null"] }
+              attempts: { type: integer }
+        generated_at: { type: [string, "null"], format: date-time }
+paths:
+  /health:
+    get:
+      security: []
+      responses: { "200": { description: ok } }
+  /v1/devices/register:
+    post:
+      security: []
+      summary: Register this device and get a device token (single-user sprint auth; DEVICE_TOKEN_SECRET signs it)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: { device_id: { type: string }, platform: { type: string }, app_version: { type: string }, display_name: { type: [string, "null"] } }
+              required: [device_id, platform, app_version]
+      responses:
+        "200": { description: token, content: { application/json: { schema: { type: object, properties: { device_token: { type: string }, user_id: { type: string } }, required: [device_token, user_id] } } } }
+  /v1/sync:
+    post:
+      summary: Upload accounts and new or edited transactions (idempotent by transaction id and updated_at)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "transaction.schema.json#/$defs/SyncRequest" } } } }
+      responses:
+        "200": { description: result, content: { application/json: { schema: { $ref: "transaction.schema.json#/$defs/SyncResponse" } } } }
+        "400": { description: invalid, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+  /v1/me/preferences:
+    get: { responses: { "200": { description: prefs, content: { application/json: { schema: { $ref: "#/components/schemas/Preferences" } } } } } }
+    put:
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/Preferences" } } } }
+      responses: { "200": { description: saved, content: { application/json: { schema: { $ref: "#/components/schemas/Preferences" } } } } }
+  /v1/reports:
+    get:
+      parameters: [ { name: kind, in: query, schema: { type: string, enum: [weekly, monthly] } } ]
+      responses: { "200": { description: list, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/ReportSummary" } } } } } }
+  /v1/reports/generate:
+    post:
+      summary: Generate (or regenerate) a report for a period; idempotent on (user, kind, period_start)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kind: { type: string, enum: [weekly, monthly] }
+                period: { type: string, description: "last_week | last_month | current | an ISO date inside the period" }
+                deliver: { type: boolean, default: false }
+                force: { type: boolean, default: false, description: "regenerate even if done" }
+              required: [kind, period]
+      responses: { "202": { description: queued, content: { application/json: { schema: { $ref: "#/components/schemas/ReportSummary" } } } } }
+  /v1/reports/{report_id}:
+    get:
+      parameters: [ { name: report_id, in: path, required: true, schema: { type: string } } ]
+      responses:
+        "200":
+          description: full report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary: { $ref: "#/components/schemas/ReportSummary" }
+                  document: { $ref: "report-document.schema.json" }
+                  facts: { $ref: "facts-sheet.schema.json" }
+  /v1/reports/{report_id}/deliver:
+    post:
+      parameters: [ { name: report_id, in: path, required: true, schema: { type: string } } ]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { channels: { type: array, items: { type: string, enum: [email, whatsapp] } } }, required: [channels] } } } }
+      responses: { "202": { description: queued, content: { application/json: { schema: { $ref: "#/components/schemas/ReportSummary" } } } } }
+  /v1/unknown-messages/extract:
+    post:
+      summary: AI extraction of redacted unknown messages (requires the ai_fallback consent; returns proposals, never writes transactions)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items: { type: array, maxItems: 20, items: { type: object, properties: { sender: { type: string }, body_redacted: { type: string }, received_at: { type: string, format: date-time } }, required: [sender, body_redacted, received_at] } }
+              required: [items]
+      responses: { "200": { description: proposals, content: { application/json: { schema: { type: object, properties: { proposals: { type: array, items: { type: object } } } } } } } }
+  /v1/public/reports/{token}:
+    get:
+      security: []
+      summary: Resolve a signed report link (used by apps/web for /r/{token}); 404 when expired or unknown
+      parameters: [ { name: token, in: path, required: true, schema: { type: string } } ]
+      responses:
+        "200":
+          description: document and facts for rendering
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  document: { $ref: "report-document.schema.json" }
+                  facts: { $ref: "facts-sheet.schema.json" }
+                  artefacts: { type: object, properties: { hero_png_url: { type: [string, "null"] }, pdf_url: { type: [string, "null"] } } }
+        "404": { description: expired or unknown }
+  /r/{token}:
+    get:
+      security: []
+      summary: Signed, expiring web report (served by apps/web; the API only validates tokens)
+      parameters: [ { name: token, in: path, required: true, schema: { type: string } } ]
+      responses: { "200": { description: HTML }, "404": { description: expired or unknown } }
+  /webhooks/whatsapp:
+    get: { security: [], summary: Meta verification handshake (hub.verify_token = WHATSAPP_VERIFY_TOKEN), responses: { "200": { description: challenge } } }
+    post: { security: [], summary: Status updates and inbound messages (JOIN, STOP), responses: { "200": { description: ok } } }
+  /webhooks/email:
+    post: { security: [], summary: Email provider events (delivered, bounced, complained), responses: { "200": { description: ok } } }

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hesabu.app/contracts/report-document.schema.json",
+  "title": "ReportDocument",
+  "description": "The one report model rendered four ways (WhatsApp hero + caption + PDF, email, web, app). Produced by the writer step (or the numbers-only fallback) from a FactsSheet. All numbers inside copy must be display strings from the sheet.",
+  "$defs": {
+    "ChartType": { "type": "string", "enum": ["donut", "daily_bars", "stacked_in_out", "trend_lines", "top_bars", "waterfall", "calendar_heatmap", "budget_bullets", "balance_sparkline", "fee_meter"] },
+    "Section": {
+      "type": "object",
+      "required": ["type"],
+      "oneOf": [
+        { "properties": { "type": { "const": "hero" }, "total_out": { "type": "string" }, "delta": { "type": "string" }, "delta_direction": { "type": "string", "enum": ["up", "down", "flat", "na"] }, "verdict": { "type": "string", "maxLength": 140 }, "tally": { "type": "array", "description": "rows of the opening tally (days for weekly, top categories for monthly)", "items": { "type": "object", "properties": { "label": { "type": "string" }, "value": { "type": "string" }, "cents": { "type": "integer" } }, "required": ["label", "value", "cents"] } } }, "required": ["type", "total_out", "delta", "delta_direction", "verdict", "tally"], "additionalProperties": false },
+        { "properties": { "type": { "const": "kpis" }, "items": { "type": "array", "maxItems": 4, "items": { "type": "object", "properties": { "label": { "type": "string" }, "value": { "type": "string" }, "delta": { "type": ["string", "null"] }, "tone": { "type": "string", "enum": ["in", "out", "fee", "transfer", "neutral"] } }, "required": ["label", "value", "tone"] } } }, "required": ["type", "items"], "additionalProperties": false },
+        { "properties": { "type": { "const": "chart" }, "chart_id": { "type": "string" }, "chart_type": { "$ref": "#/$defs/ChartType" }, "title": { "type": "string", "description": "states the takeaway" }, "takeaway": { "type": ["string", "null"] }, "data_ref": { "type": "string", "description": "JSON pointer into the FactsSheet, e.g. /daily or /categories" }, "alt_text": { "type": "string" } }, "required": ["type", "chart_id", "chart_type", "title", "data_ref", "alt_text"], "additionalProperties": false },
+        { "properties": { "type": { "const": "insights" }, "title": { "type": ["string", "null"] }, "items": { "type": "array", "maxItems": 12, "items": { "type": "object", "properties": { "insight_id": { "type": "string" }, "headline": { "type": "string", "maxLength": 90 }, "body": { "type": "string", "maxLength": 280 }, "drilldown": { "type": ["object", "null"] } }, "required": ["insight_id", "headline", "body"] } } }, "required": ["type", "items"], "additionalProperties": false },
+        { "properties": { "type": { "const": "table" }, "title": { "type": "string" }, "columns": { "type": "array", "items": { "type": "string" } }, "rows": { "type": "array", "items": { "type": "array", "items": { "type": "string" } } }, "numeric_columns": { "type": "array", "items": { "type": "integer" } }, "total_row": { "type": ["array", "null"], "items": { "type": "string" } } }, "required": ["type", "title", "columns", "rows", "numeric_columns"], "additionalProperties": false },
+        { "properties": { "type": { "const": "list" }, "title": { "type": "string" }, "items": { "type": "array", "items": { "type": "string" } } }, "required": ["type", "title", "items"], "additionalProperties": false },
+        { "properties": { "type": { "const": "callout" }, "tone": { "type": "string", "enum": ["neutral", "fee", "warn"] }, "body": { "type": "string", "maxLength": 300 } }, "required": ["type", "tone", "body"], "additionalProperties": false },
+        { "properties": { "type": { "const": "watch" }, "title": { "type": "string" }, "items": { "type": "array", "minItems": 1, "maxItems": 3, "items": { "type": "string", "maxLength": 160 } } }, "required": ["type", "title", "items"], "additionalProperties": false },
+        { "properties": { "type": { "const": "footer" }, "accounts_covered": { "type": "array", "items": { "type": "string" } }, "computed_note": { "type": "string" }, "unknown_count": { "type": "string" } }, "required": ["type", "accounts_covered", "computed_note", "unknown_count"], "additionalProperties": false }
+      ]
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string", "const": "1" },
+    "report_id": { "type": "string" },
+    "kind": { "type": "string", "enum": ["weekly", "monthly"] },
+    "locale": { "type": "string", "enum": ["en", "sw"] },
+    "period_label": { "type": "string" },
+    "title": { "type": "string", "maxLength": 80 },
+    "sections": { "type": "array", "minItems": 3, "items": { "$ref": "#/$defs/Section" } },
+    "whatsapp": {
+      "type": "object", "additionalProperties": false,
+      "properties": { "caption": { "type": "string", "maxLength": 1000, "description": "WhatsApp formatting only: *bold*, _italic_; max 1000 chars" }, "hero_chart_ids": { "type": "array", "items": { "type": "string" }, "maxItems": 1 } },
+      "required": ["caption", "hero_chart_ids"]
+    },
+    "email": { "type": "object", "additionalProperties": false, "properties": { "subject": { "type": "string", "maxLength": 80 }, "preheader": { "type": "string", "maxLength": 120 } }, "required": ["subject", "preheader"] },
+    "meta": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "generated_at": { "type": "string", "format": "date-time" }, "facts_version": { "type": "string" },
+        "writer": { "type": "string", "enum": ["model", "fallback"] }, "model": { "type": ["string", "null"] },
+        "input_tokens": { "type": "integer" }, "output_tokens": { "type": "integer" }, "cost_usd": { "type": "number" },
+        "fact_check": { "type": "object", "additionalProperties": false, "properties": { "passed": { "type": "boolean" }, "violations": { "type": "array", "items": { "type": "string" } }, "attempts": { "type": "integer" } }, "required": ["passed", "violations", "attempts"] }
+      },
+      "required": ["generated_at", "facts_version", "writer", "model", "input_tokens", "output_tokens", "cost_usd", "fact_check"]
+    }
+  },
+  "required": ["version", "report_id", "kind", "locale", "period_label", "title", "sections", "whatsapp", "email", "meta"]
+}

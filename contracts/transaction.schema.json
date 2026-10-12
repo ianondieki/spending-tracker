@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hesabu.app/contracts/transaction.schema.json",
+  "title": "Transaction and sync payload",
+  "description": "What the Android app produces from one parsed money message and what it syncs to the backend. Raw message bodies never appear here. Money is in integer cents of KES.",
+  "$defs": {
+    "Money": { "type": "integer", "description": "KES cents, non-negative unless stated" },
+    "Provider": { "type": "string", "enum": ["mpesa", "airtel_money", "tkash", "bank", "card", "wallet", "unknown"] },
+    "TxType": {
+      "type": "string",
+      "enum": [
+        "SEND_MONEY", "RECEIVE_MONEY", "PAYBILL", "BUY_GOODS", "WITHDRAW", "DEPOSIT", "AIRTIME",
+        "FULIZA_DRAWDOWN", "FULIZA_REPAY", "MSHWARI_DEPOSIT", "MSHWARI_WITHDRAW", "MSHWARI_LOAN", "MSHWARI_LOAN_REPAY",
+        "KCB_MPESA", "BANK_TO_MPESA", "MPESA_TO_BANK", "POCHI", "GLOBAL_SEND", "REVERSAL",
+        "DEBIT", "CREDIT", "CARD_PURCHASE", "ATM", "FEE", "LOAN_REPAY", "STANDING_ORDER", "INTERNAL_TRANSFER",
+        "BALANCE_QUERY", "FAILED", "OTHER"
+      ]
+    },
+    "CounterpartyKind": { "type": "string", "enum": ["person", "merchant", "paybill", "till", "agent", "bank", "self", "unknown"] },
+    "Counterparty": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": ["string", "null"], "maxLength": 120 },
+        "kind": { "$ref": "#/$defs/CounterpartyKind" },
+        "ref_masked": { "type": ["string", "null"], "description": "Phone or account with middle digits masked, e.g. 07XXXXX123" },
+        "paybill": { "type": ["string", "null"] },
+        "till": { "type": ["string", "null"] },
+        "account_ref": { "type": ["string", "null"], "description": "Paybill account number as typed by the user, may identify a person; mask if it looks like a phone or ID" }
+      },
+      "required": ["kind"]
+    },
+    "Transaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "format": "uuid", "description": "Generated on device" },
+        "account_ref": { "type": "string", "description": "Device-local account key, e.g. mpesa:07XXXXX123, bank:equity:***456" },
+        "provider": { "$ref": "#/$defs/Provider" },
+        "external_ref": { "type": ["string", "null"], "description": "Provider transaction code, e.g. the 10-char M-Pesa code" },
+        "type": { "$ref": "#/$defs/TxType" },
+        "direction": { "type": "string", "enum": ["in", "out", "none"] },
+        "amount_cents": { "$ref": "#/$defs/Money" },
+        "fee_cents": { "$ref": "#/$defs/Money" },
+        "balance_after_cents": { "type": ["integer", "null"] },
+        "occurred_at": { "type": "string", "format": "date-time", "description": "ISO 8601 with +03:00 offset" },
+        "received_at": { "type": "string", "format": "date-time" },
+        "counterparty": { "$ref": "#/$defs/Counterparty" },
+        "category_id": { "type": ["string", "null"], "description": "Taxonomy id from packages/taxonomy" },
+        "category_source": { "type": "string", "enum": ["rule", "merchant", "provider_default", "model", "user", "none"] },
+        "category_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "is_transfer": { "type": "boolean" },
+        "transfer_pair_id": { "type": ["string", "null"], "format": "uuid" },
+        "parse_confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "source": { "type": "string", "enum": ["sms", "notification", "import", "manual", "share"] },
+        "raw_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "SHA-256 of the original message body; the body itself is never sent" },
+        "parser": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "pack_id": { "type": "string" }, "pack_version": { "type": "string" }, "family_id": { "type": "string" } },
+          "required": ["pack_id", "pack_version", "family_id"]
+        },
+        "user_edited": { "type": "boolean" },
+        "note": { "type": ["string", "null"], "maxLength": 500 },
+        "tags": { "type": "array", "items": { "type": "string" }, "maxItems": 20 },
+        "updated_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "account_ref", "provider", "type", "direction", "amount_cents", "fee_cents", "occurred_at", "received_at", "counterparty", "category_source", "is_transfer", "parse_confidence", "source", "raw_hash", "parser", "user_edited", "updated_at"]
+    },
+    "Account": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "account_ref": { "type": "string" },
+        "provider": { "$ref": "#/$defs/Provider" },
+        "institution": { "type": ["string", "null"], "description": "e.g. Safaricom, Equity Bank" },
+        "label": { "type": "string" },
+        "mask": { "type": ["string", "null"] },
+        "last_balance_cents": { "type": ["integer", "null"] },
+        "last_balance_at": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "required": ["account_ref", "provider", "label"]
+    },
+    "SyncRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "device_id": { "type": "string" },
+        "app_version": { "type": "string" },
+        "parser_version": { "type": "string" },
+        "accounts": { "type": "array", "items": { "$ref": "#/$defs/Account" } },
+        "transactions": { "type": "array", "items": { "$ref": "#/$defs/Transaction" }, "maxItems": 500 },
+        "unknown_message_count": { "type": "integer", "minimum": 0 },
+        "sent_at": { "type": "string", "format": "date-time" }
+      },
+      "required": ["device_id", "app_version", "parser_version", "accounts", "transactions", "unknown_message_count", "sent_at"]
+    },
+    "SyncResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "accepted": { "type": "integer" },
+        "rejected": { "type": "array", "items": { "type": "object", "properties": { "id": { "type": "string" }, "reason": { "type": "string" } }, "required": ["id", "reason"] } },
+        "server_time": { "type": "string", "format": "date-time" },
+        "next_report_at": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "required": ["accepted", "rejected", "server_time"]
+    }
+  },
+  "oneOf": [ { "$ref": "#/$defs/Transaction" }, { "$ref": "#/$defs/SyncRequest" } ]
+}

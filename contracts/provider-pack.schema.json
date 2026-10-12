@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hesabu.app/contracts/provider-pack.schema.json",
+  "title": "Provider pack",
+  "description": "Data-driven parser definition for one provider's messages. Implemented identically by the Kotlin engine (android/) and the TypeScript reference engine (packages/pack-engine). See PROVIDER-PACKS.md for semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "pack_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "provider": { "type": "string", "enum": ["mpesa", "airtel_money", "tkash", "bank", "card", "wallet"] },
+    "institution": { "type": ["string", "null"] },
+    "sender_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Exact sender addresses, matched case-insensitively after trimming" },
+    "account_ref_template": { "type": "string", "description": "e.g. mpesa:{sim_msisdn_masked} or bank:equity:{acct_mask}. Variables come from the device, not the message." },
+    "currency": { "type": "string", "const": "KES" },
+    "datetime_formats": { "type": "array", "items": { "type": "string" }, "description": "Pattern tokens: d, dd, M, MM, MMM, yy, yyyy, H, HH, h, hh, mm, a (AM/PM). Tried in order." },
+    "amount_prefixes": { "type": "array", "items": { "type": "string" }, "description": "Tokens stripped before parsing amounts, e.g. Ksh, KES, KSh, Kshs" },
+    "families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "family_id": { "type": "string", "pattern": "^[a-z0-9_]+$" },
+          "description": { "type": "string" },
+          "type": { "type": "string" },
+          "direction": { "type": "string", "enum": ["in", "out", "none"] },
+          "counterparty_kind": { "type": "string", "enum": ["person", "merchant", "paybill", "till", "agent", "bank", "self", "unknown"] },
+          "is_transfer_hint": { "type": "boolean", "default": false },
+          "ignore": { "type": "boolean", "default": false, "description": "Match but do not create a transaction (balance queries, failures)" },
+          "prefilter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "all_of": { "type": "array", "items": { "type": "string" } },
+              "none_of": { "type": "array", "items": { "type": "string" } }
+            },
+            "description": "Cheap case-insensitive substring checks before the regex"
+          },
+          "pattern": { "type": "string", "description": "Portable regex, see PROVIDER-PACKS.md. Named groups only." },
+          "fields": {
+            "type": "object",
+            "description": "Named group -> field mapping",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "to": { "type": "string", "enum": ["external_ref", "amount", "fee", "balance_after", "occurred_at", "counterparty_name", "counterparty_ref", "paybill", "till", "account_ref", "note"] },
+                "normalise": { "type": "string", "enum": ["amount", "datetime", "text", "phone", "code", "digits"] },
+                "optional": { "type": "boolean", "default": false }
+              },
+              "required": ["to", "normalise"]
+            }
+          },
+          "defaults": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": { "fee_cents": { "type": "integer" }, "counterparty_name": { "type": "string" }, "category_id": { "type": "string" } }
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.95 },
+          "examples": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "body": { "type": "string" },
+                "verified": { "type": "boolean", "description": "true only when the body came from a real export in corpus/" },
+                "expect": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "external_ref": { "type": ["string", "null"] },
+                    "amount_cents": { "type": "integer" },
+                    "fee_cents": { "type": "integer" },
+                    "balance_after_cents": { "type": ["integer", "null"] },
+                    "occurred_at": { "type": "string" },
+                    "counterparty_name": { "type": ["string", "null"] }
+                  },
+                  "required": ["amount_cents"]
+                }
+              },
+              "required": ["body", "verified", "expect"]
+            }
+          }
+        },
+        "required": ["family_id", "description", "type", "direction", "counterparty_kind", "pattern", "fields", "examples"]
+      }
+    }
+  },
+  "required": ["pack_id", "version", "provider", "sender_ids", "account_ref_template", "currency", "datetime_formats", "amount_prefixes", "families"]
+}

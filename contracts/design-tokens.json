@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "font": {
+    "family": "Schibsted Grotesk",
+    "fallback": "system-ui, -apple-system, Roboto, sans-serif",
+    "weights": { "regular": 400, "medium": 500, "bold": 700 },
+    "features": { "numerals": "tnum" },
+    "scale_px": { "xs": 12, "sm": 14, "md": 16, "lg": 20, "xl": 28, "display": 40, "total": 56 },
+    "line_height": { "prose": 1.45, "numeral": 1.1 }
+  },
+  "space_px": [4, 8, 12, 16, 24, 32, 48],
+  "radius_px": { "control": 4, "sheet": 8 },
+  "rule_px": 1,
+  "focus_ring": { "width_px": 2, "color_token": "biro" },
+  "motion": { "tally_ms": 300, "interaction_ms": 180, "reduced_motion": "off" },
+  "breakpoints_px": { "phone": 360, "phone_large": 412, "web": 1440, "reading_column": 720 },
+  "touch_target_dp": 48,
+  "color": {
+    "light": {
+      "paper": "#F3F5F7", "sheet": "#FFFFFF", "rule": "#C9D2DC",
+      "ink": "#141E2E", "ink_soft": "#5B6878", "biro": "#1F4FD8",
+      "in": "#1E7F5C", "out": "#141E2E", "fee": "#B7791F", "transfer": "#6B7A8F", "warn": "#A23B2A",
+      "on_biro": "#FFFFFF"
+    },
+    "dark": {
+      "paper": "#101722", "sheet": "#17202D", "rule": "#2A3443",
+      "ink": "#E8ECF1", "ink_soft": "#9AA6B5", "biro": "#6D8DFF",
+      "in": "#4FC08D", "out": "#E8ECF1", "fee": "#E0A43C", "transfer": "#8A98AC", "warn": "#E0705C",
+      "on_biro": "#0B1220"
+    }
+  },
+  "charts": {
+    "categorical": {
+      "light": ["#141E2E", "#1F4FD8", "#5B6878", "#7B93E8", "#9AA6B5", "#C2CCF5"],
+      "dark":  ["#E8ECF1", "#6D8DFF", "#9AA6B5", "#A9BBFF", "#6F7C8E", "#4A5CA8"]
+    },
+    "other_slice": { "light": "#DCE2E9", "dark": "#2F3A4A" },
+    "average_line": { "light": "#5B6878", "dark": "#9AA6B5" },
+    "max_donut_slices": 6
+  },
+  "hero_image": { "width": 1080, "height": 1350, "padding_px": 72, "dpr": 2 },
+  "money": { "currency": "KES", "symbol": "KSh", "format": "KSh 12,450", "negative": "KSh -1,200", "decimals_in_reports": 0 },
+  "locale": { "default": "en", "supported": ["en", "sw"], "timezone": "Africa/Nairobi", "week_start": "monday" }
+}
