@@ -96,7 +96,7 @@ export async function renderReport(docInput: ReportDocument, factsInput: FactsSh
   try {
     const page = await context.newPage();
     await page.setContent(renderHeroHtml(doc, facts, opts.theme), { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate('document.fonts.ready');
     const heroPng = await page.screenshot({ type: 'png', clip: { x: 0, y: 0, width: HERO.width, height: HERO.height } });
 
     const chartPngs: Record<string, Buffer> = {};
@@ -105,7 +105,7 @@ export async function renderReport(docInput: ReportDocument, factsInput: FactsSh
       const cpage = await chartContext.newPage();
       for (const section of sections) {
         await cpage.setContent(renderChartHtml(section, facts, doc, opts.theme), { waitUntil: 'load' });
-        await cpage.evaluate(() => document.fonts.ready);
+        await cpage.evaluate('document.fonts.ready');
         const el = cpage.locator('#chart');
         chartPngs[section.chart_id] = await el.screenshot({ type: 'png' });
       }
@@ -115,7 +115,7 @@ export async function renderReport(docInput: ReportDocument, factsInput: FactsSh
 
     await page.setViewportSize({ width: DEFAULT_WIDTH + 96, height: 1000 });
     await page.setContent(webHtml, { waitUntil: 'load' });
-    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate('document.fonts.ready');
     await page.emulateMedia({ media: 'print', colorScheme: 'light' });
     const pdf = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true, displayHeaderFooter: false });
 

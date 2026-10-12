@@ -38,9 +38,9 @@
           "fuliza m-pesa amount is"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Fuliza M-PESA amount is Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{2})?)\\.\\s*(?:Interest|Access Fee) charged Ksh\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Total Fuliza M-PESA outstanding amount is Ksh\\s?[\\d,]+(?:\\.\\d{2})? due on \\d{1,2}/\\d{1,2}/\\d{2,4}",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Fuliza M-PESA amount is Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{2})?)\\.\\s*(?:Interest|Access Fee) charged Ksh\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Total Fuliza M-PESA outstanding amount is Ksh\\s?[\\d,]+(?:\\.\\d{2})? due on \\d{1,2}/\\d{1,2}/\\d{2,4}",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -93,9 +93,9 @@
           "pay your outstanding fuliza"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{2})?) from your M-PESA has been used to (?:fully|partially) pay your outstanding Fuliza M-PESA\\.\\s*(?:Your )?available Fuliza M-PESA limit is Ksh\\s?[\\d,]+(?:\\.\\d{2})?\\.\\s*M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{2})?) from your M-PESA has been used to (?:fully|partially) pay your outstanding Fuliza M-PESA\\.\\s*(?:Your )?available Fuliza M-PESA limit is Ksh\\s?[\\d,]+(?:\\.\\d{2})?\\.\\s*M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -103,7 +103,7 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -148,9 +148,9 @@
           "transferred from m-shwari"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) transferred from M-Shwari account on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*M-Shwari balance is Ksh[\\d,]+(?:\\.\\d{2})?\\s*\\.\\s*M-PESA balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\s*\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) transferred from M-Shwari account on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*M-Shwari balance is Ksh[\\d,]+(?:\\.\\d{2})?\\s*\\.\\s*M-PESA balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\s*\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -158,11 +158,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -202,9 +202,9 @@
           "transferred to m-shwari"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) transferred to M-Shwari account on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*M-PESA balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\s*\\.\\s*New M-Shwari saving account balance is Ksh[\\d,]+(?:\\.\\d{2})?\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) transferred to M-Shwari account on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*M-PESA balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\s*\\.\\s*New M-Shwari saving account balance is Ksh[\\d,]+(?:\\.\\d{2})?\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -212,11 +212,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -256,9 +256,9 @@
           "from your kcb m-pesa account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have transfer+ed Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from your KCB M-PESA account on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*KCB M-PESA Account balance is Ksh[\\d,]+(?:\\.\\d{2})?\\.\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have transfer+ed Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from your KCB M-PESA account on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*KCB M-PESA Account balance is Ksh[\\d,]+(?:\\.\\d{2})?\\.\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -266,11 +266,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -305,9 +305,9 @@
           "you have received"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s+(?:BANK|LTD|LIMITED|KENYA|\\d+))*)(?:\\s+to\\s+M-?PESA\\s+Retail\\s+(?<counterparty_ref>[\\dX]+))?\\s+on\\s+(?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterpartyName>(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s+(?:BANK|LTD|LIMITED|KENYA|\\d+))*)(?:\\s+to\\s+M-?PESA\\s+Retail\\s+(?<counterpartyRef>[\\dX]+))?\\s+on\\s+(?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -315,20 +315,20 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "text",
           "optional": true
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -375,9 +375,9 @@
           "from ziidi"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>ZIIDI(?:\\s+MMF)?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterpartyName>ZIIDI(?:\\s+MMF)?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -385,15 +385,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -425,9 +425,9 @@
           "you have received"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>.+?)\\s+(?<counterparty_ref>(?:\\+?254|0)[\\dX*]{9}) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterpartyName>.+?)\\s+(?<counterpartyRef>(?:\\+?254|0)[\\dX*]{9}) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -435,19 +435,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "phone"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -490,9 +490,9 @@
           "you have received"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_name>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You have received Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterpartyName>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -500,15 +500,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -543,9 +543,9 @@
           "for account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>(?:LIPA NA )?(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s[^.]*?)?) for account (?<account_ref>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterpartyName>(?:LIPA NA )?(?:KCB|EQUITY|HESABU DEMO|STANBIC|STANDARD CHARTERED|NCBA|CO-?OP|CO-OPERATIVE|ABSA|DTB|DIAMOND TRUST|I&M|IM BANK|FAMILY BANK|NATIONAL BANK|NBK|HFC|GTBANK|SIDIAN|PRIME BANK|BANK OF AFRICA|POSTBANK)(?:\\s[^.]*?)?) for account (?<accountRef>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -553,19 +553,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "account_ref": {
+        "accountRef": {
           "to": "account_ref",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -602,9 +602,9 @@
           "sent to m-pesa card"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to M-PESA CARD for account (?<counterparty_name>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to M-PESA CARD for account (?<counterpartyName>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -612,15 +612,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -657,9 +657,9 @@
           "for account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>.+?) for account (?<account_ref>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterpartyName>.+?) for account (?<accountRef>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -667,19 +667,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "account_ref": {
+        "accountRef": {
           "to": "account_ref",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -741,9 +741,9 @@
           "paid to"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) paid to (?<counterparty_name>.+?)\\.? on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) paid to (?<counterpartyName>.+?)\\.? on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -751,15 +751,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -797,9 +797,9 @@
           "for account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>.+?)\\s+(?<counterparty_ref>(?:\\+?254|0)[\\dX*]{9}) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterpartyName>.+?)\\s+(?<counterpartyRef>(?:\\+?254|0)[\\dX*]{9}) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -807,19 +807,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "phone"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -855,9 +855,9 @@
           "imetumwa kwa"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Imethibitishwa\\.?\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) imetumwa kwa (?<counterparty_name>.+?)\\s+(?<counterparty_ref>(?:\\+?254|0)[\\dX*]{9}) tarehe (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+saa\\s+\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*Baki yako ya M-PESA ni Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Gharama ya kutuma ni Ksh(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Imethibitishwa\\.?\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) imetumwa kwa (?<counterpartyName>.+?)\\s+(?<counterpartyRef>(?:\\+?254|0)[\\dX*]{9}) tarehe (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+saa\\s+\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*Baki yako ya M-PESA ni Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Gharama ya kutuma ni Ksh(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -865,19 +865,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "phone"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -916,9 +916,9 @@
           "for account"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterparty_name>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) sent to (?<counterpartyName>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -926,15 +926,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -971,9 +971,9 @@
           "withdraw ksh"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s*Withdraw Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterparty_ref>[\\dX]+) - (?<counterparty_name>.+?)\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s*Withdraw Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) from (?<counterpartyRef>[\\dX]+) - (?<counterpartyName>.+?)\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -981,19 +981,19 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "text"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -1029,9 +1029,9 @@
           "cash to"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*On (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s*Give Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) cash to (?<counterparty_name>.+?)\\s*New M-PESA balance is Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*On (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s*Give Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) cash to (?<counterpartyName>.+?)\\s*New M-PESA balance is Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1039,15 +1039,15 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -1079,9 +1079,9 @@
           "of airtime on"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*You bought Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) of airtime on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New (?:M-PESA )?balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*You bought Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) of airtime on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New (?:M-PESA )?balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1089,11 +1089,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -1131,9 +1131,9 @@
           "of airtime for"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*You bought Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) of airtime for (?<counterparty_ref>(?:\\+?254|0)[\\dX*]{9}) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New (?:M-PESA )?balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*You bought Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) of airtime for (?<counterpartyRef>(?:\\+?254|0)[\\dX*]{9}) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\.?\\s*New (?:M-PESA )?balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Transaction cost,?\\s*Ksh\\.?\\s?(?<fee>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1141,11 +1141,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
@@ -1153,7 +1153,7 @@
           "to": "fee",
           "normalise": "amount"
         },
-        "counterparty_ref": {
+        "counterpartyRef": {
           "to": "counterparty_ref",
           "normalise": "phone"
         }
@@ -1186,9 +1186,9 @@
           "credited"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*Reversal of transaction (?<note>[A-Z0-9]{8,12}) has been successfully reversed\\s+on\\s+(?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s+and Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) is credited to your M-PESA account\\.\\s*New M-PESA account balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*Reversal of transaction (?<note>[A-Z0-9]{8,12}) has been successfully reversed\\s+on\\s+(?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s+and Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) is credited to your M-PESA account\\.\\s*New M-PESA account balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1200,11 +1200,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -1237,9 +1237,9 @@
           "debited"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*Reversal of transaction (?<note>[A-Z0-9]{8,12}) has been successfully reversed\\s+on\\s+(?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s+and Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) is debited from your M-PESA account\\.\\s*New M-PESA account balance is Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*confirmed\\.\\s*Reversal of transaction (?<note>[A-Z0-9]{8,12}) has been successfully reversed\\s+on\\s+(?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M)\\s+and Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?) is debited from your M-PESA account\\.\\s*New M-PESA account balance is Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1251,11 +1251,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
@@ -1288,9 +1288,9 @@
           "jumbeid"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You sent: Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Received by: (?<counterparty_name>.+?)\\.\\s*TILL: (?<till>[\\dX]+)\\.\\s*Your JumbeID: .+?\\.\\s*Date: (?<occurred_at>\\d{4}-\\d{2}-\\d{2} at \\d{2}:\\d{2})",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*You sent: Ksh(?<amount>[\\d,]+(?:\\.\\d{2})?)\\.\\s*Received by: (?<counterpartyName>.+?)\\.\\s*TILL: (?<till>[\\dX]+)\\.\\s*Your JumbeID: .+?\\.\\s*Date: (?<occurredAt>\\d{4}-\\d{2}-\\d{2} at \\d{2}:\\d{2})",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -1298,7 +1298,7 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
@@ -1306,7 +1306,7 @@
           "to": "till",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         }
@@ -1338,17 +1338,17 @@
           "your account balance was"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Your account balance was:\\s*M-PESA Account\\s*:\\s*Ksh(?<balance_after>[\\d,]+(?:\\.\\d{2})?)(?:.*? on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M))?",
+      "pattern": "^(?<externalRef>[A-Z0-9]{8,12})\\s*Confirmed\\.\\s*Your account balance was:\\s*M-PESA Account\\s*:\\s*Ksh(?<balanceAfter>[\\d,]+(?:\\.\\d{2})?)(?:.*? on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+(?:at\\s+)?\\d{1,2}:\\d{2}\\s*[AP]M))?",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime",
           "optional": true

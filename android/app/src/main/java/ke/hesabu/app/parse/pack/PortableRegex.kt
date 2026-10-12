@@ -5,12 +5,12 @@ import java.util.regex.Pattern
 /**
  * The portable regex subset from PROVIDER-PACKS.md: what java.util.regex and JavaScript RegExp evaluate
  * identically. Rejects the constructs the contract forbids (lookaround, backreferences, Unicode properties,
- * possessive quantifiers, inline flags, word boundaries) and group names outside `[a-z][a-z0-9_]*`.
+ * possessive quantifiers, inline flags, word boundaries) and group names outside `[a-z][a-zA-Z0-9]*`.
  */
 object PortableRegex {
 
     private val groupName = Regex("""\(\?<([^>=!][^>]*)>""")
-    private val validName = Regex("""^[a-z][a-z0-9_]*$""")
+    private val validName = Regex("""^[a-z][a-zA-Z0-9]*$""")
 
     private val forbidden = listOf(
         Regex("""\(\?<[=!]""") to "lookbehind",
@@ -33,7 +33,7 @@ object PortableRegex {
         }
         val names = groupName.findAll(pattern).map { it.groupValues[1] }.toList()
         names.forEach {
-            if (!validName.matches(it)) throw PortableRegexException("group name '$it' must match [a-z][a-z0-9_]*")
+            if (!validName.matches(it)) throw PortableRegexException("group name '$it' must match [a-z][a-zA-Z0-9]*")
         }
         val compiled = try {
             Pattern.compile(pattern, Pattern.CASE_INSENSITIVE)

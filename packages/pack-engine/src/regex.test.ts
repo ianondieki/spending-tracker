@@ -32,7 +32,7 @@ describe('portable regex subset', () => {
     [String.raw`[a-z&&[^b]]`, 'class intersection'],
     [String.raw`[[:alpha:]]`, 'nested character class'],
     [String.raw`(?<Amount>1)`, 'group name'],
-    [String.raw`(?<a1_>1)(?<a1_>2)`, 'duplicate group name'],
+    [String.raw`(?<a1>1)(?<a1>2)`, 'duplicate group name'],
     [String.raw`a{`, 'literal {'],
     [String.raw`a}`, 'literal }'],
     [String.raw`(a`, 'unnamed capturing group'],

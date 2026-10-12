@@ -34,7 +34,7 @@ Both Java (`java.util.regex`) and JavaScript (`RegExp` with the `u` flag off) mu
 named groups `(?<name>...)`, non-capturing groups `(?:...)`, alternation `|`, classes `[...]` and `\d \s \w \D \S`,
 quantifiers `? * + {m,n}` (greedy and lazy `?`), anchors `^ $`, the dot, and escapes. Do not use lookbehind,
 backreferences, `\p{...}`, possessive quantifiers, inline flags, or `\b` (word boundaries differ with Unicode). Match
-case-insensitively (both engines compile with the case-insensitive flag). Named group names: `[a-z][a-z0-9_]*`.
+case-insensitively (both engines compile with the case-insensitive flag). Named group names: `[a-z][a-zA-Z0-9]*` (camelCase, no underscores: Java rejects `_` in group names).
 
 ## Three amounts rule
 

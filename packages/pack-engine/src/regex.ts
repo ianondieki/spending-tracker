@@ -6,7 +6,7 @@
  * is ever compiled, so a pack that would behave differently on Android never loads here either.
  */
 
-export const GROUP_NAME = /^[a-z][a-z0-9_]*$/;
+export const GROUP_NAME = /^[a-z][a-zA-Z0-9]*$/;
 
 /** Letter escapes whose meaning is the same in Java and JavaScript. */
 const ALLOWED_LETTER_ESCAPES = new Set(['d', 'D', 's', 'S', 'w', 'W', 't', 'n', 'r']);
@@ -80,7 +80,7 @@ export function validatePortableRegex(pattern: string): string[] {
           const close = tail.indexOf('>');
           if (close < 0) fail('unterminated group name');
           const name = tail.slice(1, close);
-          if (!GROUP_NAME.test(name)) fail(`group name "${name}" must match [a-z][a-z0-9_]*`);
+          if (!GROUP_NAME.test(name)) fail(`group name "${name}" must match [a-z][a-zA-Z0-9]*`);
           if (names.includes(name)) fail(`duplicate group name "${name}"`);
           names.push(name);
           i += 2 + close + 1;

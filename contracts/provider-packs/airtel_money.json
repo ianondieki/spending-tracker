@@ -33,9 +33,9 @@
           "purchased a bundle"
         ]
       },
-      "pattern": "^(?<external_ref>[A-Z0-9]{6,14})\\s*Confirmed\\.\\s*You have successfully purchased a bundle of Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{1,2})?) via (?<counterparty_name>.+?) on (?<occurred_at>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+at\\s+\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*Fee:\\s*Ksh\\s?(?<fee>[\\d,]+(?:\\.\\d{1,2})?)\\.\\s*Bal:\\s*Ksh\\s?(?<balance_after>[\\d,]+(?:\\.\\d{1,2})?)",
+      "pattern": "^(?<externalRef>[A-Z0-9]{6,14})\\s*Confirmed\\.\\s*You have successfully purchased a bundle of Ksh\\s?(?<amount>[\\d,]+(?:\\.\\d{1,2})?) via (?<counterpartyName>.+?) on (?<occurredAt>\\d{1,2}/\\d{1,2}/\\d{2,4}\\s+at\\s+\\d{1,2}:\\d{2}\\s*[AP]M)\\.\\s*Fee:\\s*Ksh\\s?(?<fee>[\\d,]+(?:\\.\\d{1,2})?)\\.\\s*Bal:\\s*Ksh\\s?(?<balanceAfter>[\\d,]+(?:\\.\\d{1,2})?)",
       "fields": {
-        "external_ref": {
+        "externalRef": {
           "to": "external_ref",
           "normalise": "code"
         },
@@ -43,11 +43,11 @@
           "to": "amount",
           "normalise": "amount"
         },
-        "counterparty_name": {
+        "counterpartyName": {
           "to": "counterparty_name",
           "normalise": "text"
         },
-        "occurred_at": {
+        "occurredAt": {
           "to": "occurred_at",
           "normalise": "datetime"
         },
@@ -55,7 +55,7 @@
           "to": "fee",
           "normalise": "amount"
         },
-        "balance_after": {
+        "balanceAfter": {
           "to": "balance_after",
           "normalise": "amount"
         }
