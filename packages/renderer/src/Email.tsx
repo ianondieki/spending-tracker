@@ -80,7 +80,7 @@ function SectionBlock({ section, doc, chartIds }: { readonly section: Section; r
         <Row style={{ paddingTop: 8 }}>
           <Ledger columns={[]} rows={section.tally.map((r) => [r.label, r.value])} numeric={new Set([1])} total={[s.totalSpent, section.total_out]} />
           <p style={{ ...text(16), marginTop: 12 }}>
-            <b style={{ fontWeight: 500 }}>{section.delta}</b> <span style={{ color: C.ink_soft }}>{s.vsLast(doc.kind)}</span>
+            <b style={{ fontWeight: 500 }}>{s.deltaSentence(section.delta, section.delta_direction, doc.kind)}</b>
           </p>
           <p style={{ ...text(20), marginTop: 12 }}>{section.verdict}</p>
         </Row>
@@ -250,7 +250,7 @@ export function emailText(doc: ReportDocument, reportUrl: string): string {
     switch (section.type) {
       case 'hero':
         for (const r of section.tally) out.push(`${r.label.padEnd(28)}${r.value.padStart(14)}`);
-        out.push(`${s.totalSpent.padEnd(28)}${section.total_out.padStart(14)}`, `${section.delta} ${s.vsLast(doc.kind)}`, '', section.verdict, '');
+        out.push(`${s.totalSpent.padEnd(28)}${section.total_out.padStart(14)}`, s.deltaSentence(section.delta, section.delta_direction, doc.kind), '', section.verdict, '');
         break;
       case 'kpis':
         for (const k of section.items) out.push(`${k.label}: ${k.value}${k.delta ? ` (${k.delta})` : ''}`);
