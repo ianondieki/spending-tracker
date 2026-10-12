@@ -91,3 +91,4 @@ Not available: no real export in `corpus/` at the time of writing.
 - 14:05 UTC: items 1–5 done and pushed (commits `da03aa2..07f43ff`); monorepo green; no real export.
 - 14:56 UTC: orchestrator check-in 1 package done: merged the camelCase group-name fix, `pack-engine dump` + `corpus/expected/` with a drift test, Kiswahili airtime and balance families from the one public source, a test per engine clarification (`41fbc00`). No real export.
 - 15:16 UTC: merged c588cf8; normaliseMerchantName + isMerchantCounterparty in @hesabu/taxonomy for Lane B's analytics. No real export.
+- 16:09 UTC: merged b9d904a; Lane A's ParityTest and Lane B's demo seed consume my files as documented; taxonomy `pnpm build` now copies `data/*.json` into `dist/` for the Android asset sync. No real export.
