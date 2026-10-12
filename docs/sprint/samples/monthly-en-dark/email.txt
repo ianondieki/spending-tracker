@@ -11,7 +11,7 @@ Electricity (KPLC tokens & bills)     KSh 3,000
 Sent to people                   KSh 3,000
 Streaming                        KSh 1,100
 Total spent                     KSh 62,890
-KSh +38,755 vs last month
+KSh 38,755 more than last month
 
 You spent 161% more than last month (KSh +38,755).
 
@@ -98,4 +98,4 @@ Every number here is computed from your transaction messages on your phone. Noth
 Accounts covered: Demo Bank, M-Pesa
 Messages Hesabu could not read: Messages not yet understood: 0
 
-Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiQUtjemJTRmIifQ.DaCv86YxoVH1hIy6EZGHnyFFY8xamPv1Sz5i-HuXT0M
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoid2hkUWx5RjUifQ.kFJjfcgesxcw-782Z6DYrz9bZgdgtwi9NNDr9r5qxhQ

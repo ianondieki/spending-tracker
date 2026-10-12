@@ -11,7 +11,7 @@ Stima (tokeni na bili za KPLC)     KSh 3,000
 Pesa ulizotuma kwa watu          KSh 3,000
 Kutazama mtandaoni               KSh 1,100
 Jumla ya matumizi               KSh 62,890
-KSh +38,755 ikilinganishwa na mwezi uliopita
+KSh 38,755 zaidi ya mwezi uliopita
 
 Umetumia 161% zaidi ya mwezi uliopita (KSh +38,755).
 
@@ -98,4 +98,4 @@ Kila namba hapa imehesabiwa kutoka kwa jumbe za miamala kwenye simu yako. Hakuna
 Akaunti zilizojumuishwa: Demo Bank, M-Pesa
 Jumbe ambazo Hesabu haikuweza kusoma: Jumbe ambazo bado hazijaeleweka: 0
 
-Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiU0JVVkIxNFUifQ.g4f5iF4TE2qT-HLqTZHhu0hza7iW9r1cFCMxKDtI4dA
+Ripoti kamili: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI1YWVjZGI1Yi04ZTAwLTQzNDUtYjJhNy03ZDRlYWY2Y2QyZWQiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiZzltaFFlUjkifQ.TYdSKAvpoo7rOVczdkY-3bu5UPlltCWK-5TGbdYNaX4

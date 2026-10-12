@@ -11,7 +11,7 @@ Friday                           KSh 1,580
 Saturday                         KSh 2,820
 Sunday                               KSh 0
 Total spent                      KSh 9,515
-KSh -23,375 vs last week
+KSh 23,375 less than last week
 
 You spent less than last week (KSh -23,375, -71%).
 
@@ -75,4 +75,4 @@ Every number here is computed from your transaction messages on your phone. Noth
 Accounts covered: Demo Bank, M-Pesa
 Messages Hesabu could not read: Messages not yet understood: 0
 
-Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoibm1PLVNndlMifQ.FS6JwjWmR8LautRs556hfa5FSubImGvbR3Vpm2mZEGU
+Full report: https://hesabu.example/r/eyJyZXBvcnRfaWQiOiI3M2NiZjdlNC05YTk3LTRkMGUtOTlmNy1hNTBlYWZiNWNkOTYiLCJleHAiOjE3OTQzNzY4MDAsIm5vbmNlIjoiQ3NDanl2eVUifQ.XvgvID5GLCtJkvPFyYmy_HR7BvjkcdAMsUQGAqLpsgY
