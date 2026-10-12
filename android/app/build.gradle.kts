@@ -129,12 +129,14 @@ val contractsDir: File = rootProject.file("../contracts")
 val generatedAssets: File = layout.buildDirectory.dir("generated/hesabuAssets").get().asFile
 
 /**
- * Copies contracts/provider-packs/*.json into assets/provider-packs/ and packages/taxonomy/dist/*.json into
- * assets/taxonomy/ at build time, so the app always ships the packs and taxonomy from the integration branch.
+ * Copies the JSON files under contracts/provider-packs into assets/provider-packs and the JSON files under
+ * packages/taxonomy/dist into assets/taxonomy at build time, so the app always ships the packs and taxonomy from
+ * the integration branch. (No "slash-star" sequences in this comment: Kotlin block comments nest, and a glob here
+ * once commented out the rest of this file.)
  * Both sources may be absent early in the sprint; the task then produces an empty directory and the engine
  * falls back to the inline packs under src/main/assets.
  */
-val copyContractAssets by tasks.registering(Sync::class) {
+val copyContractAssets = tasks.register<Sync>("copyContractAssets") {
     description = "Copies provider packs and the taxonomy from the monorepo into the app's assets"
     from(contractsDir.resolve("provider-packs")) { include("*.json"); into("provider-packs") }
     from(rootProject.file("../packages/taxonomy/dist")) { include("*.json"); into("taxonomy") }
