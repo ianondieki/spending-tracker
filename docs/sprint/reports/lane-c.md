@@ -70,6 +70,27 @@ it); never run `playwright install` there.
   longer collide. Findings left with Lane B in `docs/sprint/LOG.md`: raw category ids and ISO dates in two chart
   titles, a signed delta repeated in the verdict, zero months before data in the trend.
 
+## Final package (orchestrator check-in 3)
+
+- **Showcase recordings** in `docs/sprint/showcase/`: `report-web-mobile.webm` (412×915, 34 s, 1.6 MB) and
+  `report-web-desktop.webm` (1440×900 recorded, 1152 wide encoded, 34 s, 2.0 MB), each with a first-frame PNG.
+  The walkthrough opens the weekly-en report, scrolls the tally, the in/out and category charts, opens and closes
+  the daily chart's data table, reaches the watch list and footer, then switches to the print view. Regenerate
+  with `pnpm --filter @hesabu/web build && pnpm --filter @hesabu/web showcase`.
+- **Lighthouse** (local `npx lighthouse`, mobile profile, headless Chromium) and axe on `/dev/report`, both locales:
+
+  | Fixture | Performance | Accessibility | Best practices | LCP | TBT | JS transferred | Page weight |
+  |---|---|---|---|---|---|---|---|
+  | weekly-en | 91 | 100 | 96 | 2.5 s | 290 ms | 103 KB | 216 KB |
+  | weekly-sw | 96 | 100 | 96 | 2.3 s | 151 ms | 103 KB | 215 KB |
+  | monthly-en | 98 | 100 | 96 | 2.2 s | 75 ms | 103 KB | 264 KB |
+  | monthly-sw | 97 | 100 | 96 | 2.5 s | 89 ms | 103 KB | 266 KB |
+
+  axe (WCAG 2.1 AA and best practice) is clean on all sixteen fixture pages. Nothing is below 90. The JS is the
+  Next.js runtime only (the report is server-rendered, no client components); the weekly-en blocking time comes
+  from hydration on the simulated mobile CPU. Best practices 96 is the `robots: noindex` meta on a dev route, which
+  is intended.
+
 ## Known gaps
 
 - `frontend-design` and `impeccable` skills were not available in this session; the design work and the polish pass
