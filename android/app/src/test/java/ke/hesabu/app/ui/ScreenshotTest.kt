@@ -139,6 +139,28 @@ class ScreenshotTest(private val width: Int, private val height: Int, private va
     }
 
     @Test
+    fun settingsVerification() = shoot("settings-verification") {
+        SettingsContent(
+            SettingsViewModel.State(
+                settings = AppSettings(serverUrl = "https://hesabu.example", smsConsentGiven = true, email = "you@example.com", whatsappE164 = "+254712345678", whatsappBusinessNumber = "+254700000000"),
+                prefs = ke.hesabu.app.sync.WirePreferences(email = "you@example.com", whatsappE164 = "+254712345678", joinCode = "HSB-4K2Q", whatsappVerified = false, emailVerified = true),
+                packs = listOf(SettingsViewModel.Pack("mpesa", "0.2.0", "mpesa", 28, "MPESA, M-PESA")),
+            ),
+        )
+    }
+
+    @Test
+    fun settingsAddressTaken() = shoot("settings-address-taken") {
+        SettingsContent(
+            SettingsViewModel.State(
+                settings = AppSettings(serverUrl = "https://hesabu.example", whatsappE164 = "+254712345678", whatsappBusinessNumber = "+254700000000"),
+                prefs = ke.hesabu.app.sync.WirePreferences(joinCode = "HSB-4K2Q", whatsappVerified = false, emailVerified = false),
+                verifyMessage = "address_taken",
+            ),
+        )
+    }
+
+    @Test
     fun pasteImport() = shoot("import") { PasteImportContent(false, null, 0, ke.hesabu.app.ingest.TextImport.Preview(linkedMapOf("buy_goods" to 2, "send_money" to 1), 1, 1, 5), {}, {}, {}) }
 
     @Test

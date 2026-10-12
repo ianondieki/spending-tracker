@@ -14,6 +14,7 @@ import ke.hesabu.app.ingest.IngestPipeline
 import ke.hesabu.app.ingest.TextImport
 import ke.hesabu.app.parse.pack.MessageSource
 import ke.hesabu.app.sync.SyncClient
+import ke.hesabu.app.sync.WirePreferences
 import ke.hesabu.app.sync.SyncScheduler
 import ke.hesabu.app.sync.Syncer
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,6 +41,10 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
         val importSkipped: Int = 0,
         /** What the pasted text would become; nothing is written until the user confirms. */
         val importPreview: TextImport.Preview? = null,
+        /** Server-side preferences with the verification state; null until fetched (or when no server is set). */
+        val prefs: WirePreferences? = null,
+        /** A short code for the delivery sheet: address_taken, email_sent, email_rate_limited, prefs_failed. */
+        val verifyMessage: String? = null,
     )
 
     private val transient = MutableStateFlow(State())
@@ -54,6 +59,71 @@ class SettingsViewModel(private val graph: AppGraph) : ViewModel() {
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), State())
 
     fun <T> set(key: Preferences.Key<T>, value: T?) = viewModelScope.launch { graph.settings.set(key, value) }
+
+    init {
+        refreshPreferences()
+    }
+
+    /** A client with a token: registers first when none is stored. Throws SyncClient errors. */
+    private suspend fun authedClient(): SyncClient? {
+        val s = graph.currentSettings()
+        if (!s.syncConfigured) return null
+        val client = graph.syncClient(s.serverUrl)
+        if (graph.secrets.deviceToken == null) {
+            val reg = client.register(graph.settings.deviceId(), BuildConfig.VERSION_NAME)
+            graph.secrets.deviceToken = reg.deviceToken
+        }
+        return client
+    }
+
+    /** Reads join_code, whatsapp_verified and email_verified; quiet when there is no server. */
+    fun refreshPreferences() = viewModelScope.launch {
+        try {
+            val client = authedClient() ?: return@launch
+            try { transient.value = transient.value.copy(prefs = client.getPreferences(), verifyMessage = null) } finally { client.close() }
+        } catch (e: Exception) {
+            transient.value = transient.value.copy(verifyMessage = "prefs_failed")
+        }
+    }
+
+    /** Saves the address locally, then pushes preferences; a 409 address_taken is explained, not swallowed. */
+    fun saveAddress(key: Preferences.Key<String>, value: String) = viewModelScope.launch {
+        graph.settings.set(key, value.trim())
+        pushPreferences()
+    }
+
+    private suspend fun pushPreferences() {
+        try {
+            val client = authedClient() ?: return
+            try {
+                val s = graph.currentSettings()
+                val body = WirePreferences(
+                    email = s.email.ifBlank { null }, whatsappE164 = s.whatsappE164.ifBlank { null }, locale = s.locale,
+                    weekStart = "monday", weeklyAt = s.weeklyAt, monthlyAt = s.monthlyAt, theme = s.theme,
+                )
+                transient.value = transient.value.copy(prefs = client.putPreferences(body), verifyMessage = null)
+            } finally { client.close() }
+        } catch (e: SyncClient.ServerError) {
+            transient.value = transient.value.copy(verifyMessage = if (e.status == 409 || e.code == "address_taken") "address_taken" else "prefs_failed")
+        } catch (e: Exception) {
+            transient.value = transient.value.copy(verifyMessage = "prefs_failed")
+        }
+    }
+
+    /** "Send me a confirmation email": a 429 is shown kindly, not as a failure. */
+    fun sendEmailLink() = viewModelScope.launch {
+        transient.value = transient.value.copy(busy = true)
+        try {
+            val client = authedClient() ?: run { transient.value = transient.value.copy(busy = false, verifyMessage = "prefs_failed"); return@launch }
+            try { client.sendEmailLink(); transient.value = transient.value.copy(busy = false, verifyMessage = "email_sent") } finally { client.close() }
+        } catch (e: SyncClient.ServerError) {
+            transient.value = transient.value.copy(busy = false, verifyMessage = if (e.status == 429) "email_rate_limited" else "prefs_failed")
+        } catch (e: Exception) {
+            transient.value = transient.value.copy(busy = false, verifyMessage = "prefs_failed")
+        }
+    }
+
+    fun clearVerifyMessage() { transient.value = transient.value.copy(verifyMessage = null) }
 
     fun setServerUrl(url: String) = viewModelScope.launch {
         graph.settings.set(SettingsKeys.ServerUrl, url.trim())

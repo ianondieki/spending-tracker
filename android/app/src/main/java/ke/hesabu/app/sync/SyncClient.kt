@@ -95,12 +95,23 @@ class SyncClient(
     suspend fun getPreferences(): WirePreferences =
         client.get("${base()}/v1/me/preferences") { header(HttpHeaders.Authorization, "Bearer ${auth()}") }.bodyOrThrow()
 
+    /** PUT preferences; a 409 `address_taken` (another user verified that WhatsApp number) surfaces as [ServerError]. */
     suspend fun putPreferences(p: WirePreferences): WirePreferences =
         client.put("${base()}/v1/me/preferences") {
             header(HttpHeaders.Authorization, "Bearer ${auth()}")
             contentType(ContentType.Application.Json)
-            setBody(p)
+            setBody(p.forPut())
         }.bodyOrThrow()
+
+    /** Asks the server to email a magic link to the address in preferences. 202 on success; 429 when rate limited. */
+    suspend fun sendEmailLink() {
+        val response = client.post("${base()}/v1/me/email/send-link") { header(HttpHeaders.Authorization, "Bearer ${auth()}") }
+        if (response.status == HttpStatusCode.Unauthorized || response.status == HttpStatusCode.Forbidden) throw Unauthorised()
+        if (response.status.value >= 400) {
+            val err = runCatching { WireJson.decodeFromString(ApiError.serializer(), response.bodyAsText()) }.getOrDefault(ApiError())
+            throw ServerError(response.status.value, err.code.ifEmpty { if (response.status.value == 429) "rate_limited" else "" }, err.message.ifEmpty { response.status.description })
+        }
+    }
 
     suspend fun reports(kind: String? = null): List<ReportSummary> =
         client.get("${base()}/v1/reports" + (kind?.let { "?kind=$it" } ?: "")) { header(HttpHeaders.Authorization, "Bearer ${auth()}") }.bodyOrThrow()

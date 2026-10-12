@@ -55,6 +55,8 @@ object SettingsKeys {
     val OnboardingDone = booleanPreferencesKey("onboarding_done")
     /** Developer toggle: allow an http:// server address (a laptop tunnel). Off by default; loopback never needs it. */
     val AllowCleartext = booleanPreferencesKey("allow_cleartext")
+    /** The WhatsApp business number users send JOIN to; empty until the operator configures it. */
+    val WhatsappBusinessNumber = stringPreferencesKey("whatsapp_business_number")
 }
 
 /** Typed view of the preferences with Kenyan defaults. */
@@ -81,6 +83,7 @@ data class AppSettings(
     val oemGuidanceDismissed: Boolean = false,
     val onboardingDone: Boolean = false,
     val allowCleartext: Boolean = false,
+    val whatsappBusinessNumber: String = "",
 ) {
     /** Sync is possible only when a server URL is configured; otherwise the client fails closed. */
     val syncConfigured: Boolean get() = serverUrl.startsWith("http://") || serverUrl.startsWith("https://")
@@ -112,6 +115,7 @@ class SettingsRepository(private val store: DataStore<Preferences>) {
             oemGuidanceDismissed = p[SettingsKeys.OemGuidanceDismissed] ?: false,
             onboardingDone = p[SettingsKeys.OnboardingDone] ?: false,
             allowCleartext = p[SettingsKeys.AllowCleartext] ?: false,
+            whatsappBusinessNumber = p[SettingsKeys.WhatsappBusinessNumber] ?: "",
         )
     }
 

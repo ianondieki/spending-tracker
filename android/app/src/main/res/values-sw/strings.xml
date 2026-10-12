@@ -293,4 +293,19 @@
     <string name="settings_allow_http">Ruhusu http kwa majaribio ya ndani</string>
     <string name="settings_allow_http_body">Ikizimwa, Hesabu huzungumza na seva za https pekee. Washa tu kwa seva iliyo kwenye kompyuta yako au tunnel yako.</string>
     <string name="settings_sync_cleartext_blocked">Anwani hiyo ya seva inatumia http. Washa \"Ruhusu http kwa majaribio ya ndani\" ili kuitumia.</string>
+
+    <string name="settings_whatsapp_state">Nambari ya WhatsApp</string>
+    <string name="settings_email_state">Anwani ya barua pepe</string>
+    <string name="settings_verified">Imethibitishwa</string>
+    <string name="settings_unverified">Bado haijathibitishwa</string>
+    <string name="settings_join_instruction">Tuma JOIN %1$s kwa %2$s kwenye WhatsApp. Ripoti zinaweza kwenda kwenye nambari hii ujumbe huo ukifika.</string>
+    <string name="settings_open_whatsapp">Fungua WhatsApp na ujumbe tayari</string>
+    <string name="settings_send_email_link">Nitumie barua pepe ya uthibitisho</string>
+    <string name="settings_check_verification">Kagua uthibitisho</string>
+    <string name="settings_email_link_sent">Barua pepe ya uthibitisho inakuja. Fungua kiungo kilichomo ili kumaliza.</string>
+    <string name="settings_email_rate_limited">Barua pepe ya uthibitisho ilitumwa muda mfupi uliopita. Kagua kikasha chako, na ujaribu tena baadaye ikiwa haijafika.</string>
+    <string name="settings_address_taken">Nambari hiyo ya WhatsApp tayari imethibitishwa kwenye akaunti nyingine ya Hesabu. Tumia nambari nyingine, au ithibitishe kutoka akaunti hiyo.</string>
+    <string name="settings_prefs_failed">Hesabu haikuweza kufikia seva kukagua uthibitisho. Jaribu tena baadaye.</string>
+    <string name="settings_business_number">Nambari ya biashara ya WhatsApp</string>
+    <string name="settings_business_number_body">Nambari ambayo Hesabu hutuma ripoti kutoka. Mwendeshaji wa seva yako hukupa hii.</string>
 </resources>

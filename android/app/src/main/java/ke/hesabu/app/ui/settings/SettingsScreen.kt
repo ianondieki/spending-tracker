@@ -52,8 +52,13 @@ fun SettingsScreen(
     SettingsContent(
         state,
         onServerUrl = vm::setServerUrl,
-        onEmail = { vm.set(SettingsKeys.Email, it.trim()) },
-        onWhatsapp = { vm.set(SettingsKeys.WhatsappE164, it.trim()) },
+        onEmail = { vm.saveAddress(SettingsKeys.Email, it) },
+        onWhatsapp = { vm.saveAddress(SettingsKeys.WhatsappE164, it) },
+        onBusinessNumber = { vm.set(SettingsKeys.WhatsappBusinessNumber, it.trim()) },
+        onSendEmailLink = vm::sendEmailLink,
+        onRefreshPrefs = { vm.refreshPreferences() },
+        onOpenWhatsapp = { url -> runCatching { context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))) } },
+        onDismissVerifyMessage = vm::clearVerifyMessage,
         onNumber = vm::setMsisdn,
         onAllowCleartext = { vm.set(SettingsKeys.AllowCleartext, it) },
         onLocale = { vm.set(SettingsKeys.Locale, it) },
@@ -78,6 +83,11 @@ fun SettingsContent(
     onEmail: (String) -> Unit = {},
     onWhatsapp: (String) -> Unit = {},
     onNumber: (String) -> Unit = {},
+    onBusinessNumber: (String) -> Unit = {},
+    onSendEmailLink: () -> Unit = {},
+    onRefreshPrefs: () -> Unit = {},
+    onOpenWhatsapp: (String) -> Unit = {},
+    onDismissVerifyMessage: () -> Unit = {},
     onAllowCleartext: (Boolean) -> Unit = {},
     onLocale: (String) -> Unit = {},
     onWeeklyAt: (String) -> Unit = {},
@@ -120,10 +130,32 @@ fun SettingsContent(
 
         Sheet(title = stringResource(R.string.settings_delivery_title)) {
             Text(stringResource(R.string.settings_delivery_body), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft)
-            SavedField(s.email, stringResource(R.string.settings_email), KeyboardType.Email, onEmail)
+            state.verifyMessage?.let { m ->
+                Text(verifyMessageText(m), style = MaterialTheme.typography.bodyMedium, color = if (m == "address_taken" || m == "prefs_failed") HesabuTheme.colors.warn else HesabuTheme.colors.ink, modifier = Modifier.padding(top = 8.dp))
+                QuietButton(stringResource(R.string.action_done), onDismissVerifyMessage)
+            }
+            // WhatsApp: the number, its verified state, and the JOIN instruction while unverified.
             SavedField(s.whatsappE164, stringResource(R.string.settings_whatsapp), KeyboardType.Phone, onWhatsapp)
+            val prefs = state.prefs
+            if (s.whatsappE164.isNotBlank() && prefs != null) {
+                KeyValue(stringResource(R.string.settings_whatsapp_state), stringResource(if (prefs.whatsappVerified == true) R.string.settings_verified else R.string.settings_unverified))
+                val code = prefs.joinCode
+                if (prefs.whatsappVerified != true && !code.isNullOrBlank() && s.whatsappBusinessNumber.isNotBlank()) {
+                    Text(stringResource(R.string.settings_join_instruction, code, s.whatsappBusinessNumber), style = MaterialTheme.typography.bodyMedium, color = HesabuTheme.colors.ink, modifier = Modifier.padding(top = 4.dp))
+                    SecondaryButton(stringResource(R.string.settings_open_whatsapp), { onOpenWhatsapp(joinLink(s.whatsappBusinessNumber, code)) }, Modifier.padding(top = 8.dp))
+                }
+            }
+            // Email: the address, its verified state, and the confirmation link.
+            SavedField(s.email, stringResource(R.string.settings_email), KeyboardType.Email, onEmail)
+            if (s.email.isNotBlank() && prefs != null) {
+                KeyValue(stringResource(R.string.settings_email_state), stringResource(if (prefs.emailVerified == true) R.string.settings_verified else R.string.settings_unverified))
+                if (prefs.emailVerified != true) SecondaryButton(stringResource(R.string.settings_send_email_link), onSendEmailLink, enabled = !state.busy)
+            }
+            if (s.syncConfigured && prefs == null) QuietButton(stringResource(R.string.settings_check_verification), onRefreshPrefs)
             SavedField(s.weeklyAt, stringResource(R.string.settings_weekly_at), KeyboardType.Text, onWeeklyAt)
             SavedField(s.monthlyAt, stringResource(R.string.settings_monthly_at), KeyboardType.Text, onMonthlyAt)
+            Text(stringResource(R.string.settings_business_number_body), style = MaterialTheme.typography.bodySmall, color = HesabuTheme.colors.inkSoft, modifier = Modifier.padding(top = 12.dp))
+            SavedField(s.whatsappBusinessNumber, stringResource(R.string.settings_business_number), KeyboardType.Phone, onBusinessNumber)
         }
 
         Sheet(title = stringResource(R.string.settings_language_title)) {
@@ -161,6 +193,18 @@ fun SettingsContent(
             KeyValue(stringResource(R.string.settings_app_version), state.appVersion)
         }
     }
+}
+
+/** wa.me opens WhatsApp with the JOIN text pre-filled; only digits go in the path. */
+fun joinLink(businessNumber: String, code: String): String =
+    "https://wa.me/" + businessNumber.filter { it.isDigit() } + "?text=" + java.net.URLEncoder.encode("JOIN $code", "UTF-8").replace("+", "%20")
+
+@Composable
+private fun verifyMessageText(m: String): String = when (m) {
+    "address_taken" -> stringResource(R.string.settings_address_taken)
+    "email_sent" -> stringResource(R.string.settings_email_link_sent)
+    "email_rate_limited" -> stringResource(R.string.settings_email_rate_limited)
+    else -> stringResource(R.string.settings_prefs_failed)
 }
 
 @Composable

@@ -117,7 +117,14 @@ data class WirePreferences(
     @SerialName("monthly_at") val monthlyAt: String? = null,
     val channels: List<String>? = null,
     val theme: String? = null,
-)
+    /** Read-only, from GET: the code the user sends as "JOIN <code>" to the business number. Never sent back. */
+    @SerialName("join_code") val joinCode: String? = null,
+    @SerialName("whatsapp_verified") val whatsappVerified: Boolean? = null,
+    @SerialName("email_verified") val emailVerified: Boolean? = null,
+) {
+    /** The writable subset for PUT: the read-only verification fields are dropped. */
+    fun forPut(): WirePreferences = copy(joinCode = null, whatsappVerified = null, emailVerified = null)
+}
 
 @Serializable
 data class ApiError(val code: String = "", val message: String = "")

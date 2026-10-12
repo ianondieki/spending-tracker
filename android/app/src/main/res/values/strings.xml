@@ -298,4 +298,20 @@
     <string name="settings_allow_http">Allow http for local testing</string>
     <string name="settings_allow_http_body">Off, Hesabu only talks to https servers. Turn on only for a server on your own laptop or tunnel.</string>
     <string name="settings_sync_cleartext_blocked">That server address uses http. Turn on \"Allow http for local testing\" to use it.</string>
+
+    <!-- Delivery verification [[COPY-REVIEW]] -->
+    <string name="settings_whatsapp_state">WhatsApp number</string>
+    <string name="settings_email_state">Email address</string>
+    <string name="settings_verified">Verified</string>
+    <string name="settings_unverified">Not verified yet</string>
+    <string name="settings_join_instruction">Send JOIN %1$s to %2$s on WhatsApp. Reports can go to this number once that message arrives.</string>
+    <string name="settings_open_whatsapp">Open WhatsApp with the message ready</string>
+    <string name="settings_send_email_link">Send me a confirmation email</string>
+    <string name="settings_check_verification">Check verification</string>
+    <string name="settings_email_link_sent">A confirmation email is on its way. Open the link in it to finish.</string>
+    <string name="settings_email_rate_limited">A confirmation email was sent a moment ago. Check your inbox, and try again in a little while if it has not arrived.</string>
+    <string name="settings_address_taken">That WhatsApp number is already verified on another Hesabu account. Use a different number, or verify it from that account.</string>
+    <string name="settings_prefs_failed">Hesabu could not reach the server to check verification. Try again later.</string>
+    <string name="settings_business_number">WhatsApp business number</string>
+    <string name="settings_business_number_body">The number Hesabu sends reports from. Your server operator gives you this.</string>
 </resources>

@@ -75,6 +75,48 @@ class SyncClientBodyTest {
         assertTrue(acct.keys.containsAll(required("Account")))
     }
 
+    private var linkStatus = HttpStatusCode.Accepted
+    private var prefsStatus = HttpStatusCode.OK
+
+    private fun verifyClient() = SyncClient("https://api.test", { "tok" }, MockEngine { req ->
+        sent.add(req.url.encodedPath to ((req.body as? TextContent)?.text ?: ""))
+        when (req.url.encodedPath) {
+            "/v1/me/email/send-link" -> respond("", linkStatus)
+            "/v1/me/preferences" -> if (prefsStatus == HttpStatusCode.OK) respond("""{"email":"a@b.c","whatsapp_e164":"+254712345678","join_code":"HSB-4K2Q","whatsapp_verified":false,"email_verified":true}""", HttpStatusCode.OK, headersOf(HttpHeaders.ContentType, "application/json"))
+                else respond("""{"code":"address_taken","message":"already verified elsewhere"}""", prefsStatus, headersOf(HttpHeaders.ContentType, "application/json"))
+            else -> respond("{}", HttpStatusCode.OK)
+        }
+    })
+
+    @Test
+    fun sendEmailLinkPostsWithoutABodyAndSurfacesRateLimiting() = runTest {
+        verifyClient().sendEmailLink()
+        assertEquals("/v1/me/email/send-link" to "", sent.single())
+        linkStatus = HttpStatusCode.TooManyRequests
+        try { verifyClient().sendEmailLink(); fail("expected 429") } catch (e: SyncClient.ServerError) {
+            assertEquals(429, e.status)
+            assertTrue(e.retryable)
+        }
+    }
+
+    @Test
+    fun preferencesCarryVerificationAndPutDropsTheReadOnlyFields() = runTest {
+        val got = verifyClient().getPreferences()
+        assertEquals("HSB-4K2Q", got.joinCode)
+        assertEquals(false, got.whatsappVerified)
+        assertEquals(true, got.emailVerified)
+        verifyClient().putPreferences(got)
+        val body = Json.parseToJsonElement(sent.last().second).jsonObject
+        assertFalse(body.containsKey("join_code"))
+        assertFalse(body.containsKey("whatsapp_verified"))
+        assertFalse(body.containsKey("email_verified"))
+        prefsStatus = HttpStatusCode.Conflict
+        try { verifyClient().putPreferences(got); fail("expected 409") } catch (e: SyncClient.ServerError) {
+            assertEquals(409, e.status)
+            assertEquals("address_taken", e.code)
+        }
+    }
+
     @Test
     fun httpIsRefusedUnlessTheLocalTestingToggleIsOnOrTheHostIsLoopback() = runTest {
         try { client(url = "http://tunnel.example").generateReport("weekly", "last_week"); fail("expected CleartextBlocked") } catch (e: SyncClient.CleartextBlocked) {}

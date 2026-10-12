@@ -62,7 +62,7 @@ ANDROID_HOME=/opt/android-sdk && ./gradlew assembleDebug testDebugUnitTest lint 
 7. **Demo mode.** Settings toggle; `assets/demo/demo-inbox.jsonl` (from `corpus/demo` when merged) or the built-in
    29-message sample through the real pipeline, rows tagged `demo` and removed exactly when toggled off.
 8. **Screenshots.** `ScreenshotTest` (Roborazzi) records every screen at 360×800 and 412×915, light and dark, into
-   `android/screenshots/` on every unit-test run (56 PNGs committed, reports included). Reviewing them caught and
+   `android/screenshots/` on every unit-test run (72 PNGs committed: screens, reports, the sprint sample reports and the verification states). Reviewing them caught and
    fixed: tabular figures widening the thousands comma, a tally row never reaching full opacity, KPI truncation at
    360 dp, a clipped 56 sp hero amount, a squeezed label on the OEM screen.
 9. **Import paths.** `ShareReceiverActivity` (ACTION_SEND text/plain) and the paste screen run `TextImport`: each block
@@ -70,7 +70,7 @@ ANDROID_HOME=/opt/android-sdk && ./gradlew assembleDebug testDebugUnitTest lint 
 
 ## Tests
 
-`./gradlew assembleDebug testDebugUnitTest lint`: 293 unit tests green, lint with no errors, debug APK built. Suites: Money format and
+`./gradlew assembleDebug testDebugUnitTest lint`: 303 unit tests green, lint with no errors, debug APK built. Suites: Money format and
 parsing, design-token parity, ledger components (Compose/Robolectric), portable regex, normalisers, pack engine,
 post-processing, pack examples (parameterised), corpus coverage, categoriser and taxonomy reader, body cipher,
 ingest pipeline (in-memory Room), text import, demo inbox, periods, screen smoke tests, screenshots, sync protocol
@@ -103,13 +103,15 @@ thing to run.
 
 ## Known gaps and where to resume
 
-- **First thing to resume (openapi 1.1.0 additions, not yet built):** Settings should read `join_code`,
-  `whatsapp_verified` and `email_verified` from `GET /v1/me/preferences`, show "Send JOIN <join_code> to <business
-  number> from WhatsApp" with the verified state, offer "Send me a confirmation email" (`POST /v1/me/email/send-link`)
-  and show `email_verified`; `PUT /v1/me/preferences` can answer 409 `address_taken` when another user verified that
-  WhatsApp number, which Settings must explain. Done from this addendum: share re-fetches the report summary before
-  every download because artefact URLs are signed for 15 minutes; a delivery skipped for an unverified address says
-  so on the Reports list; the single re-register on 401 covers expired and revoked tokens.
+- **openapi 1.1.0 verification UI (delivered in the last package).** Settings reads `join_code`,
+  `whatsapp_verified` and `email_verified` from `GET /v1/me/preferences` (registering the device first when there is
+  no token). The WhatsApp row shows the number and its state; while unverified and when the operator has entered the
+  business number, it shows "Send JOIN <code> to <number> on WhatsApp" with a button that opens `wa.me` with the text
+  pre-filled. The Email row shows the address and its state with "Send me a confirmation email"
+  (`POST /v1/me/email/send-link`); a 429 is worded as "sent a moment ago, check your inbox". Saving an address pushes
+  preferences; a 409 `address_taken` is explained in plain words. The read-only fields are never sent back. Tests:
+  `SyncClientBodyTest` covers send-link (202 and 429), the preferences round trip and the 409. Screenshots:
+  `settings-verification-*` and `settings-address-taken-*`.
 
 - Kiswahili copy is machine-drafted and tagged `[[COPY-REVIEW]]`; category names in Kiswahili likewise.
 - Share image / PDF is unit-tested for URL handling only; the sample report has no artefact URLs, so the download
