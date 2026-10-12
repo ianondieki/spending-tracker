@@ -85,3 +85,17 @@ the first release; the ids and `name_en` do not change when they do.
 ## Scripts
 
 `pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm build` · `pnpm clean`
+
+## Display names and merchant lists (`normaliseMerchantName`, `isMerchantCounterparty`)
+
+Money SMS carry merchant names as raw upper-case text. `normaliseMerchantName(raw, { paybill?, till? })` returns the
+name a report shows: a seed match (number first, then an alias that **starts** the name) gives the seed's
+`display_name` (or `name`), keeping a named branch ("NAIVAS LTD KILIMANI" → "Naivas Kilimani"); otherwise the text is
+title-cased with trailing legal suffixes (LTD, LIMITED, PLC, CO, INC…) and bare branch tokens removed, acronyms on the
+allow-list (KPLC, DSTV, GOTV, NHIF, SHA, NSSF, KRA, NTSA, KCB, NCBA, DTB, I&M, ATM…) kept upper-case and Safaricom
+spellings applied (M-PESA, M-Shwari, Fuliza). A name that is already mixed case is returned with only its whitespace
+collapsed. `display_name` is an optional seed field for seeds whose canonical `name` is descriptive.
+
+`isMerchantCounterparty({ counterparty_kind, type })` is false for M-Pesa agents (`agent`, and the WITHDRAW /
+DEPOSIT / ATM types), people, banks and the user's own accounts, so analytics can keep cash withdrawals out of
+"where the money went" merchant lists. The packs already mark withdrawals and deposits with `counterparty_kind: agent`.
