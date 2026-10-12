@@ -6,6 +6,7 @@
  *   DATABASE_URL=... RESEND_API_KEY=... WHATSAPP_TOKEN=... WHATSAPP_PHONE_NUMBER_ID=... \
  *   REPORT_TO_EMAIL=you@example.com REPORT_TO_WHATSAPP=+2547XXXXXXXX pnpm --filter @hesabu/worker live-delivery
  *
+ * USER_ID names the owner's own account (printed by seed:demo); the script never looks at any other user's reports.
  * Options: CHANNELS=email,whatsapp (default both); DRY_RUN=1 prints what would be sent and exits.
  */
 import { ReportDocumentSchema } from '@hesabu/agents';
@@ -16,10 +17,15 @@ import { FsStorage, S3Storage } from '../src/adapters/storage.ts';
 import { CloudApiWhatsAppSender } from '../src/adapters/whatsapp.ts';
 import { readWorkerConfig } from '../src/config.ts';
 
-const REQUIRED = ['DATABASE_URL', 'RESEND_API_KEY', 'WHATSAPP_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'REPORT_TO_EMAIL', 'REPORT_TO_WHATSAPP'] as const;
+const REQUIRED = ['DATABASE_URL', 'RESEND_API_KEY', 'WHATSAPP_TOKEN', 'WHATSAPP_PHONE_NUMBER_ID', 'REPORT_TO_EMAIL', 'REPORT_TO_WHATSAPP', 'USER_ID'] as const;
 const missing = REQUIRED.filter((k) => !process.env[k]);
 if (missing.length > 0) {
   console.error(`live-delivery refused: missing ${missing.join(', ')} (every secret and recipient is required; nothing was sent)`);
+  process.exit(2);
+}
+const ownerUserId = process.env['USER_ID']!;
+if (!/^[0-9a-f-]{36}$/i.test(ownerUserId)) {
+  console.error('live-delivery refused: USER_ID must be the owner account uuid');
   process.exit(2);
 }
 const toEmail = process.env['REPORT_TO_EMAIL']!;
@@ -34,14 +40,10 @@ const dryRun = process.env['DRY_RUN'] === '1';
 const config = readWorkerConfig(process.env);
 const db = await Db.open(process.env, { migrate: false });
 try {
-  // The latest finished weekly report across users, by generated_at.
-  const rows = await db.rawSql<{ id: string; user_id: string }[]>`
-    SELECT id, user_id FROM reports WHERE kind = 'weekly' AND status = 'done' ORDER BY generated_at DESC NULLS LAST LIMIT 1`;
-  const row = rows[0];
-  if (!row) throw new Error('no finished weekly report; generate one first (make seed-demo)');
-  const tenant = db.forUser(row.user_id);
-  const report = await tenant.getReport(row.id);
-  if (!report) throw new Error('report vanished');
+  // The owner's latest finished weekly report, through the owner's tenant handle only (m1).
+  const tenant = db.forUser(ownerUserId);
+  const report = (await tenant.listReports('weekly')).find((r) => r.status === 'done' && !r.artefacts.stubbed);
+  if (!report) throw new Error('no finished weekly report for USER_ID; generate one first (make seed-demo)');
   const document = ReportDocumentSchema.parse(report.document_json);
   const storage = config.s3 ? new S3Storage(config.s3) : new FsStorage(config.storageDir);
   const a = report.artefacts;

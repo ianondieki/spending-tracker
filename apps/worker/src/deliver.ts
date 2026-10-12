@@ -56,6 +56,7 @@ async function deliverOne(deps: DeliveryDeps, tenant: TenantDb, report: ReportRo
     await tenant.audit('worker', 'delivery.skipped', { channel, reason });
     return { channel, status: 'skipped', reason };
   };
+  if (report.artefacts.stubbed) return skip('artefacts are renderer placeholders (no browser); not delivering');
   const prefs = await tenant.getPreferences();
   const document = ReportDocumentSchema.parse(report.document_json);
   try {

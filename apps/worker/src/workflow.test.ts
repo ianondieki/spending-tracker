@@ -58,7 +58,7 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(synced.rejected).toEqual([]);
     expect(synced.accepted).toBe(inbox.transactions.length);
     deps = {
-      db, renderer: new StubRenderer(), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
+      db, renderer: new StubRenderer({ markStubbed: false }), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
       appBaseUrl: 'https://hesabu.test', reportLinkSecret: env.REPORT_LINK_SECRET, reportLinkTtlDays: 30,
       enqueueDeliver: async (job) => { deliverJobs.push(job); }, now: () => NOW,
     };
@@ -95,7 +95,7 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     expect(result!.report.artefacts.hero_png_key).toMatch(/hero\.png$/);
     expect(result!.report.artefacts.pdf_key).toMatch(/report\.pdf$/);
     expect(JSON.stringify(result!.report.artefacts)).not.toMatch(/_url":"http[^"]*(png|pdf)"/); // M6: no permanent artefact URLs
-    expect(result!.report.artefacts.stubbed).toBe(true); // the StubRenderer's placeholders are flagged
+    expect(result!.report.artefacts.stubbed).toBe(false); // the test double stands in for a real render
     expect(result!.report.artefacts.web_url).toMatch(/^https:\/\/hesabu\.test\/r\//);
     expect(result!.report.cost_usd).toBe(0);
 
@@ -151,6 +151,22 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     await db.forUser(userId).updatePreferences({ whatsapp_e164: '+254700000321' });
     const noProvider = await runDeliveryJob({ db, storage, email: null, whatsapp: null }, { ...second, channels: ['email'] });
     expect(noProvider[0]).toMatchObject({ channel: 'email', status: 'already' }); // email for report 2 was sent just above
+  });
+
+  it('m11: placeholder artefacts from a browser-less renderer are never delivered', async () => {
+    const job = deliverJobs[0]!;
+    const tenant = db.forUser(userId);
+    const report = (await tenant.getReport(job.report_id))!;
+    // A real StubRenderer (no browser) flags its output; the workflow stores the flag.
+    const flagged = await runReportJob({ ...deps, renderer: new StubRenderer() }, { user_id: userId, report_id: (await tenant.ensureReport('weekly', '2026-09-28T00:00:00+03:00', '2026-10-05T00:00:00+03:00')).id, deliver: false });
+    expect(flagged?.report.artefacts.stubbed).toBe(true);
+    const d = await tenant.ensureDelivery(flagged!.report.id, 'email');
+    const before = email.sent.length;
+    const out = await runDeliveryJob({ db, storage, email, whatsapp }, { user_id: userId, report_id: flagged!.report.id, channels: ['email'] });
+    expect(out[0]).toMatchObject({ status: 'skipped', reason: expect.stringContaining('placeholders') });
+    expect(email.sent).toHaveLength(before);
+    expect((await tenant.listDeliveries(flagged!.report.id)).find((x) => x.id === d.id)?.status).toBe('skipped');
+    void report;
   });
 
   it('regenerates on force and marks failures', async () => {

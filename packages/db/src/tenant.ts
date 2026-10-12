@@ -562,6 +562,12 @@ export class TenantDb {
     await this.tx((tx) => tx`INSERT INTO audit_log (user_id, actor, action, details) VALUES (${this.userId}, ${actor}, ${action}, ${tx.json(details as never)})`);
   }
 
+  /** This user's model spend since `since` (the per-user daily cap). */
+  async aiSpendUsdSince(since: Date): Promise<number> {
+    const rows = await this.tx((tx) => tx<{ total: string | null }[]>`SELECT sum(cost_usd)::text AS total FROM ai_usage WHERE user_id = ${this.userId} AND created_at >= ${since}`);
+    return Number(rows[0]?.total ?? 0);
+  }
+
   async recordAiUsage(e: AiUsageEntry): Promise<void> {
     await this.tx(
       (tx) => tx`INSERT INTO ai_usage (user_id, report_id, step, model, input_tokens, output_tokens, cache_read, cache_write, cost_usd)
