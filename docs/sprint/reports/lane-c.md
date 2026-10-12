@@ -1,7 +1,8 @@
 # Lane C report: charts, renderer, web viewer, email
 
-Branch `claude/beautiful-pascal-w5oxu3-lane-c`, 13:33 to 14:35 UTC on 12 October 2026. All five kickoff items
-shipped in order; `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` are green from the repo root.
+Branch `claude/beautiful-pascal-w5oxu3-lane-c`, from 13:33 UTC on 12 October 2026. All five kickoff items shipped
+in order, then the orchestrator's second package (audit, 25 % hero review, PDF smoke test, sample review);
+`pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` are green from the repo root.
 
 ## What shipped
 
@@ -9,8 +10,8 @@ shipped in order; `pnpm lint`, `pnpm typecheck`, `pnpm test` and `pnpm build` ar
 |---|---|---|
 | `packages/report-model` | Types generated from the two frozen schemas (`pnpm gen`, test fails when stale), ajv validators that fail closed, the one KSh formatter, a fixture builder that computes every derived number, weekly (5 to 11 Oct 2026) and monthly (Sep 2026) FactsSheets with ReportDocuments in en and sw, the same as JSON in `fixtures/` for Kotlin and Lane B | 44 |
 | `packages/charts` | The ten chart types as deterministic React SVG, tokens as CSS variables, light and dark, en and sw, alt text and a data-table twin on every chart, `resolveChart(section, facts)`; plus `ReportPage` and `reportStyles`, the ruled-ledger report page shared by the web viewer and the renderer; Schibsted Grotesk (OFL, Latin woff2) in `fonts/` | 96 (snapshot per chart section per fixture per theme) |
-| `apps/web` | `/r/[token]` against `GET /v1/public/reports/{token}` (validated, fail closed, token never echoed), `/dev/report?fixture=&theme=`, 360 and 1440 layouts, print stylesheet, both themes; 16 screenshots in `apps/web/screenshots/`; axe clean (WCAG 2.1 AA + best practice); Lighthouse mobile: accessibility 100, performance 93 (weekly) and 97 (monthly), best practices 96 to 100 | 10 |
-| `packages/renderer` | `renderReport()` per the interface: standalone web HTML with embedded fonts, hero PNG 1080×1350, chart PNGs 1200 px at 2× DPR, A4 PDF from the print stylesheet, table-based email with `cid:` images and a plain-text twin; golden heroes for weekly en and monthly sw in both themes in `golden/` | 19 (browser tests skip without Chromium) |
+| `apps/web` | `/r/[token]` against `GET /v1/public/reports/{token}` (validated, fail closed, token never echoed), `/dev/report?fixture=&theme=`, 360 and 1440 layouts, print stylesheet, both themes; 16 screenshots in `apps/web/screenshots/`; axe clean (WCAG 2.1 AA + best practice); Lighthouse mobile (`apps/web/screenshots/lighthouse.json`): accessibility 100, performance 98, best practices 96 to 100 on both fixtures | 10 |
+| `packages/renderer` | `renderReport()` per the interface: standalone web HTML with embedded fonts, hero PNG 1080×1350, chart PNGs 1200 px at 2× DPR, A4 PDF from the print stylesheet, table-based email with `cid:` images and a plain-text twin; golden heroes for weekly en and monthly sw in both themes in `golden/`; an A4 smoke test (pdf.js) asserting page count, key copy and no text past the page or the right margin on every fixture | 23 (browser tests skip without Chromium) |
 
 Design decisions worth knowing:
 
@@ -51,6 +52,16 @@ it); never run `playwright install` there.
   `packages/charts/src/charts/*.tsx` hold the data shapes and layout rules to mirror in Compose.
 - The web viewer needs `API_BASE_URL` (or `HESABU_API_BASE_URL`) at runtime; without it `/r/[token]` shows an
   honest error page rather than a half report.
+
+## Second package (orchestrator check-in 1)
+
+- Audit of `/dev/report` and the hero against the brief (the `impeccable` skill is not available in this session).
+  Fixed: trend-line labels colliding at 360 px (series named at the line ends, months abbreviated), ledger columns
+  touching when a text column follows an amount, year-to-date KPI amounts overflowing their print tiles (caught by
+  the new PDF test), phone table scroll region not keyboard-focusable.
+- Golden heroes reviewed at 25 %: title, period, tally and total read; the insight lines are at the 28 px floor and
+  still legible. No change needed.
+- Lighthouse after the fixes: accessibility 100, performance 98 on both fixtures (mobile profile).
 
 ## Known gaps
 
