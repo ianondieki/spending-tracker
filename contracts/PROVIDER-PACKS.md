@@ -45,8 +45,10 @@ Ksh" is rejected in review.
 
 ## Dedupe and transfers (cross-pack rules, implemented in both engines' post-processing)
 
-- **Dedupe key.** `(provider, external_ref)` when `external_ref` exists, otherwise `raw_hash`. A duplicate is dropped
-  with a count.
+- **Dedupe key.** `(provider, external_ref, family_id)` when `external_ref` exists, otherwise `raw_hash`. The family is
+  part of the key because M-Pesa reuses one code across related messages: a Fuliza drawdown arrives as a second SMS
+  carrying the same code as the payment it funded, and reversals cite the original code. A duplicate is dropped with a
+  count.
 - **Transfer matching.** Two transactions from different `account_ref`s of the same user, opposite directions, equal
   `amount_cents`, `occurred_at` within 10 minutes, where at least one family has `is_transfer_hint` or the
   counterparty kind is `self` or `bank`, become a pair: both get `is_transfer = true` and the same
