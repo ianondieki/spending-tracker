@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",
+    "@hesabu/analytics": "workspace:*",
+    "@hesabu/i18n": "workspace:*",
     "zod": "^4.6.6"
   }
 }
