@@ -8,9 +8,10 @@ import {
   previousPeriod, periodContaining, toLocalDate,
 } from '@hesabu/analytics';
 import {
-  produceReport, ReportDocumentSchema, type BudgetGuard, type CostLedger, type ModelClient, type ReportDocument,
+  AnthropicModelClient, BudgetGuard, FakeModelClient, produceReport, ReportDocumentSchema,
+  type AiConfig, type CostLedger, type ModelClient, type ReportDocument,
 } from '@hesabu/agents';
-import type { Db, ReportGenerateJob, ReportRow, TenantDb } from '@hesabu/db';
+import { DbCostLedger, type Db, type ReportGenerateJob, type ReportRow, type TenantDb } from '@hesabu/db';
 
 import type { Renderer } from './adapters/renderer.js';
 import type { Storage } from './adapters/storage.js';
@@ -20,9 +21,9 @@ export interface WorkflowDeps {
   db: Db;
   renderer: Renderer;
   storage: Storage;
-  client: ModelClient;
-  guard: BudgetGuard;
-  ledger: CostLedger;
+  ai: AiConfig;
+  /** Builds the model client for one report; defaults to the real SDK client when AI is enabled, else a fake. */
+  clientFactory?: (ctx: { guard: BudgetGuard; ledger: CostLedger; ai: AiConfig }) => ModelClient;
   appBaseUrl: string;
   reportLinkSecret: string | undefined;
   reportLinkTtlDays: number;
@@ -106,11 +107,15 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
     );
 
     // 2–4. insight-select → write → check (model steps with the numbers-only fallback)
-    const produced = await produceReport(facts, { report_id: report.id, kind: report.kind, locale: user.locale }, {
-      client: deps.client,
-      guard: deps.guard,
-      ledger: deps.ledger,
-      now,
+    const ledger = new DbCostLedger(deps.db, job.user_id, report.id);
+    const guard = new BudgetGuard({ config: deps.ai, ledger });
+    const client = deps.clientFactory
+      ? deps.clientFactory({ guard, ledger, ai: deps.ai })
+      : deps.ai.enabled
+        ? new AnthropicModelClient({ config: deps.ai, guard, ledger, now: () => now })
+        : new FakeModelClient([]);
+    const produced = await produceReport(facts, { report_id: report.id, kind: report.kind, baseUrl: deps.appBaseUrl }, {
+      client, guard, ledger, locale: user.locale, now,
     });
     const document = ReportDocumentSchema.parse(produced.document);
     await tenant.updateReport(report.id, {
@@ -121,10 +126,11 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
       output_tokens: document.meta.output_tokens,
       cost_usd: document.meta.cost_usd,
     });
-    if (produced.selection.length > 0) {
+    const selectedIds = new Set((produced.selection?.selected ?? []).map((s) => s.id));
+    if (selectedIds.size > 0) {
       await tenant.insertInsights(
         report.id,
-        facts.candidate_insights.map((i) => ({ insight_id: i.id, kind: i.kind, severity: i.severity, payload: i.params, drilldown: i.drilldown, selected: produced.selection.includes(i.id) })),
+        facts.candidate_insights.map((i) => ({ insight_id: i.id, kind: i.kind, severity: i.severity, payload: i.params, drilldown: i.drilldown, selected: selectedIds.has(i.id) })),
       );
     }
 
@@ -156,7 +162,7 @@ export async function runReportJob(deps: WorkflowDeps, job: ReportGenerateJob): 
         web_url: link.url,
       },
     });
-    await tenant.audit('worker', 'report.generated', { kind: report.kind, period_start: report.period_start, writer: produced.writer, renderer: deps.renderer.name });
+    await tenant.audit('worker', 'report.generated', { kind: report.kind, period_start: report.period_start, writer: produced.writer, fallback_reason: produced.fallback_reason, renderer: deps.renderer.name });
     log(`workflow: ${report.kind} ${report.period_start} done (${produced.writer}) for ${job.user_id}`);
 
     // 6. deliver

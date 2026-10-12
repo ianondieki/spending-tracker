@@ -3,7 +3,7 @@
  * numbers-only fallback writer → stub renderer → fake storage → fake deliveries. This is the path CI proves.
  */
 import { FactsSheetSchema } from '@hesabu/analytics';
-import { BudgetGuard, FakeModelClient, InMemoryCostLedger, readAiConfig, ReportDocumentSchema } from '@hesabu/agents';
+import { FakeModelClient, readAiConfig, ReportDocumentSchema } from '@hesabu/agents';
 import { createApp, InMemoryQueue } from '@hesabu/api';
 import { DEMO_CATEGORIES, demoAccounts, demoTransactions, hashToken, type Db, type ReportDeliverJob } from '@hesabu/db';
 import { canReachDatabase, openTestDb } from '@hesabu/db/test-db';
@@ -53,10 +53,8 @@ describe.skipIf(!reachable)('report workflow (Postgres, fallback writer, fakes)'
     const sync = await post('/v1/sync', { device_id: 'demo', app_version: '1.0.0', parser_version: '1.0.0', accounts: demoAccounts(NOW), transactions: demoTransactions(NOW), unknown_message_count: 3, sent_at: NOW.toISOString() });
     expect(sync.status).toBe(200);
     expect(((await sync.json()) as { rejected: unknown[] }).rejected).toEqual([]);
-    const ai = readAiConfig({ AI_ENABLED: 'false' });
-    const ledger = new InMemoryCostLedger();
     deps = {
-      db, renderer: new StubRenderer(), storage, client: new FakeModelClient([]), guard: new BudgetGuard(ai, ledger), ledger,
+      db, renderer: new StubRenderer(), storage, ai: readAiConfig({ AI_ENABLED: 'false' }), clientFactory: () => new FakeModelClient([]),
       appBaseUrl: 'https://hesabu.test', reportLinkSecret: env.REPORT_LINK_SECRET, reportLinkTtlDays: 30,
       enqueueDeliver: async (job) => { deliverJobs.push(job); }, now: () => NOW,
     };

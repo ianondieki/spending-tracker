@@ -1,23 +1,28 @@
 /**
- * Wires `@hesabu/agents` extraction behind the API's Extractor interface. Enabled only when AI is
- * switched on with a key; the redaction helper runs again on the server before anything is sent.
+ * Wires `@hesabu/agents` extraction behind the API's Extractor interface. Enabled only when AI is switched on
+ * with a key and the daily budget has headroom; the redaction helper runs again on the server before anything is
+ * sent, and the result is proposals only (never written to the ledger).
  */
+import { AnthropicModelClient, BudgetGuard, extractUnknownMessages, readAiConfig, redact } from '@hesabu/agents';
+import { DbCostLedger, type Db } from '@hesabu/db';
+
 import type { Env } from './env.js';
 import type { ExtractItem, Extractor } from './routes/extract.js';
 
-interface AgentsModule {
-  extractUnknownMessagesWithEnv?: (items: readonly ExtractItem[], env: Env) => Promise<{ proposals: unknown[] }>;
-}
-
-export function createExtractor(env: Env): Extractor {
-  const enabled = env['AI_ENABLED'] === 'true' && !!env['ANTHROPIC_API_KEY'];
+export function createExtractor(env: Env, db: Db): Extractor {
+  const config = readAiConfig(env);
   return {
-    enabled,
-    async extract(items: readonly ExtractItem[]): Promise<{ proposals: unknown[] }> {
-      if (!enabled) return { proposals: [] };
-      const agents = (await import('@hesabu/agents')) as unknown as AgentsModule;
-      if (!agents.extractUnknownMessagesWithEnv) return { proposals: [] };
-      return agents.extractUnknownMessagesWithEnv(items, env);
+    enabled: config.enabled,
+    async extract(items: readonly ExtractItem[], userId: string): Promise<{ proposals: unknown[] }> {
+      if (!config.enabled) return { proposals: [] };
+      const ledger = new DbCostLedger(db, userId);
+      const guard = new BudgetGuard({ config, ledger });
+      const client = new AnthropicModelClient({ config, guard, ledger });
+      const result = await extractUnknownMessages(
+        items.map((i) => ({ sender: redact(i.sender), body_redacted: redact(i.body_redacted), received_at: i.received_at })),
+        client,
+      );
+      return { proposals: result.proposals };
     },
   };
 }

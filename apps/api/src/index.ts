@@ -11,7 +11,7 @@ export type { AppDeps } from './app.js';
 const port = Number(process.env['PORT'] ?? 8787);
 const db = await Db.open(process.env);
 const queue = await PgBossQueue.start(getDatabaseUrl(process.env));
-const app = createApp({ db, queue, env: process.env, extractor: createExtractor(process.env) });
+const app = createApp({ db, queue, env: process.env, extractor: createExtractor(process.env, db) });
 
 serve({ fetch: app.fetch, port }, (info) => {
   console.log(`hesabu api listening on http://localhost:${info.port}`);

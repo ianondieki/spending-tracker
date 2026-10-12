@@ -13,6 +13,7 @@ import { DeliverBodySchema, GenerateBodySchema, PreferencesSchema, RegisterBodyS
 import { toSummary } from './summary.js';
 
 export const API_VERSION = '1.0.0';
+export { InMemoryQueue, PgBossQueue, type JobQueue } from './queue.js';
 
 export interface AppDeps {
   readonly db: Db;

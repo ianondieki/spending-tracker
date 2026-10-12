@@ -26,7 +26,9 @@ describe('device tokens', () => {
 describe('report link tokens', () => {
   it('expire and hash', () => {
     const live = signReportLinkToken({ report_id: 'r1', exp: 2_000_000_000 }, secret);
-    expect(verifyReportLinkToken(live, secret, new Date(1_000_000_000_000))).toEqual({ report_id: 'r1', exp: 2_000_000_000 });
+    expect(verifyReportLinkToken(live, secret, new Date(1_000_000_000_000))).toMatchObject({ report_id: 'r1', exp: 2_000_000_000 });
+    expect(signReportLinkToken({ report_id: 'r1', exp: 2_000_000_000 }, secret)).not.toBe(live);
+    expect(signReportLinkToken({ report_id: 'r1', exp: 2_000_000_000, nonce: 'fixed' }, secret)).toBe(signReportLinkToken({ report_id: 'r1', exp: 2_000_000_000, nonce: 'fixed' }, secret));
     const dead = signReportLinkToken({ report_id: 'r1', exp: 1 }, secret);
     expect(verifyReportLinkToken(dead, secret)).toBeNull();
     expect(hashToken(live)).toMatch(/^[a-f0-9]{64}$/);

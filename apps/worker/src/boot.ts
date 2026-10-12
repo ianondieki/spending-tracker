@@ -1,5 +1,5 @@
 /** Wires real adapters (or fakes when a secret is missing), pg-boss queues and the scheduler. */
-import { AnthropicModelClient, BudgetGuard, DbCostLedger, FakeModelClient, readAiConfig } from '@hesabu/agents';
+import { readAiConfig } from '@hesabu/agents';
 import { Db, getDatabaseUrl, REPORT_DELIVER_JOB, REPORT_GENERATE_JOB, SCHEDULER_TICK_JOB, deliveryJobKey, reportJobKey, type ReportDeliverJob, type ReportGenerateJob } from '@hesabu/db';
 import { PgBoss } from 'pg-boss';
 
@@ -37,9 +37,6 @@ export async function buildWorker(env: Env = process.env, log: (line: string) =>
   const renderer: Renderer = new PackageRenderer();
 
   const ai = readAiConfig(env);
-  const ledger = new DbCostLedger(db);
-  const guard = new BudgetGuard(ai, ledger);
-  const client = ai.enabled ? new AnthropicModelClient({ apiKey: ai.apiKey, model: ai.model, guard, ledger }) : new FakeModelClient([]);
   log(`worker: ai=${ai.enabled ? ai.model : 'off (numbers-only fallback)'} storage=${config.s3 ? 's3' : 'fs'} email=${email?.name ?? 'none'} whatsapp=${whatsapp?.name ?? 'none'}`);
 
   const enqueueDeliver = async (job: ReportDeliverJob): Promise<void> => {
@@ -48,7 +45,7 @@ export async function buildWorker(env: Env = process.env, log: (line: string) =>
     }
   };
   const workflow: WorkflowDeps = {
-    db, renderer, storage, client, guard, ledger,
+    db, renderer, storage, ai,
     appBaseUrl: config.appBaseUrl, reportLinkSecret: config.reportLinkSecret, reportLinkTtlDays: config.reportLinkTtlDays,
     enqueueDeliver, log,
   };

@@ -3,7 +3,7 @@
  * closed: no secret, no token. Tokens are `base64url(payload).base64url(hmac-sha256)`; only the SHA-256
  * of a report-link token is stored (report_links.token_hash).
  */
-import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 
 const b64u = (buf: Buffer | string): string => Buffer.from(buf).toString('base64url');
 const fromB64u = (s: string): Buffer => Buffer.from(s, 'base64url');
@@ -53,11 +53,13 @@ export function verifyDeviceToken(token: string, secret: string | undefined): De
 export interface ReportLinkClaims {
   readonly report_id: string;
   readonly exp: number; // epoch seconds
+  /** Random per link, so two links for the same report at the same expiry are still distinct tokens. */
+  readonly nonce?: string;
 }
 
 export function signReportLinkToken(claims: ReportLinkClaims, secret: string | undefined): string {
   const s = requireSecret(secret, 'REPORT_LINK_SECRET');
-  const payload = b64u(JSON.stringify(claims));
+  const payload = b64u(JSON.stringify({ ...claims, nonce: claims.nonce ?? randomBytes(6).toString('base64url') }));
   return `${payload}.${sign(payload, s)}`;
 }
 
@@ -70,7 +72,7 @@ export function verifyReportLinkToken(token: string, secret: string | undefined,
     const claims = JSON.parse(fromB64u(payload).toString('utf8')) as Partial<ReportLinkClaims>;
     if (typeof claims.report_id !== 'string' || typeof claims.exp !== 'number') return null;
     if (claims.exp * 1000 <= now.getTime()) return null;
-    return { report_id: claims.report_id, exp: claims.exp };
+    return { report_id: claims.report_id, exp: claims.exp, ...(typeof claims.nonce === 'string' ? { nonce: claims.nonce } : {}) };
   } catch {
     return null;
   }
