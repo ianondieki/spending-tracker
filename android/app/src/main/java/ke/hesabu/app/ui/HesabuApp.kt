@@ -12,8 +12,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -58,20 +62,32 @@ object Routes {
 }
 
 /**
- * Root: applies the chosen language and theme, shows onboarding until it is done, then the app shell.
- * The language is applied by wrapping the context so every stringResource call sees the chosen locale.
+ * Root: applies the chosen language and theme, opens the ledger once off the main thread, then shows onboarding
+ * until it is done and the app shell after. The language is applied by wrapping the context so every
+ * stringResource call sees the chosen locale. A ledger that will not open (Keystore, SQLCipher, a corrupt keyset)
+ * is a screen with a retry and the detail to pass on; nothing below this point touches storage before it is open.
  */
 @Composable
 fun HesabuRoot(startRoute: String? = null) {
     val context = LocalContext.current
     val graph = remember { HesabuApplication.graph(context) }
     val settings by graph.settings.settings.collectAsStateWithLifecycle(initialValue = null)
+    var attempt by remember { mutableIntStateOf(0) }
+    var startup by remember { mutableStateOf<StartupState>(StartupState.Opening) }
+    LaunchedEffect(attempt) {
+        startup = StartupState.Opening
+        startup = graph.warmUp().fold({ StartupState.Ready }, { StartupState.Failed(StartupFailure.describe(it)) })
+    }
     val s = settings ?: return
     val localized = remember(s.locale) { context.localized(s.locale) }
     val dark = when (s.theme) { "dark" -> true; "light" -> false; else -> isSystemInDarkTheme() }
     CompositionLocalProvider(LocalContext provides localized) {
         HesabuTheme(darkTheme = dark) {
-            if (!s.onboardingDone) OnboardingFlow(onFinished = {}) else HesabuApp(startRoute = startRoute)
+            when (val state = startup) {
+                StartupState.Opening -> StartupOpening()
+                is StartupState.Failed -> StartupErrorScreen(detail = state.detail, onRetry = { attempt++ })
+                StartupState.Ready -> if (!s.onboardingDone) OnboardingFlow(onFinished = {}) else HesabuApp(startRoute = startRoute)
+            }
         }
     }
 }

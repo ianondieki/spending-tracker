@@ -18,6 +18,19 @@
     <string name="action_cancel">Ghairi</string>
     <string name="action_save">Hifadhi</string>
 
+    <string name="startup_opening">Inafungua leja yako…</string>
+    <string name="startup_error_title">Hesabu haikufunguka</string>
+    <string name="startup_error_subtitle">Leja haikufunguka</string>
+    <string name="startup_error_body">Hifadhi salama ya simu hii au leja iliyosimbwa haikuweza kufunguliwa. Jaribu tena; ikiendelea kushindwa, tuma maelezo yaliyo hapa chini kwa msanidi. Hakuna maandishi ya ujumbe yanayojumuishwa.</string>
+    <string name="startup_error_details">Maelezo</string>
+    <string name="crash_title">Hesabu imesimama ghafla</string>
+    <string name="crash_body">Toleo hili la majaribio linaonyesha tatizo ili lirekebishwe. Nakili au shiriki maelezo yaliyo hapa chini kwa msanidi, kisha fungua Hesabu tena.</string>
+    <string name="crash_copy">Nakili maelezo</string>
+    <string name="crash_share">Shiriki maelezo</string>
+    <string name="crash_restart">Fungua Hesabu tena</string>
+    <string name="crash_copied">Maelezo yamenakiliwa</string>
+    <string name="crash_no_report">Hakuna maelezo yaliyorekodiwa.</string>
+
     <string name="welcome_title">Hesabu husoma jumbe zako za pesa badala yako</string>
     <string name="welcome_subtitle">Hesabu ya wiki na ya mwezi ya pesa zako zilipoenda, inayohesabiwa kutoka jumbe zilizo kwenye simu hii.</string>
     <string name="welcome_point_1">Hesabu husoma jumbe za M-Pesa, Airtel Money, T-Kash na benki kwenye simu hii na kuweka daftari.</string>

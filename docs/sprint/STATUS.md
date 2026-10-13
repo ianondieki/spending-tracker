@@ -34,7 +34,11 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
    24-hour window.
 4. **Install the APK**: GitHub → Actions → the latest green `ci` run on this branch → Artifacts →
    `hesabu-debug-apk` → unzip → `adb install app-debug.apk` (or copy the APK to the phone and open it). Then
-   Settings → server URL → onboarding → allow SMS → backfill.
+   Settings → server URL → onboarding → allow SMS → backfill. If the app shows "Hesabu could not open", tap Try
+   again once; if it persists, send the Details text to the developer. A test build that stops unexpectedly shows
+   its own "Hesabu stopped unexpectedly" screen with Copy and Share buttons; send that text too. Smaller per-ABI
+   builds (arm64 about 26 MB, arm32 about 24 MB) can be made locally with ABI splits (see `docs/sprint/LOG.md`,
+   13 Oct); the CI artifact is the universal APK (41 MB).
 
 ## Showcase layers (details in `docs/sprint/SHOWCASE.md`)
 

@@ -40,7 +40,11 @@ abstract class HesabuDatabase : RoomDatabase() {
         /** Runs once per process; [open] calls it, so callers never need to. Not loadable on the JVM (unit tests). */
         fun loadNativeLibrary() {
             if (!nativeLoaded) {
-                System.loadLibrary("sqlcipher")
+                try {
+                    System.loadLibrary("sqlcipher")
+                } catch (e: UnsatisfiedLinkError) {
+                    throw IllegalStateException("SQLCipher native library failed to load: ${e.message}", e)
+                }
                 nativeLoaded = true
             }
         }

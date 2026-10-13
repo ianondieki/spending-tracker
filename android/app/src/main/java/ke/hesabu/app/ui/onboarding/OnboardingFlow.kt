@@ -2,7 +2,6 @@ package ke.hesabu.app.ui.onboarding
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -82,8 +81,6 @@ fun OnboardingFlow(onFinished: () -> Unit) {
             )
         }
     }
-
-    LaunchedEffect(Unit) { graph.ensureTaxonomy() }
 }
 
 /** Observes the unique backfill work and maps its progress to the screen state. */

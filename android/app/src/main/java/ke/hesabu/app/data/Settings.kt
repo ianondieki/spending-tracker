@@ -5,13 +5,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 import java.util.UUID
 
 /** App preferences (non-secret). Secrets such as the device token go through [SecretStore]. */
@@ -91,7 +94,9 @@ data class AppSettings(
 
 class SettingsRepository(private val store: DataStore<Preferences>) {
 
-    val settings: Flow<AppSettings> = store.data.map { p ->
+    // An unreadable preferences file (corrupt, or the disk refusing the read) falls back to the defaults instead of
+    // failing every collector; the next write replaces the file.
+    val settings: Flow<AppSettings> = store.data.catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }.map { p ->
         AppSettings(
             smsConsentGiven = p[SettingsKeys.SmsConsentGiven] ?: false,
             aiFallbackConsent = p[SettingsKeys.AiFallbackConsent] ?: false,

@@ -65,6 +65,17 @@
             </intent-filter>
         </receiver>
 
+        <!--
+            Debug builds only in practice (the handler is installed when BuildConfig.DEBUG): shows an uncaught
+            exception's trace. Its own process, so it survives the crashed one being killed and never loops.
+        -->
+        <activity
+            android:name=".diagnostics.CrashActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:process=":crash"
+            android:theme="@style/Theme.Hesabu" />
+
         <!-- Shares a downloaded report image or PDF through the share sheet; exposes cache/reports/ only. -->
         <provider
             android:name="androidx.core.content.FileProvider"

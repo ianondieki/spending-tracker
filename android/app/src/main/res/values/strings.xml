@@ -20,6 +20,20 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
 
+    <!-- Start-up and crash screens [[COPY-REVIEW]] -->
+    <string name="startup_opening">Opening your ledger…</string>
+    <string name="startup_error_title">Hesabu could not open</string>
+    <string name="startup_error_subtitle">The ledger did not open</string>
+    <string name="startup_error_body">This phone\'s secure storage or the encrypted ledger could not be opened. Try again; if it keeps failing, send the details below to the developer. No message text is included.</string>
+    <string name="startup_error_details">Details</string>
+    <string name="crash_title">Hesabu stopped unexpectedly</string>
+    <string name="crash_body">This test build shows the problem so it can be fixed. Copy or share the details below to the developer, then open Hesabu again.</string>
+    <string name="crash_copy">Copy details</string>
+    <string name="crash_share">Share details</string>
+    <string name="crash_restart">Open Hesabu again</string>
+    <string name="crash_copied">Details copied</string>
+    <string name="crash_no_report">No details were recorded.</string>
+
     <!-- Onboarding [[COPY-REVIEW]] -->
     <string name="welcome_title">Hesabu reads your money messages so you don\'t have to</string>
     <string name="welcome_subtitle">A weekly and monthly account of where your money went, counted from the messages already on this phone.</string>

@@ -1,6 +1,7 @@
 package ke.hesabu.app
 
 import android.content.Context
+import android.util.Log
 import ke.hesabu.app.data.BodyCipher
 import ke.hesabu.app.data.DatabaseKey
 import ke.hesabu.app.data.HesabuDatabase
@@ -13,6 +14,7 @@ import ke.hesabu.app.data.settingsDataStore
 import ke.hesabu.app.ingest.IngestPipeline
 import ke.hesabu.app.parse.pack.PackEngine
 import ke.hesabu.app.parse.pack.PackLoader
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 /**
  * Hand-wired dependency graph (no DI framework in the sprint build). Everything is lazy so that the Application
@@ -54,16 +57,45 @@ open class AppGraph(
     private val taxonomyMutex = Mutex()
     private var taxonomySeeded = false
 
-    /** Loads categories and merchant seeds into the ledger once per process (idempotent upserts). */
+    /**
+     * Opens everything the screens assume is open, off the main thread, and reports failure instead of throwing:
+     * the Keystore-backed passphrase, the SQLCipher ledger (a real open, not just the Room builder), the secret
+     * store, the provider packs and the taxonomy seed. [ke.hesabu.app.ui.HesabuRoot] calls this before the first
+     * screen so a phone whose secure storage misbehaves sees a readable error with a retry, not "keeps stopping".
+     * Safe to call again after a failure: every lazy that threw is retried.
+     */
+    suspend fun warmUp(): Result<Unit> = withContext(Dispatchers.IO) {
+        runCatching {
+            db.openHelper.writableDatabase
+            secrets.deviceToken
+            engine
+            ensureTaxonomy()
+        }.onFailure {
+            if (it is CancellationException) throw it
+            Log.e(TAG, "Start-up failed: ${it.javaClass.name}", it)
+        }
+    }
+
+    /**
+     * Loads categories and merchant seeds into the ledger once per process (idempotent upserts). Seeding is
+     * fail-soft: the ledger works without categories, so a seed problem is logged, never thrown at a screen.
+     */
     suspend fun ensureTaxonomy() = taxonomyMutex.withLock {
         if (taxonomySeeded) return@withLock
-        val loaded = Taxonomy.fromAssets(context)
+        val loaded = runCatching { Taxonomy.fromAssets(context) }
+            .onFailure { Log.w(TAG, "Taxonomy assets unreadable: ${it.javaClass.simpleName}") }.getOrNull()
         if (loaded != null) {
-            db.categoryDao().upsertAll(loaded.categories)
-            db.merchantSeedDao().upsertAll(loaded.seeds)
+            runCatching {
+                db.categoryDao().upsertAll(loaded.categories)
+                db.merchantSeedDao().upsertAll(loaded.seeds)
+            }.onFailure { Log.w(TAG, "Taxonomy seed failed: ${it.javaClass.simpleName}") }
         }
         taxonomySeeded = true
     }
 
     suspend fun currentSettings() = settings.settings.first()
+
+    private companion object {
+        const val TAG = "AppGraph"
+    }
 }
