@@ -1,6 +1,8 @@
-# Hesabu, state of the product (sprint day one)
+# Hesabu, state of the product (sprint day one, final)
 
-Updated by the orchestrator at every check-in. Integration branch `claude/beautiful-pascal-w5oxu3`.
+Final version at the sprint wrap, 12:30 UTC 13 Oct 2026. Integration branch `claude/beautiful-pascal-w5oxu3`,
+tag `v0.1-day-one`. The sprint is over (`docs/sprint/DONE.md`); the phase-per-session rules in `CLAUDE.md` apply
+again from the next session.
 
 ## What works now
 
@@ -9,7 +11,10 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
   taxonomy, transfer matching, balance-chain checks, sync to the backend, Home, Transactions (search, filters,
   correction, "Teach Hesabu"), Accounts, Reports (native charts, share hero PNG and PDF), Settings, demo mode,
   share-to-app and paste import with a confirm step, prominent SMS disclosure, per-OEM background guidance,
-  WhatsApp JOIN-code and email confirmation rows in Settings. 303 unit tests; screenshots at 360 and 412 px in both themes under `android/screenshots/`.
+  WhatsApp JOIN-code and email confirmation rows in Settings. Start-up opens the Keystore-backed passphrase, the
+  SQLCipher ledger and the parsers off the main thread and shows "Hesabu could not open" with the cause and a retry
+  when a phone's secure storage misbehaves; debug builds show their own crash screen with Copy and Share. 312 unit
+  tests; screenshots at 360 and 412 px in both themes under `android/screenshots/`.
 - **Backend** (`apps/api`, `apps/worker`): device-token auth with expiry and revocation, tenant-scoped Postgres with
   row-level security, sync, preferences, report generation (facts engine, insight selection, writer, fact-checker,
   numbers-only fallback), renderer (hero PNG, chart PNGs, A4 PDF, email), email and WhatsApp delivery adapters with
@@ -32,13 +37,12 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
    real bank alert exists (`docs/DECISIONS-NEEDED.md`).
 3. **Meta test number**: add your number as a recipient and send it one message from your phone to open the
    24-hour window.
-4. **Install the APK**: GitHub → Actions → the latest green `ci` run on this branch → Artifacts →
-   `hesabu-debug-apk` → unzip → `adb install app-debug.apk` (or copy the APK to the phone and open it). Then
-   Settings → server URL → onboarding → allow SMS → backfill. If the app shows "Hesabu could not open", tap Try
-   again once; if it persists, send the Details text to the developer. A test build that stops unexpectedly shows
-   its own "Hesabu stopped unexpectedly" screen with Copy and Share buttons; send that text too. Smaller per-ABI
-   builds (arm64 about 26 MB, arm32 about 24 MB) can be made locally with ABI splits (see `docs/sprint/LOG.md`,
-   13 Oct); the CI artifact is the universal APK (41 MB).
+4. **Install the APK**: the fixed per-ABI builds (arm64 and arm32, from commit 430f7d4) were sent to you in the
+   chat on 13 Oct; GitHub → Actions → `ci` run 91 or later → Artifacts → `hesabu-debug-apk` is the universal
+   build of the same code (41 MB zip). Install, open, allow SMS on the disclosure screen, let the backfill run (or
+   switch on demo mode in Settings). The first APK "kept stopping" on your phone; the fixed build either opens or
+   shows "Hesabu could not open" with a Details box. If you see that box, or a "Hesabu stopped unexpectedly"
+   screen, send its text (Copy details) to the developer: it names the exact failure on your phone.
 
 ## Showcase layers (details in `docs/sprint/SHOWCASE.md`)
 
@@ -50,4 +54,7 @@ Updated by the orchestrator at every check-in. Integration branch `claude/beauti
 ## Known gaps
 
 Automated WhatsApp to numbers other than Meta's five test recipients needs business verification. No real bank
-message formats yet. Ask assistant, local-only mode and statement import are out of the day-one scope.
+message formats yet. The on-phone verdict on the fixed build is still open (no report back yet). The merchant
+seeds on the phone read only each merchant's name; paybill, till and alias lists from `packages/taxonomy` are not
+yet used on-device (the backend uses them). Ask assistant, local-only mode and statement import are out of the
+day-one scope. The 14 security minors are listed in `docs/sprint/reports/security-review.md`.
